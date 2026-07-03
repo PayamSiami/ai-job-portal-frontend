@@ -25,7 +25,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  jwt: string;
+  token: string;
   message: string;
   title: string;
   user: User;

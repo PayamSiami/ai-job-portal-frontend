@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { authService } from '@/lib/services/auth.service';
-import toast from 'react-hot-toast';
-import { RegisterRequest, User } from '../types/auth.types';
+import { useState, useEffect, useCallback } from "react";
+import { authService } from "@/lib/services/auth.service";
+import toast from "react-hot-toast";
+import { RegisterRequest, User } from "../types/auth.types";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -13,13 +13,13 @@ export const useAuth = () => {
   useEffect(() => {
     const initializeAuth = () => {
       try {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem("user");
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         }
       } catch (error) {
-        console.error('Failed to parse user from localStorage:', error);
-        localStorage.removeItem('user');
+        console.error("Failed to parse user from localStorage:", error);
+        localStorage.removeItem("user");
       } finally {
         setIsLoading(false);
       }
@@ -32,13 +32,13 @@ export const useAuth = () => {
   const login = useCallback(async (email: string, password: string) => {
     try {
       const response = await authService.login({ email, password });
-      localStorage.setItem('accessToken', response.jwt);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem("accessToken", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       setUser(response.user);
       toast.success(`Welcome back, ${response.user.fullName}!`);
       return response;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed';
+      const message = error instanceof Error ? error.message : "Login failed";
       toast.error(message);
       throw error;
     }
@@ -48,13 +48,14 @@ export const useAuth = () => {
   const register = useCallback(async (data: RegisterRequest) => {
     try {
       const response = await authService.register(data);
-      localStorage.setItem('accessToken', response.jwt);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem("accessToken", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       setUser(response.user);
       toast.success(`Welcome, ${response.user.fullName}!`);
       return response;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Registration failed';
+      const message =
+        error instanceof Error ? error.message : "Registration failed";
       toast.error(message);
       throw error;
     }
@@ -64,13 +65,13 @@ export const useAuth = () => {
   const logout = useCallback(() => {
     authService.logout();
     setUser(null);
-    toast.success('Logged out successfully');
+    toast.success("Logged out successfully");
   }, []);
 
   // Update user function
   const updateUser = useCallback((updatedUser: User) => {
     setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    localStorage.setItem("user", JSON.stringify(updatedUser));
   }, []);
 
   // Refresh token function
@@ -78,12 +79,12 @@ export const useAuth = () => {
     try {
       const response = await authService.refreshToken();
       if (response.accessToken) {
-        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem("accessToken", response.accessToken);
         return response.accessToken;
       }
       return null;
     } catch (error) {
-      console.error('Failed to refresh token:', error);
+      console.error("Failed to refresh token:", error);
       logout();
       return null;
     }

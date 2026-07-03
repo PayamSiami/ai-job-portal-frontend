@@ -65,7 +65,7 @@ export const LoginForm = () => {
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 mb-2">
           <div className="space-y-2">
             <label className="text-sm font-medium">Email</label>
             <Input
