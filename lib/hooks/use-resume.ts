@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { resumeService } from '@/lib/services/resume.service';
-import { Resume, PersonalInfo } from '@/lib/types/resume.types';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { resumeService } from "@/lib/services/resume.service";
+import { Resume, PersonalInfo } from "@/lib/types/resume.types";
+import toast from "react-hot-toast";
 
 export const useResume = () => {
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ export const useResume = () => {
   // Get all resumes
   const useGetMyResumes = () => {
     return useQuery({
-      queryKey: ['resumes'],
+      queryKey: ["resumes"],
       queryFn: resumeService.getMyResumes,
     });
   };
@@ -21,7 +21,7 @@ export const useResume = () => {
   // Get resume by ID
   const useGetResumeById = (id: string) => {
     return useQuery({
-      queryKey: ['resume', id],
+      queryKey: ["resume", id],
       queryFn: () => resumeService.getResumeById(id),
       enabled: !!id,
     });
@@ -31,12 +31,12 @@ export const useResume = () => {
   const createResume = useMutation({
     mutationFn: (data: Partial<Resume>) => resumeService.createResume(data),
     onSuccess: (data: Resume) => {
-      queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
       setCurrentResume(data);
-      toast.success('Resume created successfully!');
+      toast.success("Resume created successfully!");
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create resume');
+      toast.error(error.message || "Failed to create resume");
     },
   });
 
@@ -45,13 +45,13 @@ export const useResume = () => {
     mutationFn: ({ id, data }: { id: string; data: Partial<PersonalInfo> }) =>
       resumeService.updatePersonalInfo(id, data),
     onSuccess: (data: Resume, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['resume', id] });
-      queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      queryClient.invalidateQueries({ queryKey: ["resume", id] });
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
       setCurrentResume(data);
-      toast.success('Personal information updated!');
+      toast.success("Personal information updated!");
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update personal information');
+      toast.error(error.message || "Failed to update personal information");
     },
   });
 
@@ -60,13 +60,13 @@ export const useResume = () => {
     mutationFn: ({ id, summary }: { id: string; summary: string }) =>
       resumeService.updateSummary(id, summary),
     onSuccess: (data: Resume, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['resume', id] });
-      queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      queryClient.invalidateQueries({ queryKey: ["resume", id] });
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
       setCurrentResume(data);
-      toast.success('Summary updated successfully!');
+      toast.success("Summary updated successfully!");
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update summary');
+      toast.error(error.message || "Failed to update summary");
     },
   });
 
@@ -74,10 +74,10 @@ export const useResume = () => {
   const analyzeResume = useMutation({
     mutationFn: (id: string) => resumeService.analyzeResume(id),
     onSuccess: () => {
-      toast.success('Resume analysis complete!');
+      toast.success("Resume analysis complete!");
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to analyze resume');
+      toast.error(error.message || "Failed to analyze resume");
     },
   });
 
@@ -85,11 +85,11 @@ export const useResume = () => {
   const deleteResume = useMutation({
     mutationFn: (id: string) => resumeService.deleteResume(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ['resumes'] });
-      toast.success('Resume deleted successfully!');
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      toast.success("Resume deleted successfully!");
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete resume');
+      toast.error(error.message || "Failed to delete resume");
     },
   });
 
@@ -98,11 +98,11 @@ export const useResume = () => {
     mutationFn: ({ resumeId, jobId }: { resumeId: string; jobId: string }) =>
       resumeService.generateCoverLetter(resumeId, jobId),
     onSuccess: (data: { coverLetter: string }) => {
-      toast.success('Cover letter generated successfully!');
+      toast.success("Cover letter generated successfully!");
       return data;
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to generate cover letter');
+      toast.error(error.message || "Failed to generate cover letter");
     },
   });
 
@@ -110,11 +110,11 @@ export const useResume = () => {
   const generateAISummary = useMutation({
     mutationFn: (resumeId: string) => resumeService.generateAISummary(resumeId),
     onSuccess: (data: { summary: string }) => {
-      toast.success('AI summary generated successfully!');
+      toast.success("AI summary generated successfully!");
       return data;
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to generate summary');
+      toast.error(error.message || "Failed to generate summary");
     },
   });
 

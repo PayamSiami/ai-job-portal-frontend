@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { JobCard } from './job-card';
-import { Job, JobPaginationResult } from '@/lib/types/job.types';
-import { Pagination } from '@/components/shared/pagination';
-import { LoadingSpinner } from '@/components/shared/loading-spinner';
-import { EmptyState } from '@/components/shared/empty-state';
+import React from "react";
+import { JobCard } from "./job-card";
+import { Pagination } from "@/components/shared/pagination";
+import { LoadingSpinner } from "@/components/shared/loading-spinner";
+import { EmptyState } from "@/components/shared/empty-state";
+import { Job, JobPaginationResult } from "@/lib/types/job.types";
 
 interface JobListProps {
   jobs: Job[];
   isLoading?: boolean;
-  pagination?: JobPaginationResult['pagination'];
+  pagination?: JobPaginationResult["pagination"];
   onPageChange?: (page: number) => void;
   onSaveJob?: (jobId: string) => void;
   onApplyJob?: (jobId: string) => void;
@@ -54,6 +54,7 @@ export const JobList: React.FC<JobListProps> = ({
             onSave={onSaveJob}
             onApply={onApplyJob}
             isSaved={savedJobs.includes(job._id)}
+            showApplyButton={true}
           />
         ))}
       </div>

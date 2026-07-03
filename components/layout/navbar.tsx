@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   Home,
   Search,
@@ -19,11 +19,11 @@ import {
   FileText,
   Building,
   LayoutDashboard,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils/cn';
-import { useAuth } from '@/lib/hooks/use-auth';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/cn";
+import { useAuth } from "@/lib/hooks/use-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,33 +31,33 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/search', label: 'Search', icon: Search },
-  { href: '/jobs', label: 'Jobs', icon: Briefcase },
-  { href: '/saved-jobs', label: 'Saved', icon: Heart },
-  { href: '/resumes', label: 'Resumes', icon: FileText },
+  { href: "/", label: "Home", icon: Home },
+  { href: "/search", label: "Search", icon: Search },
+  { href: "/jobs", label: "Jobs", icon: Briefcase },
+  { href: "/saved-jobs", label: "Saved", icon: Heart },
+  { href: "/resumes", label: "Resumes", icon: FileText },
 ];
 
 const employerNavItems = [
-  { href: '/employer/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/employer/jobs', label: 'My Jobs', icon: Briefcase },
-  { href: '/employer/applications', label: 'Applications', icon: Search },
-  { href: '/employer/company', label: 'Company', icon: Building },
+  { href: "/employer/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/employer/jobs", label: "My Jobs", icon: Briefcase },
+  { href: "/employer/applications", label: "Applications", icon: Search },
+  { href: "/employer/company", label: "Company", icon: Building },
 ];
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const isEmployer = user?.role === 'EMPLOYER';
+  const isEmployer = user?.role === "EMPLOYER";
 
   const displayNavItems = isEmployer ? employerNavItems : navItems;
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 flex justify-center">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -77,10 +77,10 @@ export const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                  "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? "bg-blue-50 text-blue-600"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -103,7 +103,10 @@ export const Navbar = () => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="/avatars/01.png" alt={user.fullName} />
                       <AvatarFallback>
@@ -115,8 +118,12 @@ export const Navbar = () => {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.fullName}</p>
-                      <p className="text-xs leading-none text-gray-500">{user.email}</p>
+                      <p className="text-sm font-medium leading-none">
+                        {user.fullName}
+                      </p>
+                      <p className="text-xs leading-none text-gray-500">
+                        {user.email}
+                      </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -167,7 +174,11 @@ export const Navbar = () => {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
       </div>
@@ -189,10 +200,10 @@ export const Navbar = () => {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors',
+                    "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >

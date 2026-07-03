@@ -1,41 +1,56 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Sliders, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Sliders, X } from "lucide-react";
 
-interface JobFiltersProps {
-  onFilterChange: (filters: any) => void;
+// Define the filter type
+export interface JobFilterValues {
+  title: string;
+  location: string;
+  minSalary: string;
+  maxSalary: string;
+  experienceLevel: string;
+  workMode: string;
+  jobType: string;
 }
 
-export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
-  const [filters, setFilters] = useState({
-    title: '',
-    location: '',
-    minSalary: '',
-    maxSalary: '',
-    experienceLevel: '',
-    workMode: '',
-    jobType: '',
+interface JobFiltersProps {
+  onFilterChange: (filters: JobFilterValues) => void;
+  initialFilters?: Partial<JobFilterValues>;
+}
+
+export const JobFilters: React.FC<JobFiltersProps> = ({ 
+  onFilterChange,
+  initialFilters = {},
+}) => {
+  const [filters, setFilters] = useState<JobFilterValues>({
+    title: initialFilters.title || "",
+    location: initialFilters.location || "",
+    minSalary: initialFilters.minSalary || "",
+    maxSalary: initialFilters.maxSalary || "",
+    experienceLevel: initialFilters.experienceLevel || "",
+    workMode: initialFilters.workMode || "",
+    jobType: initialFilters.jobType || "",
   });
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: keyof JobFilterValues, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
 
   const clearFilters = () => {
-    const emptyFilters = {
-      title: '',
-      location: '',
-      minSalary: '',
-      maxSalary: '',
-      experienceLevel: '',
-      workMode: '',
-      jobType: '',
+    const emptyFilters: JobFilterValues = {
+      title: "",
+      location: "",
+      minSalary: "",
+      maxSalary: "",
+      experienceLevel: "",
+      workMode: "",
+      jobType: "",
     };
     setFilters(emptyFilters);
     onFilterChange(emptyFilters);
@@ -60,7 +75,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
           <Input
             placeholder="Job title, keywords..."
             value={filters.title}
-            onChange={(e) => handleChange('title', e.target.value)}
+            onChange={(e) => handleChange("title", e.target.value)}
           />
         </div>
 
@@ -69,7 +84,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
           <Input
             placeholder="City, state, or country"
             value={filters.location}
-            onChange={(e) => handleChange('location', e.target.value)}
+            onChange={(e) => handleChange("location", e.target.value)}
           />
         </div>
 
@@ -80,7 +95,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
               type="number"
               placeholder="Min"
               value={filters.minSalary}
-              onChange={(e) => handleChange('minSalary', e.target.value)}
+              onChange={(e) => handleChange("minSalary", e.target.value)}
             />
           </div>
           <div>
@@ -89,7 +104,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
               type="number"
               placeholder="Max"
               value={filters.maxSalary}
-              onChange={(e) => handleChange('maxSalary', e.target.value)}
+              onChange={(e) => handleChange("maxSalary", e.target.value)}
             />
           </div>
         </div>
@@ -99,7 +114,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
           <select
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.experienceLevel}
-            onChange={(e) => handleChange('experienceLevel', e.target.value)}
+            onChange={(e) => handleChange("experienceLevel", e.target.value)}
           >
             <option value="">All Levels</option>
             <option value="entry">Entry Level</option>
@@ -114,7 +129,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
           <select
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.workMode}
-            onChange={(e) => handleChange('workMode', e.target.value)}
+            onChange={(e) => handleChange("workMode", e.target.value)}
           >
             <option value="">All</option>
             <option value="remote">Remote</option>
@@ -128,7 +143,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
           <select
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.jobType}
-            onChange={(e) => handleChange('jobType', e.target.value)}
+            onChange={(e) => handleChange("jobType", e.target.value)}
           >
             <option value="">All Types</option>
             <option value="full-time">Full Time</option>
@@ -137,6 +152,14 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ onFilterChange }) => {
             <option value="internship">Internship</option>
           </select>
         </div>
+
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={clearFilters}
+        >
+          Clear All Filters
+        </Button>
       </CardContent>
     </Card>
   );

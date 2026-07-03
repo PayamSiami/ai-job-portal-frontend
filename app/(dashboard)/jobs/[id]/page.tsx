@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useParams } from 'next/navigation';
-import { JobDetails } from '@/components/jobs/job-details';
-import { JobApplicationForm } from '@/components/jobs/job-application-form';
-import { useJobs } from '@/lib/hooks/use-jobs';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { useParams } from "next/navigation";
+import { JobDetails } from "@/components/jobs/job-details";
+import { JobApplicationForm } from "@/components/jobs/job-application-form";
+import { useJobs } from "@/lib/hooks/use-jobs";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function JobDetailsPage() {
   const params = useParams();
@@ -26,7 +26,9 @@ export default function JobDetailsPage() {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-semibold text-gray-900">Job not found</h2>
-        <p className="text-gray-600 mt-2">The job you&apos;re looking for doesn&apos;t exist.</p>
+        <p className="text-gray-600 mt-2">
+          The job you&apos;re looking for doesn&apos;t exist.
+        </p>
       </div>
     );
   }
@@ -34,7 +36,7 @@ export default function JobDetailsPage() {
   return (
     <div className="space-y-6">
       <JobDetails job={job} />
-      
+
       <div className="flex justify-end">
         <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
           <DialogTrigger asChild>

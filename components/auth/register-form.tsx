@@ -1,24 +1,31 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Eye, EyeOff, Loader2, User, Briefcase } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/lib/hooks/use-auth';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Eye, EyeOff, Loader2, User, Briefcase } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useAuth } from "@/lib/hooks/use-auth";
+import toast from "react-hot-toast";
 
 const registerSchema = z.object({
-  fullName: z.string().min(2, 'Full name is required'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  phone: z.string().min(10, 'Please enter a valid phone number'),
-  role: z.enum(['JOB_SEEKER', 'EMPLOYER']),
+  fullName: z.string().min(2, "Full name is required"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  role: z.enum(["JOB_SEEKER", "EMPLOYER"]),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -37,20 +44,22 @@ export const RegisterForm = () => {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      role: 'JOB_SEEKER',
+      role: "JOB_SEEKER",
     },
   });
 
-  const selectedRole = watch('role');
+  const selectedRole = watch("role");
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
       await registerUser(data);
-      toast.success('Account created successfully!');
-      router.push('/dashboard');
+      toast.success("Account created successfully!");
+      router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Registration failed');
+      toast.error(
+        error instanceof Error ? error.message : "Registration failed",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +68,9 @@ export const RegisterForm = () => {
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-center font-bold">Create Account</CardTitle>
+        <CardTitle className="text-2xl text-center font-bold">
+          Create Account
+        </CardTitle>
         <CardDescription className="text-center">
           Join thousands of professionals finding their dream jobs
         </CardDescription>
@@ -70,8 +81,8 @@ export const RegisterForm = () => {
             <label className="text-sm font-medium">Full Name</label>
             <Input
               placeholder="John Doe"
-              {...register('fullName')}
-              className={errors.fullName ? 'border-red-500' : ''}
+              {...register("fullName")}
+              className={errors.fullName ? "border-red-500" : ""}
             />
             {errors.fullName && (
               <p className="text-sm text-red-500">{errors.fullName.message}</p>
@@ -83,8 +94,8 @@ export const RegisterForm = () => {
             <Input
               type="email"
               placeholder="you@example.com"
-              {...register('email')}
-              className={errors.email ? 'border-red-500' : ''}
+              {...register("email")}
+              className={errors.email ? "border-red-500" : ""}
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -95,17 +106,21 @@ export const RegisterForm = () => {
             <label className="text-sm font-medium">Password</label>
             <div className="relative">
               <Input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                {...register('password')}
-                className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                {...register("password")}
+                className={errors.password ? "border-red-500 pr-10" : "pr-10"}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
             {errors.password && (
@@ -118,8 +133,8 @@ export const RegisterForm = () => {
             <Input
               type="tel"
               placeholder="+1 234 567 8900"
-              {...register('phone')}
-              className={errors.phone ? 'border-red-500' : ''}
+              {...register("phone")}
+              className={errors.phone ? "border-red-500" : ""}
             />
             {errors.phone && (
               <p className="text-sm text-red-500">{errors.phone.message}</p>
@@ -131,12 +146,15 @@ export const RegisterForm = () => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => register('role').onChange({ target: { value: 'JOB_SEEKER' } })}
+                onClick={() =>
+                  register("role").onChange({ target: { value: "JOB_SEEKER" } })
+                }
                 className={`
                   flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all
-                  ${selectedRole === 'JOB_SEEKER' 
-                    ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                    : 'border-gray-200 hover:border-gray-300'
+                  ${
+                    selectedRole === "JOB_SEEKER"
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 hover:border-gray-300"
                   }
                 `}
               >
@@ -145,12 +163,15 @@ export const RegisterForm = () => {
               </button>
               <button
                 type="button"
-                onClick={() => register('role').onChange({ target: { value: 'EMPLOYER' } })}
+                onClick={() =>
+                  register("role").onChange({ target: { value: "EMPLOYER" } })
+                }
                 className={`
                   flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all
-                  ${selectedRole === 'EMPLOYER' 
-                    ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                    : 'border-gray-200 hover:border-gray-300'
+                  ${
+                    selectedRole === "EMPLOYER"
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 hover:border-gray-300"
                   }
                 `}
               >
@@ -172,13 +193,16 @@ export const RegisterForm = () => {
                 Creating account...
               </>
             ) : (
-              'Create Account'
+              "Create Account"
             )}
           </Button>
 
           <div className="text-sm text-center text-gray-600">
-            Already have an account?{' '}
-            <Link href="/login" className="text-blue-600 hover:underline font-medium">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-blue-600 hover:underline font-medium"
+            >
               Sign in
             </Link>
           </div>

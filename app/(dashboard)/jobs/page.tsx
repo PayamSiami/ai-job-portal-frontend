@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { JobList } from '@/components/jobs/job-list';
-import { JobFilters } from '@/components/jobs/job-filters';
-import { useJobs } from '@/lib/hooks/use-jobs';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { JobList } from "@/components/jobs/job-list";
+import { JobFilters } from "@/components/jobs/job-filters";
+import { useJobs } from "@/lib/hooks/use-jobs";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 export default function JobsPage() {
   const [filters, setFilters] = useState({});

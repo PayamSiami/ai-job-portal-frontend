@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Job, ParsedJobFilters } from "@/lib/types";
 import toast from "react-hot-toast";
 import { jobService } from "../services/job.service";
+import { Job, ParsedJobFilters } from "../types/job.types";
 
 interface SearchResult {
   jobs: Job[];

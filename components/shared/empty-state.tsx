@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Search, Briefcase, FileText, Users, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Search, Briefcase, FileText, Users, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface EmptyStateProps {
   title: string;
   description: string;
-  icon?: 'search' | 'briefcase' | 'file' | 'users' | 'alert';
+  icon?: "search" | "briefcase" | "file" | "users" | "alert";
   actionText?: string;
   onAction?: () => void;
 }
@@ -23,7 +23,7 @@ const iconMap = {
 export const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   description,
-  icon = 'search',
+  icon = "search",
   actionText,
   onAction,
 }) => {

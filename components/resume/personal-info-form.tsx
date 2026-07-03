@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -10,57 +10,58 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useResume } from '@/lib/hooks/use-resume';
 import { PersonalInfo } from '@/lib/types/resume.types';
 
-// Define the schema with all fields explicitly
+// Define the schema with optional fields
 const personalInfoSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  headline: z.string().default(''),
+  headline: z.string().optional(),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number is required'),
-  city: z.string().default(''),
-  country: z.string().default(''),
-  linkedinUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
-  githubUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
-  portfolioUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
-  websiteUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  linkedinUrl: z.string().url('Invalid URL').optional(),
+  githubUrl: z.string().url('Invalid URL').optional(),
+  portfolioUrl: z.string().url('Invalid URL').optional(),
+  websiteUrl: z.string().url('Invalid URL').optional(),
 });
 
+// Infer the type with optional fields
 type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;
 
 interface PersonalInfoFormProps {
   resumeId: string;
-  initialData?: PersonalInfo;
+  initialData?: PersonalInfo | null;
 }
 
 export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
   resumeId,
-  initialData,
+  initialData = null,
 }) => {
   const { updatePersonalInfo } = useResume();
 
-  // Create a complete default values object
-  const defaultValues: PersonalInfoFormData = {
+  // Create default values - handle optional fields properly
+  const getDefaultValues = (): PersonalInfoFormData => ({
     firstName: initialData?.firstName || '',
     lastName: initialData?.lastName || '',
-    headline: initialData?.headline || '',
+    headline: initialData?.headline,
     email: initialData?.email || '',
     phone: initialData?.phone || '',
-    city: initialData?.city || '',
-    country: initialData?.country || '',
-    linkedinUrl: initialData?.linkedinUrl || '',
-    githubUrl: initialData?.githubUrl || '',
-    portfolioUrl: initialData?.portfolioUrl || '',
-    websiteUrl: initialData?.websiteUrl || '',
-  };
+    city: initialData?.city,
+    country: initialData?.country,
+    linkedinUrl: initialData?.linkedinUrl,
+    githubUrl: initialData?.githubUrl,
+    portfolioUrl: initialData?.portfolioUrl,
+    websiteUrl: initialData?.websiteUrl,
+  });
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<PersonalInfoFormData>({
     resolver: zodResolver(personalInfoSchema),
-    defaultValues,
+    defaultValues: getDefaultValues(),
   });
 
   // Reset form when initialData changes
@@ -69,50 +70,64 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
       reset({
         firstName: initialData.firstName || '',
         lastName: initialData.lastName || '',
-        headline: initialData.headline || '',
+        headline: initialData.headline,
         email: initialData.email || '',
         phone: initialData.phone || '',
-        city: initialData.city || '',
-        country: initialData.country || '',
-        linkedinUrl: initialData.linkedinUrl || '',
-        githubUrl: initialData.githubUrl || '',
-        portfolioUrl: initialData.portfolioUrl || '',
-        websiteUrl: initialData.websiteUrl || '',
+        city: initialData.city,
+        country: initialData.country,
+        linkedinUrl: initialData.linkedinUrl,
+        githubUrl: initialData.githubUrl,
+        portfolioUrl: initialData.portfolioUrl,
+        websiteUrl: initialData.websiteUrl,
       });
     }
   }, [initialData, reset]);
 
-  // Define the submit handler with proper type
-  const onSubmit = async (data: PersonalInfoFormData) => {
+  // Define the submit handler
+  const onSubmit: SubmitHandler<PersonalInfoFormData> = async (data) => {
     try {
-      // Clean data - remove empty strings for optional fields
+      // Clean data - remove undefined and empty values
       const cleanedData: Partial<PersonalInfo> = {};
       
-      // Include all required fields
+      // Include required fields
       cleanedData.firstName = data.firstName;
       cleanedData.lastName = data.lastName;
       cleanedData.email = data.email;
       cleanedData.phone = data.phone;
       
       // Only include optional fields if they have values
-      if (data.headline) cleanedData.headline = data.headline;
-      if (data.city) cleanedData.city = data.city;
-      if (data.country) cleanedData.country = data.country;
-      if (data.linkedinUrl) cleanedData.linkedinUrl = data.linkedinUrl;
-      if (data.githubUrl) cleanedData.githubUrl = data.githubUrl;
-      if (data.portfolioUrl) cleanedData.portfolioUrl = data.portfolioUrl;
-      if (data.websiteUrl) cleanedData.websiteUrl = data.websiteUrl;
+      if (data.headline && data.headline.trim() !== '') {
+        cleanedData.headline = data.headline;
+      }
+      if (data.city && data.city.trim() !== '') {
+        cleanedData.city = data.city;
+      }
+      if (data.country && data.country.trim() !== '') {
+        cleanedData.country = data.country;
+      }
+      if (data.linkedinUrl && data.linkedinUrl.trim() !== '') {
+        cleanedData.linkedinUrl = data.linkedinUrl;
+      }
+      if (data.githubUrl && data.githubUrl.trim() !== '') {
+        cleanedData.githubUrl = data.githubUrl;
+      }
+      if (data.portfolioUrl && data.portfolioUrl.trim() !== '') {
+        cleanedData.portfolioUrl = data.portfolioUrl;
+      }
+      if (data.websiteUrl && data.websiteUrl.trim() !== '') {
+        cleanedData.websiteUrl = data.websiteUrl;
+      }
       
       await updatePersonalInfo.mutateAsync({
         id: resumeId,
         data: cleanedData,
       });
     } catch (error) {
-      // Error is handled in the hook
       console.error('Failed to update personal info:', error);
     }
   };
 
+  // Rest of the component remains the same...
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Card>

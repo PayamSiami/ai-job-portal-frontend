@@ -1,16 +1,16 @@
-import { apiClient } from '@/lib/api/client';
-import { Resume, PersonalInfo } from '@/lib/types/resume.types';
+import { apiClient } from "@/lib/api/client";
+import { Resume, PersonalInfo } from "@/lib/types/resume.types";
 
 export const resumeService = {
   // Create resume
   async createResume(data: Partial<Resume>): Promise<Resume> {
-    const response = await apiClient.post('/resumes', data);
+    const response = await apiClient.post("/resumes", data);
     return response.data;
   },
 
   // Get user's resumes
   async getMyResumes(): Promise<Resume[]> {
-    const response = await apiClient.get('/resumes/my');
+    const response = await apiClient.get("/resumes/my");
     return response.data;
   },
 
@@ -21,7 +21,10 @@ export const resumeService = {
   },
 
   // Update personal information
-  async updatePersonalInfo(id: string, data: Partial<PersonalInfo>): Promise<Resume> {
+  async updatePersonalInfo(
+    id: string,
+    data: Partial<PersonalInfo>,
+  ): Promise<Resume> {
     const response = await apiClient.put(`/resumes/${id}/personal-info`, data);
     return response.data;
   },
@@ -39,8 +42,13 @@ export const resumeService = {
   },
 
   // Generate AI cover letter
-  async generateCoverLetter(resumeId: string, jobId: string): Promise<{ coverLetter: string }> {
-    const response = await apiClient.post(`/resumes/${resumeId}/cover-letter`, { jobId });
+  async generateCoverLetter(
+    resumeId: string,
+    jobId: string,
+  ): Promise<{ coverLetter: string }> {
+    const response = await apiClient.post(`/resumes/${resumeId}/cover-letter`, {
+      jobId,
+    });
     return response.data;
   },
 

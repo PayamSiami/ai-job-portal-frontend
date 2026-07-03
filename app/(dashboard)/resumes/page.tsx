@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ResumeBuilder } from '@/components/resume/resume-builder';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import { ResumeBuilder } from "@/components/resume/resume-builder";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 export default function ResumesPage() {
   return (

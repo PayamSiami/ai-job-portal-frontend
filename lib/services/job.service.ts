@@ -1,10 +1,7 @@
-import {
-  Job,
-  JobFilters,
-  JobPaginationResult,
-  ParsedJobFilters,
-} from "@/lib/types";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { apiClient } from "../api/client";
+import { Job, JobFilters, JobPaginationResult, ParsedJobFilters } from "../types/job.types";
 
 interface AISearchResponse {
   query: string;

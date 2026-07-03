@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { jobService } from "@/lib/services/job.service";
-import { Job, JobFilters } from "@/lib/types/job.types";
 import toast from "react-hot-toast";
+import { JobFilters } from "../types/job.types";
 
 export const useJobs = () => {
   const queryClient = useQueryClient();

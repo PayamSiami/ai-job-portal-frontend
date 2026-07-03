@@ -2,8 +2,8 @@ export interface Resume {
   id: string;
   candidateId: string;
   title: string;
-  template: 'classic' | 'modern' | 'creative' | 'professional';
-  visibility: 'public' | 'private' | 'link-only';
+  template: "classic" | "modern" | "creative" | "professional";
+  visibility: "public" | "private" | "link-only";
   isDefault: boolean;
   isActive: boolean;
   personalInfo?: PersonalInfo;
@@ -70,7 +70,8 @@ export interface ResumeSkill {
   id: string;
   resumeId: string;
   skillName: string;
-  proficiencyLevel: 'beginner' | 'elementary' | 'intermediate' | 'advanced' | 'expert';
+  proficiencyLevel:
+    "beginner" | "elementary" | "intermediate" | "advanced" | "expert";
   yearsOfExperience: number;
   displayOrder: number;
   createdAt: string;
@@ -97,7 +98,8 @@ export interface Language {
   id: string;
   resumeId: string;
   languageName: string;
-  proficiency: 'basic' | 'conversational' | 'professional' | 'fluent' | 'native';
+  proficiency:
+    "basic" | "conversational" | "professional" | "fluent" | "native";
   displayOrder: number;
   createdAt: string;
   updatedAt: string;

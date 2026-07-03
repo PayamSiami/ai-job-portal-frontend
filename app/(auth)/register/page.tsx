@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
-import { RegisterForm } from '@/components/auth/register-form';
+import { Metadata } from "next";
+import { RegisterForm } from "@/components/auth/register-form";
 
 export const metadata: Metadata = {
-  title: 'Register - Job Portal',
-  description: 'Create your job portal account',
+  title: "Register - Job Portal",
+  description: "Create your job portal account",
 };
 
 export default function RegisterPage() {

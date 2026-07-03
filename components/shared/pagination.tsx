@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PaginationProps {
   currentPage: number;
@@ -40,7 +40,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         if (number - lastNumber === 2) {
           rangeWithDots.push(lastNumber + 1);
         } else if (number - lastNumber !== 1) {
-          rangeWithDots.push('...');
+          rangeWithDots.push("...");
         }
       }
       rangeWithDots.push(number);
@@ -53,7 +53,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className={cn('flex items-center justify-center gap-2', className)}>
+    <div className={cn("flex items-center justify-center gap-2", className)}>
       <Button
         variant="outline"
         size="sm"
@@ -66,13 +66,11 @@ export const Pagination: React.FC<PaginationProps> = ({
       {getPageNumbers().map((page, index) => (
         <Button
           key={index}
-          variant={page === currentPage ? 'default' : 'outline'}
+          variant={page === currentPage ? "default" : "outline"}
           size="sm"
-          onClick={() => typeof page === 'number' && onPageChange(page)}
-          disabled={page === '...' || typeof page !== 'number'}
-          className={cn(
-            typeof page !== 'number' && 'cursor-default'
-          )}
+          onClick={() => typeof page === "number" && onPageChange(page)}
+          disabled={page === "..." || typeof page !== "number"}
+          className={cn(typeof page !== "number" && "cursor-default")}
         >
           {page}
         </Button>
