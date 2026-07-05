@@ -191,8 +191,7 @@ export default function ProfilePage() {
       ?.join('')
       ?.toUpperCase();
   };
-
-  console.log({ displayProfile })
+  
   const getRoleBadge = (role: string) => {
     const styles: Record<string, string> = {
       JOB_SEEKER: 'bg-blue-100 text-blue-800',

@@ -28,7 +28,7 @@ export const JobList: React.FC<JobListProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
+      <div className="flex justify-center items-center min-h-100">
         <LoadingSpinner />
       </div>
     );

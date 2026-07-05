@@ -181,7 +181,7 @@ export default function HomePage() {
       {!results && (
         <section className="container px-4 py-16 w-full flex justify-center">
           <div className="w-full max-w-6xl">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-center text-white">
+            <div className="bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-center text-white">
               <h2 className="text-3xl font-bold mb-4">
                 Ready to Find Your Dream Job?
               </h2>
@@ -195,7 +195,7 @@ export default function HomePage() {
                   </Button>
                 </Link>
                 <Link href="/search">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                  <Button size="lg" variant="ghost" className="border-white text-white">
                     Browse Jobs
                   </Button>
                 </Link>

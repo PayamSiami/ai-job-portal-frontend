@@ -1,0 +1,167 @@
+
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { Calendar, MapPin, Briefcase, DollarSign, Clock, Building, Globe, Sparkles } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Job } from '@/lib/types/job.types';
+import { formatDistanceToNow, formatSalary } from '@/lib/utils/index';
+
+interface JobCardProps {
+  job: Job;
+  featured?: boolean;
+}
+
+export function JobCard({ job, featured }: JobCardProps) {
+  const getExperienceLevelColor = (level: string) => {
+    const colors: Record<string, string> = {
+      entry: 'bg-green-100 text-green-800',
+      mid: 'bg-blue-100 text-blue-800',
+      senior: 'bg-orange-100 text-orange-800',
+      lead: 'bg-purple-100 text-purple-800',
+      executive: 'bg-red-100 text-red-800',
+    };
+    return colors[level] || 'bg-gray-100 text-gray-800';
+  };
+
+  const getWorkModeIcon = (mode: string) => {
+    switch (mode) {
+      case 'remote':
+        return <Globe className="w-4 h-4" />;
+      case 'hybrid':
+        return <Briefcase className="w-4 h-4" />;
+      default:
+        return <Building className="w-4 h-4" />;
+    }
+  };
+
+  const getWorkModeLabel = (mode: string) => {
+    switch (mode) {
+      case 'remote':
+        return 'Remote';
+      case 'hybrid':
+        return 'Hybrid';
+      default:
+        return 'On-site';
+    }
+  };
+
+  return (
+    <Card className={`hover:shadow-lg transition-shadow ${featured ? 'border-blue-200 border-2 bg-blue-50/30' : ''}`}>
+      <CardContent className="p-6">
+        <div className="flex items-start gap-4">
+          <Avatar className="h-12 w-12 rounded-lg">
+            <AvatarImage src={job.company?.logo} />
+            <AvatarFallback className="bg-blue-100 text-blue-600 text-lg rounded-lg">
+              {job.company?.name?.charAt(0) || 'C'}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-4">
+              <Link href={`/jobs/${job._id}`} className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors flex items-center gap-2">
+                  {job.title}
+                  {featured && (
+                    <Badge className="bg-blue-600 text-white text-xs">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Featured
+                    </Badge>
+                  )}
+                </h3>
+              </Link>
+              <div className="flex-shrink-0">
+                <Badge 
+                  variant="outline" 
+                  className="flex items-center gap-1 text-xs"
+                >
+                  {getWorkModeIcon(job.workMode)}
+                  {getWorkModeLabel(job.workMode)}
+                </Badge>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-600">
+              <span className="flex items-center gap-1">
+                <Building className="w-4 h-4" />
+                {job.company?.name}
+              </span>
+              <span className="flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                {job.location?.city}, {job.location?.state}
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                Posted {formatDistanceToNow(new Date(job.createdAt))}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-3">
+              <Badge className={getExperienceLevelColor(job.experienceLevel)}>
+                {job.experienceLevel}
+              </Badge>
+              <Badge variant="outline">{job.employmentType}</Badge>
+              {job.salary?.min && job.salary?.max && (
+                <Badge variant="secondary">
+                  <DollarSign className="w-3 h-3 mr-1" />
+                  {formatSalary(job.salary.min)} - {formatSalary(job.salary.max)}
+                </Badge>
+              )}
+              {job.isFeatured && (
+                <Badge className="bg-yellow-100 text-yellow-800">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  Top Match
+                </Badge>
+              )}
+            </div>
+
+            <p className="mt-3 text-sm text-gray-600 line-clamp-2">
+              {job.description}
+            </p>
+
+            {job.requiredSkills?.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-3">
+                {job.requiredSkills.slice(0, 5).map((skill) => (
+                  <Badge key={skill} variant="secondary" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+                {job.requiredSkills.length > 5 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{job.requiredSkills.length - 5} more
+                  </Badge>
+                )}
+              </div>
+            )}
+
+            <div className="flex items-center justify-between mt-4 pt-4 border-t">
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                {job.applications && (
+                  <span className="flex items-center gap-1">
+                    <span className="font-medium">{job.applications.length}</span> applicants
+                  </span>
+                )}
+                {job.employmentType && (
+                  <span className="flex items-center gap-1">
+                    <Briefcase className="w-4 h-4" />
+                    {job.employmentType}
+                  </span>
+                )}
+              </div>
+
+              <Link href={`/jobs/${job._id}`}>
+                <Button variant="outline" size="sm" className="hover:bg-blue-50">
+                  View Details
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

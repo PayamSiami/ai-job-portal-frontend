@@ -1,84 +1,89 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Job {
   _id: string;
   title: string;
-  company: string;
-  location: string;
-  minSalary: number;
-  maxSalary: number;
-  experienceLevel: 'entry' | 'mid' | 'senior' | 'lead';
-  workMode: 'remote' | 'hybrid' | 'on-site';
-  jobType: 'full-time' | 'part-time' | 'contract' | 'internship';
   description: string;
-  requirements?: string;
-  benefits?: string;
-  skills: string[];
-  tags: string[];
-  postedBy: string;
+  company: {
+    name: string;
+    logo?: string;
+    website?: string;
+  };
+  location: {
+    city: string;
+    state: string;
+    country: string;
+  };
+  isRemote: boolean;
+  workMode: 'remote' | 'hybrid' | 'on-site';
+  employmentType: 'full-time' | 'part-time' | 'contract' | 'internship';
+  experienceLevel: 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
+  salary?: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  requiredSkills: string[];
+  preferredSkills?: string[];
+  responsibilities?: string[];
+  benefits?: string[];
   isActive: boolean;
+  isFeatured: boolean;
+  postedBy: string;
+  applications?: any[];
   createdAt: string;
   updatedAt: string;
 }
 
-export interface ParsedJobFilters {
-  rawQuery?: string;
-  title: string | null;
-  location: string | null;
-  minSalary: number | null;
-  maxSalary: number | null;
-  experienceLevel: string | null;
-  workMode: string | null;
-  jobType: string | null;
-  skills: string[] | null;
-}
-
 export interface JobFilters {
+  page?: number;
+  limit?: number;
   title?: string;
+  company?: string;
   location?: string;
+  workMode?: 'remote' | 'hybrid' | 'on-site';
+  employmentType?: 'full-time' | 'part-time' | 'contract' | 'internship';
   minSalary?: number;
   maxSalary?: number;
-  experienceLevel?: string;
-  workMode?: string;
-  jobType?: string;
-  tags?: string[];
+  experienceLevel?: 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
+  skills?: string[];
+  isActive?: boolean;
+  isFeatured?: boolean;
+  postedBy?: string;
 }
 
-export interface JobPaginationResult {
+export interface JobSearchResponse {
   jobs: Job[];
   pagination: {
     page: number;
     limit: number;
     total: number;
-    pages: number;
+    totalPages: number;
   };
 }
 
-export interface CreateJobData {
-  title: string;
+export interface AISearchResponse {
+  query: string;
+  parsedFilters: {
+    title?: string;
+    location?: string;
+    workMode?: string;
+    employmentType?: string;
+    minSalary?: number;
+    maxSalary?: number;
+    experienceLevel?: string;
+    skills?: string[];
+  };
+  results: JobSearchResponse;
+}
+
+export interface GenerateJobContentRequest {
+  jobTitle: string;
+}
+
+export interface GenerateJobContentResponse {
   description: string;
-  requirements: string;
-  responsibilities: string;
-  benefits: string;
-  companyId?: string;
-  location: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    zipCode: string;
-  };
-  salary: {
-    min: number;
-    max: number;
-  };
-  jobType: 'full-time' | 'part-time' | 'contract' | 'internship' | 'freelance';
-  workMode: 'remote' | 'hybrid' | 'on-site';
-  experienceLevel: 'entry' | 'junior' | 'mid' | 'senior' | 'lead' | 'executive';
-  openings: number;
-  applicationDeadline?: string;
-  tags: string[];
+  responsibilities: string[];
+  requirements: string[];
+  benefits: string[];
   skills: string[];
-}
-
-export interface UpdateJobData extends Partial<CreateJobData> {
-  id: string;
 }

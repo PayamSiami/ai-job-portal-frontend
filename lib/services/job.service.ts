@@ -1,69 +1,46 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from 'axios';
 
-import { apiClient } from "../api/client";
-import { Job, JobFilters, JobPaginationResult, ParsedJobFilters } from "../types/job.types";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-interface AISearchResponse {
-  query: string;
-  parsedFilters: ParsedJobFilters;
-  results: JobPaginationResult;
-}
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add auth token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const jobService = {
-  // AI-powered search
-  async aiSearch(query: string): Promise<AISearchResponse> {
-    const response = await apiClient.get("/jobs/search/ai", {
-      params: { query },
-    });
+  // Create new job (employer only)
+  async createJob(jobData: any): Promise<any> {
+    const response = await api.post('/jobs', jobData);
     return response.data;
   },
 
-  // Get jobs with filters
-  async getJobs(filters?: JobFilters, page: number = 1, limit: number = 20) {
-    const response = await apiClient.get("/jobs", {
-      params: { ...filters, page, limit },
-    });
+  // Generate job content using AI (employer only)
+  async generateJobContent(request: { jobTitle: string }): Promise<any> {
+    const response = await api.post('/jobs/generate-content', request);
+    return response.data;
+  },
+
+  // Get all jobs for employer
+  async getEmployerJobs(): Promise<any> {
+    const response = await api.get('/jobs/employer');
     return response.data;
   },
 
   // Get job by ID
-  async getJobById(id: string): Promise<Job> {
-    const response = await apiClient.get(`/jobs/${id}`);
+  async getJobById(id: string): Promise<any> {
+    const response = await api.get(`/jobs/${id}`);
     return response.data;
-  },
-
-  // Get jobs by company
-  async getJobsByCompany(companyId: string): Promise<Job[]> {
-    const response = await apiClient.get(`/jobs/company/${companyId}`);
-    return response.data;
-  },
-
-  // Employer: Create job
-  async createJob(data: any): Promise<Job> {
-    const response = await apiClient.post("/jobs", data);
-    return response.data;
-  },
-
-  // Employer: Update job
-  async updateJob(id: string, data: any): Promise<Job> {
-    const response = await apiClient.put(`/jobs/${id}`, data);
-    return response.data;
-  },
-
-  // Employer: Publish job
-  async publishJob(id: string): Promise<Job> {
-    const response = await apiClient.patch(`/jobs/${id}/publish`);
-    return response.data;
-  },
-
-  // Employer: Close job
-  async closeJob(id: string): Promise<Job> {
-    const response = await apiClient.patch(`/jobs/${id}/close`);
-    return response.data;
-  },
-
-  // Employer: Delete job
-  async deleteJob(id: string): Promise<void> {
-    await apiClient.delete(`/jobs/${id}`);
   },
 };
