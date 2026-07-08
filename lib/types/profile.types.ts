@@ -2,7 +2,7 @@ export interface UserProfile {
   id: string;
   email: string;
   username: string;
-  role: "JOB_SEEKER" | "EMPLOYER" | "ADMIN";
+  role: "job_seeker" | "employer";
   profile: {
     fullName: string;
     phone: string;

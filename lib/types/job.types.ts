@@ -1,37 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Job {
   _id: string;
   title: string;
-  description: string;
-  company: {
-    name: string;
-    logo?: string;
-    website?: string;
-  };
-  location: {
-    city: string;
-    state: string;
-    country: string;
-  };
-  isRemote: boolean;
-  workMode: 'remote' | 'hybrid' | 'on-site';
-  employmentType: 'full-time' | 'part-time' | 'contract' | 'internship';
-  experienceLevel: 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
-  salary?: {
-    min: number;
-    max: number;
-    currency: string;
-  };
-  requiredSkills: string[];
-  preferredSkills?: string[];
-  responsibilities?: string[];
-  benefits?: string[];
-  isActive: boolean;
-  isFeatured: boolean;
+  company: string;
+  location: string;
+  salary?: number;
+  minSalary?: number;
+  maxSalary?: number;
+  experienceLevel?: "entry" | "mid" | "senior" | "lead";
+  workMode?: "remote" | "hybrid" | "on-site";
+  jobType?: "full-time" | "part-time" | "contract" | "internship";
+  description?: string;
+  requirements?: string;
+  benefits?: string;
+  skills: string[]; // ✅ Fixed: Added type
+  tags: string[];
   postedBy: string;
-  applications?: any[];
-  createdAt: string;
-  updatedAt: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface JobFilters {
@@ -40,11 +26,11 @@ export interface JobFilters {
   title?: string;
   company?: string;
   location?: string;
-  workMode?: 'remote' | 'hybrid' | 'on-site';
-  employmentType?: 'full-time' | 'part-time' | 'contract' | 'internship';
+  workMode?: "remote" | "hybrid" | "on-site";
+  employmentType?: "full-time" | "part-time" | "contract" | "internship";
   minSalary?: number;
   maxSalary?: number;
-  experienceLevel?: 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
+  experienceLevel?: "entry" | "mid" | "senior" | "lead" | "executive";
   skills?: string[];
   isActive?: boolean;
   isFeatured?: boolean;

@@ -4,7 +4,7 @@ export interface User {
   email: string;
   phone: string;
   profileImage?: string;
-  role: 'JOB_SEEKER' | 'EMPLOYER' | 'ADMIN';
+  role: 'job_seeker' | 'employer';
   status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'DELETED';
   lastLogin?: string;
   createdAt: string;
@@ -17,11 +17,10 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  fullName: string;
+  username: string;
   email: string;
   password: string;
-  phone: string;
-  role: 'JOB_SEEKER' | 'EMPLOYER';
+  role: 'job_seeker' | 'employer';
 }
 
 export interface AuthResponse {

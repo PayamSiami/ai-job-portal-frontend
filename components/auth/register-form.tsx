@@ -21,11 +21,10 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import toast from "react-hot-toast";
 
 const registerSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
+  username: z.string().min(2, "Full name is required"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
-  role: z.enum(["JOB_SEEKER", "EMPLOYER"]),
+  role: z.enum(["job_seeker", "employer"]),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -44,7 +43,7 @@ export const RegisterForm = () => {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      role: "JOB_SEEKER",
+      role: "job_seeker",
     },
   });
 
@@ -78,14 +77,14 @@ export const RegisterForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Full Name</label>
+            <label className="text-sm font-medium">Username</label>
             <Input
               placeholder="John Doe"
-              {...register("fullName")}
-              className={errors.fullName ? "border-red-500" : ""}
+              {...register("username")}
+              className={errors.username ? "border-red-500" : ""}
             />
-            {errors.fullName && (
-              <p className="text-sm text-red-500">{errors.fullName.message}</p>
+            {errors.username && (
+              <p className="text-sm text-red-500">{errors.username.message}</p>
             )}
           </div>
 
@@ -129,30 +128,17 @@ export const RegisterForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Phone Number</label>
-            <Input
-              type="tel"
-              placeholder="+1 234 567 8900"
-              {...register("phone")}
-              className={errors.phone ? "border-red-500" : ""}
-            />
-            {errors.phone && (
-              <p className="text-sm text-red-500">{errors.phone.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
             <label className="text-sm font-medium">I am a</label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() =>
-                  register("role").onChange({ target: { value: "JOB_SEEKER" } })
+                  register("role").onChange({ target: { value: "job_seeker" } })
                 }
                 className={`
                   flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all
                   ${
-                    selectedRole === "JOB_SEEKER"
+                    selectedRole === "job_seeker"
                       ? "border-blue-500 bg-blue-50 text-blue-700"
                       : "border-gray-200 hover:border-gray-300"
                   }
@@ -164,12 +150,12 @@ export const RegisterForm = () => {
               <button
                 type="button"
                 onClick={() =>
-                  register("role").onChange({ target: { value: "EMPLOYER" } })
+                  register("role").onChange({ target: { value: "employer" } })
                 }
                 className={`
                   flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all
                   ${
-                    selectedRole === "EMPLOYER"
+                    selectedRole === "employer"
                       ? "border-blue-500 bg-blue-50 text-blue-700"
                       : "border-gray-200 hover:border-gray-300"
                   }

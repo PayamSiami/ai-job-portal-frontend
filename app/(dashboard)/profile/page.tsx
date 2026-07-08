@@ -194,9 +194,8 @@ export default function ProfilePage() {
   
   const getRoleBadge = (role: string) => {
     const styles: Record<string, string> = {
-      JOB_SEEKER: 'bg-blue-100 text-blue-800',
-      EMPLOYER: 'bg-purple-100 text-purple-800',
-      ADMIN: 'bg-red-100 text-red-800',
+      job_seeker: 'bg-blue-100 text-blue-800',
+      employer: 'bg-purple-100 text-purple-800',
     };
     return styles[role] || 'bg-gray-100 text-gray-800';
   };

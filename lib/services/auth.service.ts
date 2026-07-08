@@ -13,7 +13,7 @@ export const authService = {
   },
 
   async register(data: RegisterRequest): Promise<AuthResponse> {
-    const response = await apiClient.post('/auth/signup', data);
+    const response = await apiClient.post('/auth/register', data);
     return response.data;
   },
 

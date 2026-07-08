@@ -35,7 +35,6 @@ import {
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/search", label: "Search", icon: Search },
   { href: "/jobs", label: "Jobs", icon: Briefcase },
   { href: "/saved-jobs", label: "Saved", icon: Heart },
   { href: "/resumes", label: "Resumes", icon: FileText },
@@ -52,7 +51,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const isEmployer = user?.role === "EMPLOYER";
+  const isEmployer = user?.role === "employer";
 
   const displayNavItems = isEmployer ? employerNavItems : navItems;
 
