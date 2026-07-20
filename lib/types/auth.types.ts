@@ -4,7 +4,7 @@ export interface User {
   email: string;
   phone: string;
   profileImage?: string;
-  role: 'job_seeker' | 'employer';
+  role: 'job-seeker' | 'employer';
   status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'DELETED';
   lastLogin?: string;
   createdAt: string;
@@ -20,7 +20,7 @@ export interface RegisterRequest {
   username: string;
   email: string;
   password: string;
-  role: 'job_seeker' | 'employer';
+  role: 'job-seeker' | 'employer';
 }
 
 export interface AuthResponse {

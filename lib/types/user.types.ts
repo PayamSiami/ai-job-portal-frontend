@@ -9,7 +9,7 @@ export interface User {
   title?: string;
   website?: string;
   avatar?: string;
-  role: 'job_seeker' | 'employer' | 'admin';
+  role: 'job-seeker' | 'employer' | 'admin';
   notificationPreferences: {
     emailNotifications: boolean;
     jobAlerts: boolean;

@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2, User, Briefcase } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,7 +24,7 @@ const registerSchema = z.object({
   username: z.string().min(2, "Full name is required"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["job_seeker", "employer"]),
+  role: z.enum(["job-seeker", "employer"]),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -39,15 +39,13 @@ export const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      role: "job_seeker",
+      role: "job-seeker",
     },
   });
 
-  const selectedRole = watch("role");
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
@@ -101,7 +99,7 @@ export const RegisterForm = () => {
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 mb-2">
             <label className="text-sm font-medium">Password</label>
             <div className="relative">
               <Input
@@ -124,49 +122,6 @@ export const RegisterForm = () => {
             </div>
             {errors.password && (
               <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">I am a</label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() =>
-                  register("role").onChange({ target: { value: "job_seeker" } })
-                }
-                className={`
-                  flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all
-                  ${
-                    selectedRole === "job_seeker"
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-gray-200 hover:border-gray-300"
-                  }
-                `}
-              >
-                <User className="h-5 w-5" />
-                <span className="text-sm font-medium">Job Seeker</span>
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  register("role").onChange({ target: { value: "employer" } })
-                }
-                className={`
-                  flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all
-                  ${
-                    selectedRole === "employer"
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-gray-200 hover:border-gray-300"
-                  }
-                `}
-              >
-                <Briefcase className="h-5 w-5" />
-                <span className="text-sm font-medium">Employer</span>
-              </button>
-            </div>
-            {errors.role && (
-              <p className="text-sm text-red-500">{errors.role.message}</p>
             )}
           </div>
         </CardContent>
