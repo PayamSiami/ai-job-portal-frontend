@@ -492,7 +492,7 @@ export default function SearchPage() {
             {!isLoading && !isError && jobs.length > 0 && (
               <div className="space-y-4">
                 {jobs.map((job: Job) => (
-                  <JobCard key={job._id} job={job} featured={job.isFeatured} />
+                  <JobCard key={job._id} job={job} featured={job.skills.length > 0} />
                 ))}
               </div>
             )}

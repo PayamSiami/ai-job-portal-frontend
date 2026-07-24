@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, MapPin, Briefcase, DollarSign, Clock, Building, Globe, Sparkles } from 'lucide-react';
+import { MapPin, Briefcase, DollarSign, Clock, Building, Globe, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,7 +13,7 @@ import { Job } from '@/lib/types/job.types';
 import { formatDistanceToNow, formatSalary } from '@/lib/utils/index';
 
 interface JobCardProps {
-  job: Job;
+  job: Job | any;
   featured?: boolean;
 }
 
@@ -75,8 +76,8 @@ export function JobCard({ job, featured }: JobCardProps) {
                 </h3>
               </Link>
               <div className="flex-shrink-0">
-                <Badge 
-                  variant="outline" 
+                <Badge
+                  variant="outline"
                   className="flex items-center gap-1 text-xs"
                 >
                   {getWorkModeIcon(job.workMode)}
@@ -125,7 +126,7 @@ export function JobCard({ job, featured }: JobCardProps) {
 
             {job.requiredSkills?.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-3">
-                {job.requiredSkills.slice(0, 5).map((skill) => (
+                {job.requiredSkills.slice(0, 5).map((skill: any) => (
                   <Badge key={skill} variant="secondary" className="text-xs">
                     {skill}
                   </Badge>
