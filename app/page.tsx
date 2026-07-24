@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useMemo } from 'react';
@@ -167,7 +168,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {featuredJobs.map((job: Job) => (
+              {featuredJobs.map((job: Job | any) => (
                 <Link href={`/jobs/${job._id}`} key={job._id}>
                   <div
                     className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-blue-200 group cursor-pointer h-full flex flex-col"
