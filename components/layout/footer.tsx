@@ -7,7 +7,7 @@ import { FaGithub, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 export const Footer = () => {
   return (
-    <footer className="border-t bg-white">
+    <footer className="border-t bg-white" dir="rtl">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -16,10 +16,10 @@ export const Footer = () => {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
                 <Sparkles className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">JobAI</span>
+              <span className="text-xl font-bold text-gray-900">جاب‌آی</span>
             </Link>
             <p className="text-sm text-gray-600 max-w-sm">
-              Find your dream job with AI-powered search. Connect with top companies and take your career to the next level.
+              شغل رویایی خود را با جستجوی مبتنی بر هوش مصنوعی پیدا کنید. به شرکت‌های برتر متصل شوید و حرفه خود را به سطح بعدی ببرید.
             </p>
             <div className="flex items-center gap-4 mt-4">
               <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -39,26 +39,26 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">For Job Seekers</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">برای جویندگان کار</h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
                 <Link href="/jobs" className="hover:text-blue-600 transition-colors">
-                  Browse Jobs
+                  مشاهده مشاغل
                 </Link>
               </li>
               <li>
                 <Link href="/resumes" className="hover:text-blue-600 transition-colors">
-                  Resume Builder
+                  ساخت رزومه
                 </Link>
               </li>
               <li>
                 <Link href="/search" className="hover:text-blue-600 transition-colors">
-                  AI Search
+                  جستجوی هوش مصنوعی
                 </Link>
               </li>
               <li>
                 <Link href="/saved-jobs" className="hover:text-blue-600 transition-colors">
-                  Saved Jobs
+                  مشاغل ذخیره شده
                 </Link>
               </li>
             </ul>
@@ -66,26 +66,26 @@ export const Footer = () => {
 
           {/* For Employers */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">For Employers</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">برای کارفرمایان</h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
                 <Link href="/employer/dashboard" className="hover:text-blue-600 transition-colors">
-                  Dashboard
+                  داشبورد
                 </Link>
               </li>
               <li>
                 <Link href="/employer/jobs/create" className="hover:text-blue-600 transition-colors">
-                  Post a Job
+                  ثبت آگهی شغلی
                 </Link>
               </li>
               <li>
                 <Link href="/employer/applications" className="hover:text-blue-600 transition-colors">
-                  Review Applications
+                  بررسی درخواست‌ها
                 </Link>
               </li>
               <li>
                 <Link href="/employer/company" className="hover:text-blue-600 transition-colors">
-                  Company Profile
+                  پروفایل شرکت
                 </Link>
               </li>
             </ul>
@@ -93,16 +93,16 @@ export const Footer = () => {
         </div>
 
         <div className="border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
-          <p>&copy; 2026 JobAI. All rights reserved.</p>
+          <p>© ۲۰۲۶ جاب‌آی. تمام حقوق محفوظ است.</p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-blue-600 transition-colors">
-              Privacy Policy
+              سیاست حریم خصوصی
             </Link>
             <Link href="/terms" className="hover:text-blue-600 transition-colors">
-              Terms of Service
+              شرایط خدمات
             </Link>
             <Link href="/cookies" className="hover:text-blue-600 transition-colors">
-              Cookie Policy
+              سیاست کوکی
             </Link>
           </div>
         </div>

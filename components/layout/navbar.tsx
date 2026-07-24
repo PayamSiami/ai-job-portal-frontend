@@ -19,6 +19,7 @@ import {
   FileText,
   Building,
   LayoutDashboard,
+  FileCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
@@ -34,17 +35,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/jobs", label: "Jobs", icon: Briefcase },
-  { href: "/saved-jobs", label: "Saved", icon: Heart },
-  { href: "/resumes", label: "Resumes", icon: FileText },
+  { href: "/", label: "خانه", icon: Home },
+  { href: "/jobs", label: "مشاغل", icon: Briefcase },
+  { href: "/saved-jobs", label: "ذخیره شده", icon: Heart },
+  { href: "/resumes", label: "رزومه‌ها", icon: FileText },
+  { href: "/applications", label: "درخواست ها", icon: FileCheck },
 ];
 
 const employerNavItems = [
-  { href: "/employer/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/employer/jobs", label: "My Jobs", icon: Briefcase },
-  { href: "/employer/applications", label: "Applications", icon: Search },
-  { href: "/employer/company", label: "Company", icon: Building },
+  { href: "/employer/dashboard", label: "داشبورد", icon: LayoutDashboard },
+  { href: "/employer/jobs", label: "مشاغل من", icon: Briefcase },
+  { href: "/employer/applications", label: "درخواست‌ها", icon: Search },
+  { href: "/employer/company", label: "شرکت", icon: Building },
 ];
 
 export const Navbar = () => {
@@ -56,14 +58,14 @@ export const Navbar = () => {
   const displayNavItems = isEmployer ? employerNavItems : navItems;
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 flex justify-center">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 flex justify-center" dir="rtl">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-gray-900">JobAI</span>
+          <span className="text-xl font-bold text-gray-900">جاب‌آی</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -95,8 +97,8 @@ export const Navbar = () => {
             <>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                  3
+                <span className="absolute -left-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  ۳
                 </span>
               </Button>
 
@@ -114,13 +116,13 @@ export const Navbar = () => {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuContent className="w-56" align="start" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
+                      <p className="text-sm font-medium leading-none text-right">
                         {user.fullName}
                       </p>
-                      <p className="text-xs leading-none text-gray-500">
+                      <p className="text-xs leading-none text-gray-500 text-right">
                         {user.email}
                       </p>
                     </div>
@@ -128,20 +130,20 @@ export const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard" className="cursor-pointer">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
+                      <LayoutDashboard className="ml-2 h-4 w-4" />
+                      <span>داشبورد</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+                      <User className="ml-2 h-4 w-4" />
+                      <span>پروفایل</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/settings" className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                      <Settings className="ml-2 h-4 w-4" />
+                      <span>تنظیمات</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -149,8 +151,8 @@ export const Navbar = () => {
                     onClick={logout}
                     className="cursor-pointer text-red-600 focus:text-red-600"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <LogOut className="ml-2 h-4 w-4" />
+                    <span>خروج</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -158,10 +160,10 @@ export const Navbar = () => {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="ghost">Sign In</Button>
+                <Button variant="ghost">ورود</Button>
               </Link>
               <Link href="/register">
-                <Button>Sign Up</Button>
+                <Button>ثبت‌نام</Button>
               </Link>
             </>
           )}
@@ -220,7 +222,7 @@ export const Navbar = () => {
                 className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
               >
                 <LogOut className="h-4 w-4" />
-                Log out
+                خروج
               </button>
             ) : (
               <>
@@ -229,14 +231,14 @@ export const Navbar = () => {
                   className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Sign In
+                  ورود
                 </Link>
                 <Link
                   href="/register"
                   className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Sign Up
+                  ثبت‌نام
                 </Link>
               </>
             )}

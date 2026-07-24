@@ -25,13 +25,13 @@ import { Badge } from "@/components/ui/badge";
 import { applicationService } from "@/lib/services/application.service";
 
 const applicationSchema = z.object({
-  resumeId: z.string().min(1, "Please select a resume"),
+  resumeId: z.string().min(1, "لطفاً یک رزومه انتخاب کنید"),
   coverLetter: z
     .string()
-    .min(50, "Cover letter must be at least 50 characters")
-    .max(2000, "Cover letter must be less than 2000 characters"),
-  expectedSalary: z.number().min(0, "Expected salary is required"),
-  availableFrom: z.string().min(1, "Please select your availability"),
+    .min(50, "نامه پوششی باید حداقل ۵۰ کاراکتر باشد")
+    .max(2000, "نامه پوششی باید کمتر از ۲۰۰۰ کاراکتر باشد"),
+  expectedSalary: z.number().min(0, "حقوق مورد انتظار الزامی است"),
+  availableFrom: z.string().min(1, "لطفاً تاریخ آمادگی خود را انتخاب کنید"),
 });
 
 type ApplicationFormData = z.infer<typeof applicationSchema>;
@@ -49,13 +49,21 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
   const queryClient = useQueryClient();
 
   // Fetch resumes
-  const { data, isLoading, error } = useQuery({
+  const { data: resumes, isLoading, error } = useQuery({
     queryKey: ['resumes', 'all'],
     queryFn: () => resumeService.getResumes({ status: 'all' }),
   });
 
-  const resumes = data?.data || [];
-  const hasResumes = resumes.length > 0;
+  const hasResumes = resumes?.length > 0;
+
+  // Get today's date in YYYY-MM-DD format safely
+  const getTodayDate = (): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   const {
     register,
@@ -66,21 +74,27 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
+      resumeId: "",
+      coverLetter: "",
       expectedSalary: 0,
-      availableFrom: new Date().toISOString().split('T')[0],
+      availableFrom: getTodayDate(),
     },
   });
+
 
   const coverLetter = watch("coverLetter");
   const selectedResumeId = watch("resumeId");
 
   // Get selected resume details
-  const selectedResume = resumes.find((r: Resume) => r._id === selectedResumeId);
+  const selectedResume = resumes?.find((r: Resume) => r._id === selectedResumeId);
 
-  // ✅ Fixed: Submit application mutation
+  // Submit application mutation
   const submitApplication = useMutation({
     mutationFn: (data: ApplicationFormData) => {
-      // Make sure all required fields are present
+      if (!jobId) {
+        throw new Error("شناسه شغل یافت نشد");
+      }
+
       const applicationData = {
         jobId: jobId,
         resumeId: data.resumeId,
@@ -91,24 +105,23 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       return applicationService.applyJob(applicationData);
     },
     onSuccess: () => {
-      toast.success('Application submitted successfully!');
+      toast.success('درخواست با موفقیت ارسال شد!');
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       if (onSuccess) onSuccess();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'Failed to submit application');
+      toast.error(error?.response?.data?.error || error?.message || 'ارسال درخواست با شکست مواجه شد');
     },
   });
 
   const handleGenerateCoverLetter = async () => {
     if (!selectedResume) {
-      toast.error("Please select a resume first");
+      toast.error("لطفاً ابتدا یک رزومه انتخاب کنید");
       return;
     }
 
     setIsGeneratingCoverLetter(true);
     try {
-      // ✅ Use the correct API endpoint
       const response = await fetch(`/api/resumes/${selectedResumeId}/generate-cover-letter`, {
         method: 'POST',
         headers: {
@@ -122,27 +135,16 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData?.error || 'Failed to generate cover letter');
+        throw new Error(errorData?.error || 'تولید نامه پوششی با شکست مواجه شد');
       }
 
       const result = await response.json();
-      const generated = result.data?.coverLetter || `Dear Hiring Manager,
-
-I am writing to express my strong interest in the position at your company. With my background in ${selectedResume.personalInfo?.title || 'my field'} and passion for technology, I am confident that my skills and experience make me an ideal candidate for this role.
-
-Throughout my career, I have developed expertise in ${selectedResume.skills?.map((s: any) => s.name).join(', ') || 'various technologies'} and successfully delivered high-impact solutions. I am particularly drawn to this opportunity because of your company's reputation for innovation and excellence.
-
-I am excited about the possibility of contributing to your team and would welcome the opportunity to discuss how my background aligns with your needs.
-
-Thank you for your consideration.
-
-Best regards,
-${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.lastName || ''}`;
+      const generated = result.data?.coverLetter;
 
       setValue("coverLetter", generated);
-      toast.success("Cover letter generated successfully!");
+      toast.success("نامه پوششی با موفقیت تولید شد!");
     } catch (error) {
-      toast.error("Failed to generate cover letter");
+      toast.error("تولید نامه پوششی با شکست مواجه شد");
       console.error('Cover letter generation error:', error);
     } finally {
       setIsGeneratingCoverLetter(false);
@@ -157,9 +159,9 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="p-12 text-center">
+        <CardContent className="p-12 text-center" dir="rtl">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
-          <p className="mt-4 text-gray-600">Loading your resumes...</p>
+          <p className="mt-4 text-gray-600">در حال بارگذاری رزومه‌های شما...</p>
         </CardContent>
       </Card>
     );
@@ -169,14 +171,14 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
   if (error) {
     return (
       <Card>
-        <CardContent className="p-12 text-center">
-          <p className="text-red-500">Failed to load resumes</p>
+        <CardContent className="p-12 text-center" dir="rtl">
+          <p className="text-red-500">بارگذاری رزومه‌ها با شکست مواجه شد</p>
           <Button
             variant="outline"
             className="mt-4"
             onClick={() => window.location.reload()}
           >
-            Try Again
+            تلاش مجدد
           </Button>
         </CardContent>
       </Card>
@@ -187,14 +189,14 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
   if (!hasResumes) {
     return (
       <Card>
-        <CardContent className="p-12 text-center">
+        <CardContent className="p-12 text-center" dir="rtl">
           <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Resumes Found</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">هیچ رزومه‌ای یافت نشد</h3>
           <p className="text-gray-600 mb-4">
-            You need to create a resume before you can apply for jobs.
+            قبل از درخواست برای مشاغل، باید یک رزومه ایجاد کنید.
           </p>
           <Button onClick={() => window.location.href = '/resumes/create'}>
-            Create Resume
+            ایجاد رزومه
           </Button>
         </CardContent>
       </Card>
@@ -207,19 +209,19 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
         <CardContent className="p-6 space-y-6">
           {/* Resume Selection */}
           <div className="space-y-2">
-            <Label>Select Resume</Label>
+            <Label>انتخاب رزومه</Label>
             <Select onValueChange={(value) => setValue("resumeId", value)}>
               <SelectTrigger className={errors.resumeId ? "border-red-500" : ""}>
-                <SelectValue placeholder="Choose a resume" />
+                <SelectValue placeholder="انتخاب رزومه" />
               </SelectTrigger>
               <SelectContent>
-                {resumes.map((resume: Resume) => (
-                  <SelectItem key={resume._id} value={resume._id}>
+                {resumes.map((resume: Resume, id: React.Key | null | undefined) => (
+                  <SelectItem key={id} value={resume._id}>
                     <div className="flex items-center gap-2">
                       <span>{resume.title}</span>
                       {resume.isDefault && (
                         <Badge variant="outline" className="text-xs">
-                          Default
+                          پیش‌فرض
                         </Badge>
                       )}
                       <span className="text-xs text-gray-400">
@@ -236,22 +238,22 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
             {selectedResume && (
               <div className="mt-2 p-3 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Selected Resume:</span> {selectedResume.title}
+                  <span className="font-medium">رزومه انتخاب شده:</span> {selectedResume.title}
                 </p>
                 {selectedResume.personalInfo?.summary && (
-                  <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                  <p className="text-sm text-gray-500 mt-1 line-clamp-2 text-right">
                     {selectedResume.personalInfo.summary}
                   </p>
                 )}
                 <div className="flex flex-wrap gap-1 mt-2">
-                  {selectedResume.skills?.slice(0, 5).map((skill: any) => (
-                    <Badge key={skill.name} variant="secondary" className="text-xs">
+                  {selectedResume.skills?.slice(0, 5).map((skill: any, id: React.Key | null | undefined) => (
+                    <Badge key={id} variant="secondary" className="text-xs">
                       {skill.name}
                     </Badge>
                   ))}
                   {selectedResume.skills?.length > 5 && (
                     <Badge variant="secondary" className="text-xs">
-                      +{selectedResume.skills.length - 5} more
+                      +{selectedResume.skills.length - 5} بیشتر
                     </Badge>
                   )}
                 </div>
@@ -262,7 +264,7 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
           {/* Cover Letter */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Cover Letter</Label>
+              <Label>نامه پوششی</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -276,13 +278,13 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
                 ) : (
                   <Sparkles className="w-4 h-4" />
                 )}
-                Generate with AI
+                تولید با هوش مصنوعی
               </Button>
             </div>
             <Textarea
               {...register("coverLetter")}
               rows={8}
-              placeholder="Write your cover letter here or generate with AI..."
+              placeholder="نامه پوششی خود را بنویسید یا با هوش مصنوعی تولید کنید..."
               className={errors.coverLetter ? "border-red-500" : ""}
             />
             {errors.coverLetter && (
@@ -291,18 +293,18 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
               </p>
             )}
             <div className="flex justify-between text-xs text-gray-500">
-              <span>{coverLetter?.length || 0} characters</span>
-              <span>{coverLetter?.length < 50 ? `Need ${50 - (coverLetter?.length || 0)} more characters` : '✓ Minimum reached'}</span>
+              <span>{coverLetter?.length || 0} کاراکتر</span>
+              <span>{coverLetter?.length < 50 ? `حداقل ${50 - (coverLetter?.length || 0)} کاراکتر دیگر نیاز است` : '✓ حداقل مقدار رسیده است'}</span>
             </div>
           </div>
 
           {/* Expected Salary */}
           <div className="space-y-2">
-            <Label>Expected Salary (USD)</Label>
+            <Label>حقوق مورد انتظار (تومان)</Label>
             <Input
               type="number"
               {...register("expectedSalary", { valueAsNumber: true })}
-              placeholder="e.g., 70000"
+              placeholder="مثال: ۷۰۰۰۰۰۰۰"
               className={errors.expectedSalary ? "border-red-500" : ""}
             />
             {errors.expectedSalary && (
@@ -314,7 +316,7 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
 
           {/* Availability */}
           <div className="space-y-2">
-            <Label>Available From</Label>
+            <Label>تاریخ آمادگی</Label>
             <Input
               type="date"
               {...register("availableFrom")}
@@ -335,11 +337,11 @@ ${selectedResume.personalInfo?.firstName || ''} ${selectedResume.personalInfo?.l
           >
             {submitApplication.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting Application...
+                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                در حال ارسال درخواست...
               </>
             ) : (
-              "Submit Application"
+              "ارسال درخواست"
             )}
           </Button>
         </CardContent>

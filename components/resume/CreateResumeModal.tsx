@@ -20,18 +20,61 @@ import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface CreateResumeModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSuccess?: () => void;
-}
+// Farsi translations
+const FA = {
+  createNewResume: 'ایجاد رزومه جدید',
+  giveYourResumeTitle: 'برای شروع، عنوان رزومه خود را وارد کنید',
+  chooseTemplateAndSettings: 'قالب و تنظیمات را انتخاب کنید',
+  title: 'عنوان رزومه',
+  required: 'الزامی',
+  requiredBadge: 'الزامی',
+  egResumeTitle: 'مثال: رزومه مهندس نرم‌افزار ارشد، رزومه مدیر محصول...',
+  chooseDescriptiveTitle: 'عنوانی توصیفی انتخاب کنید تا بعداً به راحتی این رزومه را شناسایی کنید',
+  proTips: '💡 نکات حرفه‌ای',
+  tip1: '• نقش مورد نظر خود را ذکر کنید (مثال: توسعه‌دهنده ارشد React)',
+  tip2: '• تخصص خود را اضافه کنید (مثال: فول استک با تمرکز بر هوش مصنوعی)',
+  tip3: '• عنوان را واضح و حرفه‌ای نگه دارید',
+  nextStep: 'مرحله بعد',
+  back: 'بازگشت',
+  cancel: 'انصراف',
+  createResume: 'ایجاد رزومه',
+  creating: 'در حال ایجاد...',
+  chooseTemplate: 'انتخاب قالب',
+  selectDesign: 'قالبی را انتخاب کنید که با صنعت شما هماهنگ باشد',
+  visibility: 'قابلیت مشاهده',
+  controlVisibility: 'کنترل کنید چه کسی می‌تواند رزومه شما را ببیند',
+  setAsDefault: 'تنظیم به عنوان رزومه پیش‌فرض',
+  autoSelected: 'هنگام درخواست بدون انتخاب نسخه، به‌طور خودکار انتخاب می‌شود',
+  private: 'خصوصی',
+  privateDesc: 'فقط هنگام درخواست قابل مشاهده است',
+  public: 'عمومی',
+  publicDesc: 'قابل کشف برای کارفرمایان',
+  linkOnly: 'فقط لینک',
+  linkOnlyDesc: 'از طریق لینک مستقیم به اشتراک بگذارید',
+  professional: 'حرفه‌ای',
+  professionalDesc: 'بهینه‌شده برای ATS، ساختار تمیز',
+  classic: 'کلاسیک',
+  classicDesc: 'چیدمان یک ستونی سنتی',
+  modern: 'مدرن',
+  modernDesc: 'دو ستونی با نوار کناری رنگی',
+  minimal: 'مینیمال',
+  minimalDesc: 'فضای سفید تمیز، بدون تزئینات',
+  creative: 'خلاقانه',
+  creativeDesc: 'چیدمان پررنگ و گرافیکی',
+  titleGenerated: '✨ عنوان ایجاد شد!',
+  resumeCreated: '🎉 رزومه با موفقیت ایجاد شد!',
+  failedToCreate: 'ایجاد رزومه ناموفق بود',
+  pleaseEnterTitle: 'لطفاً عنوان رزومه را وارد کنید',
+  aiGenerate: 'AI',
+};
 
+// Template data with Farsi labels
 const TEMPLATES = [
   {
     id: 'professional',
-    label: 'Professional',
-    description: 'ATS-optimized, clean structure',
-    tags: ['Corporate', 'Finance', 'Engineering'],
+    label: FA.professional,
+    description: FA.professionalDesc,
+    tags: ['شرکتی', 'مالی', 'مهندسی'],
     icon: '💼',
     color: 'from-blue-600 to-blue-800',
     bgColor: 'bg-blue-50',
@@ -39,9 +82,9 @@ const TEMPLATES = [
   },
   {
     id: 'classic',
-    label: 'Classic',
-    description: 'Traditional single-column layout',
-    tags: ['Law', 'Academia', 'Government'],
+    label: FA.classic,
+    description: FA.classicDesc,
+    tags: ['حقوق', 'آکادمیک', 'دولتی'],
     icon: '📜',
     color: 'from-gray-700 to-gray-900',
     bgColor: 'bg-gray-50',
@@ -49,9 +92,9 @@ const TEMPLATES = [
   },
   {
     id: 'modern',
-    label: 'Modern',
-    description: 'Two-column with accent sidebar',
-    tags: ['Tech', 'Product', 'Startup'],
+    label: FA.modern,
+    description: FA.modernDesc,
+    tags: ['فناوری', 'محصول', 'استارتاپ'],
     icon: '🚀',
     color: 'from-purple-600 to-blue-600',
     bgColor: 'bg-purple-50',
@@ -59,9 +102,9 @@ const TEMPLATES = [
   },
   {
     id: 'minimal',
-    label: 'Minimal',
-    description: 'Clean whitespace, no decorations',
-    tags: ['Design', 'UX', 'Consultancy'],
+    label: FA.minimal,
+    description: FA.minimalDesc,
+    tags: ['طراحی', 'تجربه کاربری', 'مشاوره'],
     icon: '✨',
     color: 'from-gray-400 to-gray-600',
     bgColor: 'bg-gray-50',
@@ -69,9 +112,9 @@ const TEMPLATES = [
   },
   {
     id: 'creative',
-    label: 'Creative',
-    description: 'Bold & graphic-heavy layout',
-    tags: ['Marketing', 'Media', 'Creative Arts'],
+    label: FA.creative,
+    description: FA.creativeDesc,
+    tags: ['بازاریابی', 'رسانه', 'هنرهای خلاق'],
     icon: '🎨',
     color: 'from-pink-600 to-orange-500',
     bgColor: 'bg-pink-50',
@@ -82,31 +125,31 @@ const TEMPLATES = [
 const VISIBILITY_OPTIONS = [
   {
     value: 'private',
-    label: 'Private',
-    description: 'Only visible when you apply',
+    label: FA.private,
+    description: FA.privateDesc,
     icon: Lock,
     color: 'text-gray-600',
     bgColor: 'bg-gray-50',
   },
   {
     value: 'public',
-    label: 'Public',
-    description: 'Discoverable by employers',
+    label: FA.public,
+    description: FA.publicDesc,
     icon: Globe,
     color: 'text-green-600',
     bgColor: 'bg-green-50',
   },
   {
     value: 'shared',
-    label: 'Link Only',
-    description: 'Share via direct link',
+    label: FA.linkOnly,
+    description: FA.linkOnlyDesc,
     icon: Link,
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
   },
 ];
 
-export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResumeModalProps) {
+export function CreateResumeModal({ open, onOpenChange, onSuccess }: any) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -142,7 +185,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
       });
     },
     onSuccess: (data) => {
-      toast.success('🎉 Resume created successfully!');
+      toast.success(FA.resumeCreated);
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
       onOpenChange(false);
       if (onSuccess) onSuccess();
@@ -153,7 +196,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
       }
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'Failed to create resume');
+      toast.error(error?.response?.data?.error || FA.failedToCreate);
     },
   });
 
@@ -167,23 +210,23 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
     setIsGenerating(true);
     try {
       const suggestions = [
-        'Senior Software Engineer Resume',
-        'Full Stack Developer Resume',
-        'Product Manager Resume',
-        'UX/UI Designer Resume',
-        'DevOps Engineer Resume',
-        'Data Scientist Resume',
-        'Machine Learning Engineer Resume',
-        'Cloud Architect Resume',
-        'Frontend Developer Resume',
-        'Backend Developer Resume',
+        'رزومه مهندس نرم‌افزار ارشد',
+        'رزومه توسعه‌دهنده فول استک',
+        'رزومه مدیر محصول',
+        'رزومه طراح تجربه کاربری/رابط کاربری',
+        'رزومه مهندس DevOps',
+        'رزومه دانشمند داده',
+        'رزومه مهندس یادگیری ماشین',
+        'رزومه معمار ابری',
+        'رزومه توسعه‌دهنده فرانت‌اند',
+        'رزومه توسعه‌دهنده بک‌اند',
       ];
-      const randomTitle = suggestions[Math.floor(Math.random() * suggestions.length)] || 'My Resume';
+      const randomTitle = suggestions[Math.floor(Math.random() * suggestions.length)] || 'رزومه من';
       setFormData(prev => ({ ...prev, title: randomTitle }));
       setCharacterCount(randomTitle.length);
-      toast.success('✨ Title generated!');
-    } catch (error) {
-      toast.error('Failed to generate title');
+      toast.success(FA.titleGenerated);
+    } catch (error: any) {
+      toast.error('ایجاد عنوان ناموفق بود', error.message);
     } finally {
       setIsGenerating(false);
     }
@@ -191,7 +234,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
 
   const handleSubmit = () => {
     if (!formData.title.trim()) {
-      toast.error('Please enter a resume title');
+      toast.error(FA.pleaseEnterTitle);
       return;
     }
     createMutation.mutate(formData);
@@ -199,7 +242,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
 
   const handleNextStep = () => {
     if (!formData.title.trim()) {
-      toast.error('Please enter a resume title');
+      toast.error(FA.pleaseEnterTitle);
       return;
     }
     setStep(2);
@@ -213,20 +256,20 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-5xl xl:max-w-6xl max-h-[95vh] p-0 gap-0 bg-gradient-to-b from-white to-gray-50/50 overflow-hidden">
+      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-5xl xl:max-w-6xl max-h-[95vh] p-0 gap-0 bg-linear-to-b from-white to-gray-50/50 overflow-hidden">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
+              <div className="p-2 bg-blue-50 rounded-lg shrink-0">
                 <FileText className="w-5 h-5 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <DialogTitle className="text-lg sm:text-xl font-bold truncate">
-                  Create New Resume
+                  {FA.createNewResume}
                 </DialogTitle>
                 <DialogDescription className="text-xs sm:text-sm truncate">
-                  {step === 1 ? 'Give your resume a title to get started' : 'Choose a template and visibility settings'}
+                  {step === 1 ? FA.giveYourResumeTitle : FA.chooseTemplateAndSettings}
                 </DialogDescription>
               </div>
             </div>
@@ -240,13 +283,13 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
             </Button>
           </div>
 
-          {/* Progress Steps */}
+          {/* Progress Steps - RTL adjusted */}
           <div className="flex items-center gap-2 mt-4">
             {[1, 2].map((s) => (
               <div key={s} className="flex items-center gap-2">
                 <div
                   className={cn(
-                    "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all flex-shrink-0",
+                    "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all shrink-0",
                     step === s
                       ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
                       : step > s
@@ -260,7 +303,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                   "text-xs font-medium hidden sm:inline",
                   step === s ? "text-blue-600" : "text-gray-500"
                 )}>
-                  {s === 1 ? 'Title' : 'Template & Settings'}
+                  {s === 1 ? 'عنوان' : 'قالب و تنظیمات'}
                 </span>
                 {s < 2 && (
                   <div className={cn(
@@ -280,23 +323,23 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
             {step === 1 && (
               <motion.div
                 key="step1"
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-6 max-w-2xl mx-auto"
               >
                 <div>
                   <Label htmlFor="title" className="text-sm font-semibold flex items-center gap-2 flex-wrap">
-                    Resume Title <span className="text-red-500">*</span>
+                    {FA.title} <span className="text-red-500">*</span>
                     <Badge variant="outline" className="text-xs font-normal">
-                      Required
+                      {FA.requiredBadge}
                     </Badge>
                   </Label>
                   <div className="relative mt-1.5">
                     <Input
                       id="title"
-                      placeholder="e.g. Senior Software Engineer Resume, Product Manager Resume..."
+                      placeholder={FA.egResumeTitle}
                       value={formData.title}
                       onChange={handleTitleChange}
                       maxLength={150}
@@ -305,7 +348,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                         characterCount > 0 && characterCount < 150 && "border-green-300 focus:border-green-500"
                       )}
                     />
-                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                    <div className="absolute left-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
                       <Button
                         type="button"
                         variant="ghost"
@@ -319,39 +362,39 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                         ) : (
                           <Sparkles className="w-3 h-3" />
                         )}
-                        <span className="ml-1 hidden sm:inline">AI</span>
+                        <span className="mr-1 hidden sm:inline">{FA.aiGenerate}</span>
                       </Button>
                       <span className={cn(
                         "text-xs font-medium",
                         characterCount > 140 ? "text-orange-500" : "text-gray-400"
                       )}>
-                        {characterCount}/150
+                        {characterCount}/۱۵۰
                       </span>
                     </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1.5">
-                    Choose a descriptive title to easily identify this resume later
+                    {FA.chooseDescriptiveTitle}
                   </p>
                 </div>
 
                 {/* Quick Tips */}
                 <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-                  <h4 className="text-xs font-semibold text-blue-900 mb-2">💡 Pro Tips</h4>
+                  <h4 className="text-xs font-semibold text-blue-900 mb-2">{FA.proTips}</h4>
                   <ul className="space-y-1.5 text-xs text-blue-700">
-                    <li>• Include your target role (e.g., Senior React Developer)</li>
-                    <li>• Add your specialization (e.g., Full Stack with AI Focus)</li>
-                    <li>• Keep it clear and professional</li>
+                    <li>{FA.tip1}</li>
+                    <li>{FA.tip2}</li>
+                    <li>{FA.tip3}</li>
                   </ul>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-start">
                   <Button
                     onClick={handleNextStep}
                     className="gap-2 bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
                     disabled={!formData.title.trim()}
                   >
-                    Next Step
-                    <ChevronRight className="w-4 h-4" />
+                    {FA.nextStep}
+                    <ChevronLeft className="w-4 h-4" />
                   </Button>
                 </div>
               </motion.div>
@@ -361,18 +404,18 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
             {step === 2 && (
               <motion.div
                 key="step2"
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
+                exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-6"
               >
                 {/* Template Selection */}
                 <div>
                   <Label className="text-sm font-semibold block mb-3">
-                    Choose a Template
-                    <span className="text-xs font-normal text-gray-500 ml-2">
-                      Select the design that best fits your industry
+                    {FA.chooseTemplate}
+                    <span className="text-xs font-normal text-gray-500 mr-2">
+                      {FA.selectDesign}
                     </span>
                   </Label>
 
@@ -395,7 +438,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                           <div className="text-2xl text-center">{template.icon}</div>
 
                           <div className={cn(
-                            "h-1 w-full rounded-full bg-gradient-to-r",
+                            "h-1 w-full rounded-full bg-linear-to-r",
                             template.color
                           )} />
 
@@ -404,7 +447,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                               {template.label}
                             </span>
                             {formData.template === template.id && (
-                              <Check className="w-3 h-3 text-blue-600 flex-shrink-0" />
+                              <Check className="w-3 h-3 text-blue-600 shrink-0" />
                             )}
                           </div>
                           <p className="text-[10px] text-gray-500 line-clamp-2">
@@ -443,9 +486,9 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                 {/* Visibility Selection */}
                 <div>
                   <Label className="text-sm font-semibold block mb-3">
-                    Visibility
-                    <span className="text-xs font-normal text-gray-500 ml-2">
-                      Control who can see your resume
+                    {FA.visibility}
+                    <span className="text-xs font-normal text-gray-500 mr-2">
+                      {FA.controlVisibility}
                     </span>
                   </Label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -467,7 +510,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                         >
                           <div className="flex items-start gap-3">
                             <div className={cn(
-                              "p-1.5 sm:p-2 rounded-lg flex-shrink-0",
+                              "p-1.5 sm:p-2 rounded-lg shrink-0",
                               isSelected ? option.bgColor : "bg-gray-100"
                             )}>
                               <Icon className={cn(
@@ -479,7 +522,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                               <div className="flex items-center justify-between">
                                 <h4 className="font-medium text-sm">{option.label}</h4>
                                 {isSelected && (
-                                  <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                  <Check className="w-4 h-4 text-blue-600 shrink-0" />
                                 )}
                               </div>
                               <p className="text-xs text-gray-500">{option.description}</p>
@@ -500,7 +543,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                 )}>
                   <div className="flex items-center gap-3">
                     <div className={cn(
-                      "p-2 rounded-lg flex-shrink-0",
+                      "p-2 rounded-lg shrink-0",
                       formData.isDefault ? "bg-yellow-100" : "bg-gray-200"
                     )}>
                       <Star className={cn(
@@ -509,9 +552,9 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                       )} />
                     </div>
                     <div>
-                      <Label className="font-medium text-sm">Set as default resume</Label>
+                      <Label className="font-medium text-sm">{FA.setAsDefault}</Label>
                       <p className="text-xs text-gray-500">
-                        Auto-selected when applying without choosing a version
+                        {FA.autoSelected}
                       </p>
                     </div>
                   </div>
@@ -521,19 +564,19 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                   />
                 </div>
 
-                {/* Actions */}
+                {/* Actions - RTL adjusted */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 pt-2">
                   <Button
                     variant="outline"
                     onClick={handlePrevStep}
                     className="gap-2 w-full sm:w-auto"
                   >
-                    <ChevronLeft className="w-4 h-4" />
-                    Back
+                    <ChevronRight className="w-4 h-4" />
+                    {FA.back}
                   </Button>
                   <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
-                      Cancel
+                      {FA.cancel}
                     </Button>
                     <Button
                       onClick={handleSubmit}
@@ -543,12 +586,12 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: CreateResum
                       {createMutation.isPending ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          Creating...
+                          {FA.creating}
                         </>
                       ) : (
                         <>
                           <Sparkles className="w-4 h-4" />
-                          Create Resume
+                          {FA.createResume}
                         </>
                       )}
                     </Button>

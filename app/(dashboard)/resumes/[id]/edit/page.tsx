@@ -90,13 +90,13 @@ export default function EditResumePage() {
   const updateMutation = useMutation({
     mutationFn: (data: Partial<Resume>) => resumeService.updateResume(id, data),
     onSuccess: () => {
-      toast.success('Resume updated successfully');
+      toast.success('رزومه با موفقیت بروزرسانی شد');
       queryClient.invalidateQueries({ queryKey: ['resume', id] });
       setHasChanges(false);
       refetch();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'Failed to update resume');
+      toast.error(error?.response?.data?.error || 'بروزرسانی رزومه با شکست مواجه شد');
     },
   });
 
@@ -118,7 +118,6 @@ export default function EditResumePage() {
   };
 
   // Add item to array
-  // Remove _id from new items - let MongoDB handle it
   const addItem = (section: keyof Resume) => {
     if (!localResume) return;
 
@@ -225,7 +224,7 @@ export default function EditResumePage() {
   // Handle cancel
   const handleCancel = () => {
     if (hasChanges) {
-      if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+      if (confirm('تغییرات ذخیره نشده دارید. آیا مطمئن هستید که می‌خواهید خارج شوید؟')) {
         setLocalResume(data?.data || null);
         setHasChanges(false);
         router.push('/resumes');
@@ -238,7 +237,7 @@ export default function EditResumePage() {
   // AI Generate Summary
   const handleAIGenerate = async () => {
     if (!aiPrompt.trim()) {
-      toast.error('Please describe what you want to generate');
+      toast.error('لطفاً توضیح دهید که چه چیزی می‌خواهید تولید شود');
       return;
     }
 
@@ -251,12 +250,12 @@ export default function EditResumePage() {
 
       if (response?.data?.summary) {
         handleChange('personalInfo', 'summary', response.data.summary);
-        toast.success('AI generated summary added!');
+        toast.success('خلاصه تولید شده توسط هوش مصنوعی اضافه شد!');
         setAiDialogOpen(false);
         setAiPrompt('');
       }
     } catch (error) {
-      toast.error('Failed to generate content');
+      toast.error('تولید محتوا با شکست مواجه شد');
     } finally {
       setIsGenerating(false);
     }
@@ -264,7 +263,7 @@ export default function EditResumePage() {
 
   if (isLoading || !localResume) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl" dir="rtl">
         <div className="flex items-center justify-center min-h-100">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
@@ -273,31 +272,31 @@ export default function EditResumePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl" dir="rtl">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
             <FileText className="w-8 h-8 text-blue-600" />
-            Edit Resume
+            ویرایش رزومه
           </h1>
           <p className="text-gray-600">{localResume.title}</p>
           {hasChanges && (
             <Badge className="mt-1 bg-yellow-100 text-yellow-800">
-              Unsaved changes
+              تغییرات ذخیره نشده
             </Badge>
           )}
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" onClick={handleCancel}>
-            Cancel
+            انصراف
           </Button>
           <Button
             variant="outline"
             onClick={() => router.push(`/resumes/${id}`)}
           >
-            <Eye className="w-4 h-4 mr-2" />
-            Preview
+            <Eye className="w-4 h-4 ml-2" />
+            پیش‌نمایش
           </Button>
           <Button
             onClick={handleSave}
@@ -306,13 +305,13 @@ export default function EditResumePage() {
           >
             {updateMutation.isPending ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                در حال ذخیره...
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
-                {hasChanges ? 'Save Changes' : 'Saved'}
+                <Save className="w-4 h-4 ml-2" />
+                {hasChanges ? 'ذخیره تغییرات' : 'ذخیره شد'}
               </>
             )}
           </Button>
@@ -329,18 +328,18 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('personal')}
               >
-                <User className="w-4 h-4 mr-2" />
-                Personal Info
+                <User className="w-4 h-4 ml-2" />
+                اطلاعات شخصی
               </Button>
               <Button
                 variant={activeSection === 'experience' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveSection('experience')}
               >
-                <Briefcase className="w-4 h-4 mr-2" />
-                Experience
+                <Briefcase className="w-4 h-4 ml-2" />
+                سابقه کاری
                 {localResume.experience?.length > 0 && (
-                  <Badge className="ml-auto">{localResume.experience.length}</Badge>
+                  <Badge className="mr-auto">{localResume.experience.length}</Badge>
                 )}
               </Button>
               <Button
@@ -348,10 +347,10 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('education')}
               >
-                <GraduationCap className="w-4 h-4 mr-2" />
-                Education
+                <GraduationCap className="w-4 h-4 ml-2" />
+                تحصیلات
                 {localResume.education?.length > 0 && (
-                  <Badge className="ml-auto">{localResume.education.length}</Badge>
+                  <Badge className="mr-auto">{localResume.education.length}</Badge>
                 )}
               </Button>
               <Button
@@ -359,10 +358,10 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('skills')}
               >
-                <Award className="w-4 h-4 mr-2" />
-                Skills
+                <Award className="w-4 h-4 ml-2" />
+                مهارت‌ها
                 {localResume.skills?.length > 0 && (
-                  <Badge className="ml-auto">{localResume.skills.length}</Badge>
+                  <Badge className="mr-auto">{localResume.skills.length}</Badge>
                 )}
               </Button>
               <Button
@@ -370,10 +369,10 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('certifications')}
               >
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Certifications
+                <CheckCircle className="w-4 h-4 ml-2" />
+                گواهینامه‌ها
                 {localResume.certifications?.length > 0 && (
-                  <Badge className="ml-auto">{localResume.certifications.length}</Badge>
+                  <Badge className="mr-auto">{localResume.certifications.length}</Badge>
                 )}
               </Button>
               <Button
@@ -381,10 +380,10 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('languages')}
               >
-                <Languages className="w-4 h-4 mr-2" />
-                Languages
+                <Languages className="w-4 h-4 ml-2" />
+                زبان‌ها
                 {localResume.languages?.length > 0 && (
-                  <Badge className="ml-auto">{localResume.languages.length}</Badge>
+                  <Badge className="mr-auto">{localResume.languages.length}</Badge>
                 )}
               </Button>
               <Button
@@ -392,10 +391,10 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('projects')}
               >
-                <FolderKanban className="w-4 h-4 mr-2" />
-                Projects
+                <FolderKanban className="w-4 h-4 ml-2" />
+                پروژه‌ها
                 {localResume.projects?.length > 0 && (
-                  <Badge className="ml-auto">{localResume.projects.length}</Badge>
+                  <Badge className="mr-auto">{localResume.projects.length}</Badge>
                 )}
               </Button>
               <Separator className="my-2" />
@@ -404,8 +403,8 @@ export default function EditResumePage() {
                 className="w-full justify-start"
                 onClick={() => setActiveSection('settings')}
               >
-                <ChevronDown className="w-4 h-4 mr-2" />
-                Settings
+                <ChevronDown className="w-4 h-4 ml-2" />
+                تنظیمات
               </Button>
             </CardContent>
           </Card>
@@ -418,20 +417,20 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Personal Information</h3>
+                  <h3 className="text-lg font-semibold">اطلاعات شخصی</h3>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setAiDialogOpen(true)}
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    AI Generate Summary
+                    <Sparkles className="w-4 h-4 ml-2" />
+                    تولید خلاصه با هوش مصنوعی
                   </Button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name *</Label>
+                    <Label htmlFor="firstName">نام *</Label>
                     <Input
                       id="firstName"
                       value={localResume.personalInfo && localResume.personalInfo.firstName || ''}
@@ -440,7 +439,7 @@ export default function EditResumePage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Label htmlFor="lastName">نام خانوادگی *</Label>
                     <Input
                       id="lastName"
                       value={localResume.personalInfo && localResume.personalInfo.lastName || ''}
@@ -451,62 +450,62 @@ export default function EditResumePage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email">ایمیل *</Label>
                   <div className="relative mt-1">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       id="email"
                       type="email"
                       value={localResume.personalInfo && localResume.personalInfo.email || ''}
                       onChange={(e) => handleChange('personalInfo', 'email', e.target.value)}
-                      className="pl-9"
+                      className="pr-9"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">تلفن</Label>
                   <div className="relative mt-1">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Phone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       id="phone"
                       value={localResume.personalInfo && localResume.personalInfo.phone || ''}
                       onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)}
-                      className="pl-9"
+                      className="pr-9"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="location">Location</Label>
+                  <Label htmlFor="location">موقعیت مکانی</Label>
                   <div className="relative mt-1">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       id="location"
                       value={localResume.personalInfo && localResume.personalInfo.location || ''}
                       onChange={(e) => handleChange('personalInfo', 'location', e.target.value)}
-                      className="pl-9"
+                      className="pr-9"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="website">Website</Label>
+                  <Label htmlFor="website">وب‌سایت</Label>
                   <div className="relative mt-1">
-                    <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Globe className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       id="website"
                       placeholder="https://yourwebsite.com"
                       value={localResume.personalInfo && localResume.personalInfo.website || ''}
                       onChange={(e) => handleChange('personalInfo', 'website', e.target.value)}
-                      className="pl-9"
+                      className="pr-9"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="linkedin">LinkedIn</Label>
+                    <Label htmlFor="linkedin">لینکدین</Label>
                     <Input
                       id="linkedin"
                       placeholder="https://linkedin.com/in/username"
@@ -516,7 +515,7 @@ export default function EditResumePage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="github">GitHub</Label>
+                    <Label htmlFor="github">گیت‌هاب</Label>
                     <Input
                       id="github"
                       placeholder="https://github.com/username"
@@ -528,13 +527,13 @@ export default function EditResumePage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="summary">Professional Summary</Label>
+                  <Label htmlFor="summary">خلاصه حرفه‌ای</Label>
                   <Textarea
                     id="summary"
                     value={localResume.personalInfo && localResume.personalInfo.summary || ''}
                     onChange={(e) => handleChange('personalInfo', 'summary', e.target.value)}
-                    className="mt-1 min-h-37.5"
-                    placeholder="Brief summary of your professional background and career goals..."
+                    className="mt-1 min-h-37.5 text-right"
+                    placeholder="خلاصه‌ای از سابقه حرفه‌ای و اهداف شغلی شما..."
                   />
                 </div>
               </CardContent>
@@ -546,18 +545,18 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Work Experience</h3>
+                  <h3 className="text-lg font-semibold">سابقه کاری</h3>
                   <Button size="sm" onClick={() => addItem('experience')}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Experience
+                    <Plus className="w-4 h-4 ml-1" />
+                    افزودن سابقه کاری
                   </Button>
                 </div>
 
                 {localResume.experience?.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <Briefcase className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p>No experience added yet</p>
-                    <p className="text-sm">Click Add Experience to get started</p>
+                    <p>هنوز سابقه کاری اضافه نشده است</p>
+                    <p className="text-sm">برای شروع روی افزودن سابقه کاری کلیک کنید</p>
                   </div>
                 )}
 
@@ -566,7 +565,7 @@ export default function EditResumePage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 left-2"
                       onClick={() => removeItem('experience', index)}
                     >
                       <X className="w-4 h-4" />
@@ -574,7 +573,7 @@ export default function EditResumePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Company *</Label>
+                        <Label>شرکت *</Label>
                         <Input
                           value={exp.company}
                           onChange={(e) => updateItem('experience', index, 'company', e.target.value)}
@@ -582,7 +581,7 @@ export default function EditResumePage() {
                         />
                       </div>
                       <div>
-                        <Label>Position *</Label>
+                        <Label>سمت *</Label>
                         <Input
                           value={exp.position}
                           onChange={(e) => updateItem('experience', index, 'position', e.target.value)}
@@ -592,7 +591,7 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Location</Label>
+                      <Label>موقعیت مکانی</Label>
                       <Input
                         value={exp.location || ''}
                         onChange={(e) => updateItem('experience', index, 'location', e.target.value)}
@@ -602,7 +601,7 @@ export default function EditResumePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Start Date *</Label>
+                        <Label>تاریخ شروع *</Label>
                         <Input
                           type="date"
                           value={exp.startDate?.toString().split('T')[0] || ''}
@@ -611,7 +610,7 @@ export default function EditResumePage() {
                         />
                       </div>
                       <div>
-                        <Label>End Date</Label>
+                        <Label>تاریخ پایان</Label>
                         <Input
                           type="date"
                           value={exp.endDate?.toString().split('T')[0] || ''}
@@ -627,29 +626,29 @@ export default function EditResumePage() {
                         checked={exp.current || false}
                         onCheckedChange={(checked) => updateItem('experience', index, 'current', checked)}
                       />
-                      <Label>Currently working here</Label>
+                      <Label>در حال حاضر اینجا مشغول به کار هستم</Label>
                     </div>
 
                     <div>
-                      <Label>Description</Label>
+                      <Label>توضیحات</Label>
                       <Textarea
                         value={exp.description || ''}
                         onChange={(e) => updateItem('experience', index, 'description', e.target.value)}
-                        className="mt-1 min-h-20"
-                        placeholder="Describe your responsibilities and achievements..."
+                        className="mt-1 min-h-20 text-right"
+                        placeholder="مسئولیت‌ها و دستاوردهای خود را توضیح دهید..."
                       />
                     </div>
 
                     <div>
-                      <Label>Achievements (one per line)</Label>
+                      <Label>دستاوردها (هر خط یک مورد)</Label>
                       <Textarea
                         value={exp.achievements?.join('\n') || ''}
                         onChange={(e) => {
                           const achievements = e.target.value.split('\n').filter(a => a.trim());
                           updateItem('experience', index, 'achievements', achievements);
                         }}
-                        className="mt-1 min-h-15"
-                        placeholder="• Led a team of 5 developers&#10;• Increased performance by 30%"
+                        className="mt-1 min-h-15 text-right"
+                        placeholder="• رهبری تیم ۵ نفره از توسعه‌دهندگان&#10;• افزایش عملکرد به میزان ۳۰٪"
                       />
                     </div>
                   </div>
@@ -663,18 +662,18 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Education</h3>
+                  <h3 className="text-lg font-semibold">تحصیلات</h3>
                   <Button size="sm" onClick={() => addItem('education')}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Education
+                    <Plus className="w-4 h-4 ml-1" />
+                    افزودن تحصیلات
                   </Button>
                 </div>
 
                 {localResume.education?.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <GraduationCap className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p>No education added yet</p>
-                    <p className="text-sm">Click Add Education to get started</p>
+                    <p>هنوز تحصیلاتی اضافه نشده است</p>
+                    <p className="text-sm">برای شروع روی افزودن تحصیلات کلیک کنید</p>
                   </div>
                 )}
 
@@ -683,7 +682,7 @@ export default function EditResumePage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 left-2"
                       onClick={() => removeItem('education', index)}
                     >
                       <X className="w-4 h-4" />
@@ -691,7 +690,7 @@ export default function EditResumePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Institution *</Label>
+                        <Label>موسسه *</Label>
                         <Input
                           value={edu.institution}
                           onChange={(e) => updateItem('education', index, 'institution', e.target.value)}
@@ -699,7 +698,7 @@ export default function EditResumePage() {
                         />
                       </div>
                       <div>
-                        <Label>Degree *</Label>
+                        <Label>مدرک *</Label>
                         <Input
                           value={edu.degree}
                           onChange={(e) => updateItem('education', index, 'degree', e.target.value)}
@@ -709,7 +708,7 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Field of Study</Label>
+                      <Label>رشته تحصیلی</Label>
                       <Input
                         value={edu.fieldOfStudy || ''}
                         onChange={(e) => updateItem('education', index, 'fieldOfStudy', e.target.value)}
@@ -719,7 +718,7 @@ export default function EditResumePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Start Date *</Label>
+                        <Label>تاریخ شروع *</Label>
                         <Input
                           type="date"
                           value={edu.startDate?.toString().split('T')[0] || ''}
@@ -728,7 +727,7 @@ export default function EditResumePage() {
                         />
                       </div>
                       <div>
-                        <Label>End Date</Label>
+                        <Label>تاریخ پایان</Label>
                         <Input
                           type="date"
                           value={edu.endDate?.toString().split('T')[0] || ''}
@@ -744,11 +743,11 @@ export default function EditResumePage() {
                         checked={edu.current || false}
                         onCheckedChange={(checked) => updateItem('education', index, 'current', checked)}
                       />
-                      <Label>Currently studying here</Label>
+                      <Label>در حال حاضر اینجا مشغول به تحصیل هستم</Label>
                     </div>
 
                     <div>
-                      <Label>GPA</Label>
+                      <Label>معدل</Label>
                       <Input
                         type="number"
                         step="0.01"
@@ -770,18 +769,18 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Skills</h3>
+                  <h3 className="text-lg font-semibold">مهارت‌ها</h3>
                   <Button size="sm" onClick={() => addItem('skills')}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Skill
+                    <Plus className="w-4 h-4 ml-1" />
+                    افزودن مهارت
                   </Button>
                 </div>
 
                 {localResume.skills?.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <Award className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p>No skills added yet</p>
-                    <p className="text-sm">Click Add Skill to get started</p>
+                    <p>هنوز مهارتی اضافه نشده است</p>
+                    <p className="text-sm">برای شروع روی افزودن مهارت کلیک کنید</p>
                   </div>
                 )}
 
@@ -790,7 +789,10 @@ export default function EditResumePage() {
                     <div key={index} className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1">
                       <span className="text-sm">{skill.name}</span>
                       <Badge variant="outline" className="text-xs">
-                        {skill.level || 'intermediate'}
+                        {skill.level === 'beginner' ? 'مبتدی' :
+                         skill.level === 'intermediate' ? 'متوسط' :
+                         skill.level === 'advanced' ? 'پیشرفته' :
+                         skill.level === 'expert' ? 'متخصص' : skill.level || 'متوسط'}
                       </Badge>
                       <button
                         onClick={() => removeItem('skills', index)}
@@ -805,9 +807,9 @@ export default function EditResumePage() {
                 <div className="border rounded-lg p-4 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label>Skill Name</Label>
+                      <Label>نام مهارت</Label>
                       <Input
-                        placeholder="e.g., React, Python, Project Management"
+                        placeholder="مثال: React، Python، مدیریت پروژه"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             const input = e.target as HTMLInputElement;
@@ -823,13 +825,14 @@ export default function EditResumePage() {
                             }
                           }
                         }}
+                        className="text-right"
                       />
                     </div>
                     <div>
-                      <Label>Proficiency Level</Label>
+                      <Label>سطح تسلط</Label>
                       <Select
                         onValueChange={(value) => {
-                          const input = document.querySelector('input[placeholder="e.g., React, Python, Project Management"]') as HTMLInputElement;
+                          const input = document.querySelector('input[placeholder="مثال: React، Python، مدیریت پروژه"]') as HTMLInputElement;
                           if (input?.value.trim()) {
                             const newSkill = { name: input.value.trim(), level: value as any };
                             setLocalResume((prev) => {
@@ -844,13 +847,13 @@ export default function EditResumePage() {
                         }}
                       >
                         <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select level" />
+                          <SelectValue placeholder="انتخاب سطح" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="beginner">Beginner</SelectItem>
-                          <SelectItem value="intermediate">Intermediate</SelectItem>
-                          <SelectItem value="advanced">Advanced</SelectItem>
-                          <SelectItem value="expert">Expert</SelectItem>
+                          <SelectItem value="beginner">مبتدی</SelectItem>
+                          <SelectItem value="intermediate">متوسط</SelectItem>
+                          <SelectItem value="advanced">پیشرفته</SelectItem>
+                          <SelectItem value="expert">متخصص</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -865,18 +868,18 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Certifications</h3>
+                  <h3 className="text-lg font-semibold">گواهینامه‌ها</h3>
                   <Button size="sm" onClick={() => addItem('certifications')}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Certification
+                    <Plus className="w-4 h-4 ml-1" />
+                    افزودن گواهینامه
                   </Button>
                 </div>
 
                 {localResume.certifications?.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <CheckCircle className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p>No certifications added yet</p>
-                    <p className="text-sm">Click Add Certification to get started</p>
+                    <p>هنوز گواهینامه‌ای اضافه نشده است</p>
+                    <p className="text-sm">برای شروع روی افزودن گواهینامه کلیک کنید</p>
                   </div>
                 )}
 
@@ -885,7 +888,7 @@ export default function EditResumePage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 left-2"
                       onClick={() => removeItem('certifications', index)}
                     >
                       <X className="w-4 h-4" />
@@ -893,7 +896,7 @@ export default function EditResumePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Certification Name *</Label>
+                        <Label>نام گواهینامه *</Label>
                         <Input
                           value={cert.name}
                           onChange={(e) => updateItem('certifications', index, 'name', e.target.value)}
@@ -901,7 +904,7 @@ export default function EditResumePage() {
                         />
                       </div>
                       <div>
-                        <Label>Issuer *</Label>
+                        <Label>صادرکننده *</Label>
                         <Input
                           value={cert.issuer}
                           onChange={(e) => updateItem('certifications', index, 'issuer', e.target.value)}
@@ -911,7 +914,7 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Date Obtained *</Label>
+                      <Label>تاریخ دریافت *</Label>
                       <Input
                         type="date"
                         value={cert.date?.toString().split('T')[0] || ''}
@@ -921,7 +924,7 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Expiry Date</Label>
+                      <Label>تاریخ انقضا</Label>
                       <Input
                         type="date"
                         value={cert.expiryDate?.toString().split('T')[0] || ''}
@@ -931,7 +934,7 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Credential ID</Label>
+                      <Label>شناسه مدرک</Label>
                       <Input
                         value={cert.credentialId || ''}
                         onChange={(e) => updateItem('certifications', index, 'credentialId', e.target.value)}
@@ -940,7 +943,7 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>URL</Label>
+                      <Label>لینک</Label>
                       <Input
                         placeholder="https://certification.com/verify/123"
                         value={cert.url || ''}
@@ -959,18 +962,18 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Languages</h3>
+                  <h3 className="text-lg font-semibold">زبان‌ها</h3>
                   <Button size="sm" onClick={() => addItem('languages')}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Language
+                    <Plus className="w-4 h-4 ml-1" />
+                    افزودن زبان
                   </Button>
                 </div>
 
                 {localResume.languages?.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <Languages className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p>No languages added yet</p>
-                    <p className="text-sm">Click Add Language to get started</p>
+                    <p>هنوز زبانی اضافه نشده است</p>
+                    <p className="text-sm">برای شروع روی افزودن زبان کلیک کنید</p>
                   </div>
                 )}
 
@@ -979,7 +982,10 @@ export default function EditResumePage() {
                     <div key={index} className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1">
                       <span className="text-sm font-medium">{lang.name}</span>
                       <Badge variant="outline" className="text-xs">
-                        {lang.proficiency}
+                        {lang.proficiency === 'basic' ? 'مقدماتی' :
+                         lang.proficiency === 'conversational' ? 'مکالمه' :
+                         lang.proficiency === 'professional' ? 'حرفه‌ای' :
+                         lang.proficiency === 'native' ? 'مادری' : lang.proficiency}
                       </Badge>
                       <button
                         onClick={() => removeItem('languages', index)}
@@ -994,9 +1000,9 @@ export default function EditResumePage() {
                 <div className="border rounded-lg p-4 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label>Language Name</Label>
+                      <Label>نام زبان</Label>
                       <Input
-                        placeholder="e.g., Spanish, French, Mandarin"
+                        placeholder="مثال: اسپانیایی، فرانسوی، ماندارین"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             const input = e.target as HTMLInputElement;
@@ -1012,13 +1018,14 @@ export default function EditResumePage() {
                             }
                           }
                         }}
+                        className="text-right"
                       />
                     </div>
                     <div>
-                      <Label>Proficiency Level</Label>
+                      <Label>سطح تسلط</Label>
                       <Select
                         onValueChange={(value) => {
-                          const input = document.querySelector('input[placeholder="e.g., Spanish, French, Mandarin"]') as HTMLInputElement;
+                          const input = document.querySelector('input[placeholder="مثال: اسپانیایی، فرانسوی، ماندارین"]') as HTMLInputElement;
                           if (input?.value.trim()) {
                             const newLang = { name: input.value.trim(), proficiency: value as any };
                             setLocalResume((prev) => {
@@ -1033,13 +1040,13 @@ export default function EditResumePage() {
                         }}
                       >
                         <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select proficiency" />
+                          <SelectValue placeholder="انتخاب سطح" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="basic">Basic</SelectItem>
-                          <SelectItem value="conversational">Conversational</SelectItem>
-                          <SelectItem value="professional">Professional</SelectItem>
-                          <SelectItem value="native">Native</SelectItem>
+                          <SelectItem value="basic">مقدماتی</SelectItem>
+                          <SelectItem value="conversational">مکالمه</SelectItem>
+                          <SelectItem value="professional">حرفه‌ای</SelectItem>
+                          <SelectItem value="native">مادری</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1054,18 +1061,18 @@ export default function EditResumePage() {
             <Card>
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Projects</h3>
+                  <h3 className="text-lg font-semibold">پروژه‌ها</h3>
                   <Button size="sm" onClick={() => addItem('projects')}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Project
+                    <Plus className="w-4 h-4 ml-1" />
+                    افزودن پروژه
                   </Button>
                 </div>
 
                 {localResume.projects?.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <FolderKanban className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                    <p>No projects added yet</p>
-                    <p className="text-sm">Click Add Project to get started</p>
+                    <p>هنوز پروژه‌ای اضافه نشده است</p>
+                    <p className="text-sm">برای شروع روی افزودن پروژه کلیک کنید</p>
                   </div>
                 )}
 
@@ -1074,14 +1081,14 @@ export default function EditResumePage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 left-2"
                       onClick={() => removeItem('projects', index)}
                     >
                       <X className="w-4 h-4" />
                     </Button>
 
                     <div>
-                      <Label>Project Name *</Label>
+                      <Label>نام پروژه *</Label>
                       <Input
                         value={project.name}
                         onChange={(e) => updateItem('projects', index, 'name', e.target.value)}
@@ -1090,16 +1097,16 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Description</Label>
+                      <Label>توضیحات</Label>
                       <Textarea
                         value={project.description || ''}
                         onChange={(e) => updateItem('projects', index, 'description', e.target.value)}
-                        className="mt-1 min-h-20"
+                        className="mt-1 min-h-20 text-right"
                       />
                     </div>
 
                     <div>
-                      <Label>URL</Label>
+                      <Label>لینک</Label>
                       <Input
                         placeholder="https://project.com"
                         value={project.url || ''}
@@ -1109,12 +1116,12 @@ export default function EditResumePage() {
                     </div>
 
                     <div>
-                      <Label>Technologies (comma separated)</Label>
+                      <Label>فناوری‌ها (با کاما جدا کنید)</Label>
                       <Input
-                        placeholder="React, TypeScript, Node.js"
-                        value={project.technologies?.join(', ') || ''}
+                        placeholder="React، TypeScript، Node.js"
+                        value={project.technologies?.join('، ') || ''}
                         onChange={(e) => {
-                          const technologies = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+                          const technologies = e.target.value.split('،').map(t => t.trim()).filter(Boolean);
                           updateItem('projects', index, 'technologies', technologies);
                         }}
                         className="mt-1"
@@ -1123,7 +1130,7 @@ export default function EditResumePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Start Date</Label>
+                        <Label>تاریخ شروع</Label>
                         <Input
                           type="date"
                           value={project.startDate?.toString().split('T')[0] || ''}
@@ -1132,7 +1139,7 @@ export default function EditResumePage() {
                         />
                       </div>
                       <div>
-                        <Label>End Date</Label>
+                        <Label>تاریخ پایان</Label>
                         <Input
                           type="date"
                           value={project.endDate?.toString().split('T')[0] || ''}
@@ -1151,10 +1158,10 @@ export default function EditResumePage() {
           {activeSection === 'settings' && (
             <Card>
               <CardContent className="p-6 space-y-6">
-                <h3 className="text-lg font-semibold">Resume Settings</h3>
+                <h3 className="text-lg font-semibold">تنظیمات رزومه</h3>
 
                 <div>
-                  <Label htmlFor="title">Resume Title</Label>
+                  <Label htmlFor="title">عنوان رزومه</Label>
                   <Input
                     id="title"
                     value={localResume.title}
@@ -1164,7 +1171,7 @@ export default function EditResumePage() {
                 </div>
 
                 <div>
-                  <Label>Template</Label>
+                  <Label>قالب</Label>
                   <Select
                     value={localResume.template}
                     onValueChange={(value) => handleChange('template', 'template', value)}
@@ -1173,16 +1180,16 @@ export default function EditResumePage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="modern">Modern</SelectItem>
-                      <SelectItem value="classic">Classic</SelectItem>
-                      <SelectItem value="minimal">Minimal</SelectItem>
-                      <SelectItem value="creative">Creative</SelectItem>
+                      <SelectItem value="modern">مدرن</SelectItem>
+                      <SelectItem value="classic">کلاسیک</SelectItem>
+                      <SelectItem value="minimal">مینیمال</SelectItem>
+                      <SelectItem value="creative">خلاق</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label>Visibility</Label>
+                  <Label>دسترسی</Label>
                   <Select
                     value={localResume.visibility}
                     onValueChange={(value) => handleChange('visibility', 'visibility', value)}
@@ -1191,15 +1198,15 @@ export default function EditResumePage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="private">Private</SelectItem>
-                      <SelectItem value="public">Public</SelectItem>
-                      <SelectItem value="shared">Shared</SelectItem>
+                      <SelectItem value="private">خصوصی</SelectItem>
+                      <SelectItem value="public">عمومی</SelectItem>
+                      <SelectItem value="shared">اشتراکی</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label>Status</Label>
+                  <Label>وضعیت</Label>
                   <Select
                     value={localResume.status}
                     onValueChange={(value) => handleChange('status', 'status', value)}
@@ -1208,9 +1215,9 @@ export default function EditResumePage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="archived">Archived</SelectItem>
+                      <SelectItem value="draft">پیش‌نویس</SelectItem>
+                      <SelectItem value="active">فعال</SelectItem>
+                      <SelectItem value="archived">بایگانی شده</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1220,14 +1227,14 @@ export default function EditResumePage() {
                     checked={localResume.isDefault || false}
                     onCheckedChange={(checked) => handleChange('isDefault', 'isDefault', checked)}
                   />
-                  <Label>Set as default resume</Label>
+                  <Label>تنظیم به عنوان رزومه پیش‌فرض</Label>
                 </div>
 
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Info</AlertTitle>
+                  <AlertTitle>اطلاعات</AlertTitle>
                   <AlertDescription>
-                    Your default resume will be used when applying to jobs automatically.
+                    رزومه پیش‌فرض شما هنگام درخواست خودکار برای مشاغل استفاده می‌شود.
                   </AlertDescription>
                 </Alert>
               </CardContent>
@@ -1242,27 +1249,27 @@ export default function EditResumePage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-blue-600" />
-              AI Generate Summary
+              تولید خلاصه با هوش مصنوعی
             </DialogTitle>
             <DialogDescription>
-              Describe your professional background and the AI will generate a summary.
+              سابقه حرفه‌ای خود را توضیح دهید تا هوش مصنوعی یک خلاصه تولید کند.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="aiPrompt">Tell us about yourself</Label>
+              <Label htmlFor="aiPrompt">درباره خودتان بگویید</Label>
               <Textarea
                 id="aiPrompt"
-                placeholder="e.g., I'm a Senior React Developer with 5 years of experience..."
+                placeholder="مثال: من یک توسعه‌دهنده ارشد React با ۵ سال تجربه هستم..."
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
-                className="mt-1 min-h-25"
+                className="mt-1 min-h-25 text-right"
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAiDialogOpen(false)}>
-              Cancel
+              انصراف
             </Button>
             <Button
               onClick={handleAIGenerate}
@@ -1270,13 +1277,13 @@ export default function EditResumePage() {
             >
               {isGenerating ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating...
+                  <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                  در حال تولید...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Generate
+                  <Sparkles className="w-4 h-4 ml-2" />
+                  تولید
                 </>
               )}
             </Button>

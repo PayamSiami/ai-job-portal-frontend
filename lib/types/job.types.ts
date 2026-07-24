@@ -1,25 +1,45 @@
+// lib/types/job.types.ts
 export interface Job {
   _id: string;
   title: string;
-  company: string;
+  company:
+    | string
+    | {
+        _id: string;
+        name: string;
+        location?: string;
+        logo?: string;
+        website?: string;
+      };
+  postedBy:
+    | string
+    | {
+        _id: string;
+        username: string;
+        email: string;
+      };
   location: string;
-  salary?: number;
+  description: string;
+  requirements: string;
+  responsibilities?: string;
+  benefits?: string;
+  skills: string[];
+  jobType: string;
+  experienceLevel: string;
+  workMode: string;
   minSalary?: number;
   maxSalary?: number;
-  experienceLevel?: "entry" | "mid" | "senior" | "lead";
-  workMode?: "remote" | "hybrid" | "on-site";
-  jobType?: "full-time" | "part-time" | "contract" | "internship";
-  description?: string;
-  requirements?: string;
-  benefits?: string;
-  skills: string[]; // ✅ Fixed: Added type
-  tags: string[];
-  postedBy: string;
+  openings: number;
+  applicationDeadline?: string;
+  expiresAt?: string;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  isDeleted: boolean;
+  views: number;
+  tags: string[];
+  applicantCount?: number;
+  createdAt: string;
+  updatedAt: string;
 }
-
 export interface JobFilters {
   page?: number;
   limit?: number;

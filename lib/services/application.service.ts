@@ -36,25 +36,19 @@ export const applicationService = {
 
   // Get all applications for the current user
   async getMyApplications(): Promise<any> {
-    const response = await api.get("/applications");
-    return response.data;
+    const { data } = await api.get("/applications");
+    return data?.data?.applications;
   },
 
   // Get a single application by ID
   async getApplication(id: string): Promise<any> {
     const response = await api.get(`/applications/${id}`);
-    return response.data;
+    return response.data?.data;
   },
 
   // Withdraw an application
   async withdrawApplication(id: string): Promise<any> {
-    const response = await api.delete(`/applications/${id}`);
-    return response.data;
-  },
-
-  // Get applications for a specific job (employer only)
-  async getJobApplications(jobId: string): Promise<any> {
-    const response = await api.get(`/applications/job/${jobId}`);
+    const response = await api.patch(`/applications/${id}/withdraw`);
     return response.data;
   },
 

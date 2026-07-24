@@ -35,7 +35,7 @@ export default function ResumeViewPage() {
         setPdfUrl(url);
       } catch (err) {
         console.error('Failed to load PDF:', err);
-        toast.error('Failed to load PDF preview');
+        toast.error('بارگذاری پیش‌نمایش PDF با شکست مواجه شد');
       } finally {
         setIsLoadingPdf(false);
       }
@@ -55,9 +55,9 @@ export default function ResumeViewPage() {
     if (!resume) return;
     try {
       await resumeService.downloadPDF(resume._id);
-      toast.success('PDF downloaded successfully');
+      toast.success('PDF با موفقیت دانلود شد');
     } catch (err) {
-      toast.error('Failed to download PDF');
+      toast.error('دانلود PDF با شکست مواجه شد');
     }
   };
 
@@ -67,7 +67,7 @@ export default function ResumeViewPage() {
 
   if (isLoading || isLoadingPdf) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="flex justify-center items-center min-h-[60vh]" dir="rtl">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
@@ -75,35 +75,35 @@ export default function ResumeViewPage() {
 
   if (error || !resume) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <p className="text-red-500">Resume not found or failed to load.</p>
+      <div className="container mx-auto px-4 py-8 text-center" dir="rtl">
+        <p className="text-red-500">رزومه یافت نشد یا بارگذاری با شکست مواجه شد.</p>
         <Button variant="outline" className="mt-4" onClick={() => router.push('/resumes')}>
-          Back to Resumes
+          بازگشت به رزومه‌ها
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl" dir="rtl">
       {/* Actions */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6 print:hidden">
         <Button variant="ghost" onClick={() => router.push('/resumes')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
+          <ArrowLeft className="w-4 h-4 ml-2" />
+          بازگشت
         </Button>
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" onClick={() => router.push(`/resumes/${id}/edit`)}>
-            <Edit2 className="w-4 h-4 mr-2" />
-            Edit
+            <Edit2 className="w-4 h-4 ml-2" />
+            ویرایش
           </Button>
           <Button variant="outline" onClick={handlePrint}>
-            <Printer className="w-4 h-4 mr-2" />
-            Print
+            <Printer className="w-4 h-4 ml-2" />
+            چاپ
           </Button>
           <Button onClick={handleDownloadPDF}>
-            <Download className="w-4 h-4 mr-2" />
-            Download PDF
+            <Download className="w-4 h-4 ml-2" />
+            دانلود PDF
           </Button>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function ResumeViewPage() {
           />
         ) : (
           <div className="flex justify-center items-center h-100">
-            <p className="text-gray-500">PDF preview not available</p>
+            <p className="text-gray-500">پیش‌نمایش PDF در دسترس نیست</p>
           </div>
         )}
       </div>

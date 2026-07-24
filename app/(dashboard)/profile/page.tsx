@@ -68,10 +68,10 @@ export default function ProfilePage() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" dir="rtl">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto" />
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+          <p className="mt-4 text-gray-600">در حال بارگذاری پروفایل...</p>
         </div>
       </div>
     );
@@ -80,12 +80,12 @@ export default function ProfilePage() {
   // Handle error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" dir="rtl">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-red-600 mx-auto" />
-          <p className="mt-4 text-gray-600">Failed to load profile</p>
+          <p className="mt-4 text-gray-600">بارگذاری پروفایل با شکست مواجه شد</p>
           <Button className="mt-4" onClick={() => refetch()}>
-            Try Again
+            تلاش مجدد
           </Button>
         </div>
       </div>
@@ -95,10 +95,10 @@ export default function ProfilePage() {
   // If no profile data, show empty state
   if (!profile) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" dir="rtl">
         <div className="text-center">
           <User className="w-12 h-12 text-gray-400 mx-auto" />
-          <p className="mt-4 text-gray-600">No profile data available</p>
+          <p className="mt-4 text-gray-600">داده‌ای برای پروفایل موجود نیست</p>
         </div>
       </div>
     );
@@ -177,7 +177,7 @@ export default function ProfilePage() {
     if (editableProfile && editableProfile.profile.skills) {
       try {
         await updateSkills.mutateAsync(editableProfile.profile.skills);
-        toast.success('Skills updated successfully!');
+        toast.success('مهارت‌ها با موفقیت بروزرسانی شدند!');
       } catch (error) {
         // Error is handled in the mutation
       }
@@ -200,46 +200,58 @@ export default function ProfilePage() {
     return styles[role] || 'bg-gray-100 text-gray-800';
   };
 
+  const getRoleLabel = (role: string) => {
+    const labels: Record<string, string> = {
+      "job-seeker": 'جوینده کار',
+      "employer": 'کارفرما',
+    };
+    return labels[role] || role.replace('_', ' ');
+  };
+
   const getStatusBadge = (status: boolean) => {
     if (status) return 'bg-green-100 text-green-800'
     else return 'bg-yellow-100 text-yellow-800'
   };
 
+  const getStatusLabel = (status: boolean) => {
+    return status ? 'فعال' : 'غیرفعال';
+  };
+
   const isImageUploading = uploadProfileImage.isPending;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl" dir="rtl">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-          <p className="text-gray-600">Manage your personal information and preferences</p>
+          <h1 className="text-3xl font-bold text-gray-900">پروفایل</h1>
+          <p className="text-gray-600">اطلاعات شخصی و تنظیمات خود را مدیریت کنید</p>
         </div>
         <div className="flex items-center gap-3">
           {isEditing ? (
             <>
               <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
-                <X className="w-4 h-4 mr-2" />
-                Cancel
+                <X className="w-4 h-4 ml-2" />
+                انصراف
               </Button>
               <Button onClick={handleSave} disabled={isSaving}>
                 {isSaving ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving...
+                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    در حال ذخیره...
                   </>
                 ) : (
                   <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
+                    <Save className="w-4 h-4 ml-2" />
+                    ذخیره تغییرات
                   </>
                 )}
               </Button>
             </>
           ) : (
             <Button onClick={handleEdit}>
-              <Edit2 className="w-4 h-4 mr-2" />
-              Edit Profile
+              <Edit2 className="w-4 h-4 ml-2" />
+              ویرایش پروفایل
             </Button>
           )}
         </div>
@@ -259,7 +271,7 @@ export default function ProfilePage() {
                   </AvatarFallback>
                 </Avatar>
                 {isEditing && (
-                  <label className="absolute bottom-0 right-0 p-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors cursor-pointer">
+                  <label className="absolute bottom-0 left-0 p-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors cursor-pointer">
                     <Camera className="w-4 h-4" />
                     <input
                       type="file"
@@ -275,10 +287,10 @@ export default function ProfilePage() {
               <h2 className="text-xl font-semibold mt-4">{displayProfile.profile.fullName}</h2>
               <div className="flex items-center justify-center gap-2 mt-1">
                 <Badge className={getRoleBadge(displayProfile.role)}>
-                  {displayProfile.role.replace('_', ' ')}
+                  {getRoleLabel(displayProfile.role)}
                 </Badge>
                 <Badge className={getStatusBadge(displayProfile.isActive)}>
-                  {displayProfile.isActive ? "Active" : "Deactivate"}
+                  {getStatusLabel(displayProfile.isActive)}
                 </Badge>
               </div>
 
@@ -288,24 +300,24 @@ export default function ProfilePage() {
 
               <Separator className="my-4" />
 
-              <div className="space-y-2 text-sm text-left">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Mail className="w-4 h-4 text-gray-400" />
+              <div className="space-y-2 text-sm text-right">
+                <div className="flex items-center gap-2 text-gray-600 justify-end">
                   <span>{displayProfile.email}</span>
+                  <Mail className="w-4 h-4 text-gray-400" />
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Phone className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-gray-600 justify-end">
                   <span>{displayProfile.profile.phone}</span>
+                  <Phone className="w-4 h-4 text-gray-400" />
                 </div>
                 {displayProfile.profile.location && (
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <MapPin className="w-4 h-4 text-gray-400" />
+                  <div className="flex items-center gap-2 text-gray-600 justify-end">
                     <span>{displayProfile.profile.location}</span>
+                    <MapPin className="w-4 h-4 text-gray-400" />
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-gray-600 justify-end">
+                  <span>عضویت در {new Date(displayProfile.createdAt).toLocaleDateString('fa-IR')}</span>
                   <Calendar className="w-4 h-4 text-gray-400" />
-                  <span>Joined {new Date(displayProfile.createdAt).toLocaleDateString()}</span>
                 </div>
               </div>
 
@@ -360,35 +372,35 @@ export default function ProfilePage() {
           {/* Stats Card */}
           <Card>
             <CardContent className="p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Statistics</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">آمار</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 flex items-center gap-2">
                     <Briefcase className="w-4 h-4 text-blue-500" />
-                    Jobs Applied
+                    مشاغل درخواست داده
                   </span>
-                  <span className="font-semibold">24</span>
+                  <span className="font-semibold">۲۴</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 flex items-center gap-2">
                     <Users className="w-4 h-4 text-green-500" />
-                    Saved Jobs
+                    مشاغل ذخیره شده
                   </span>
-                  <span className="font-semibold">12</span>
+                  <span className="font-semibold">۱۲</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 flex items-center gap-2">
                     <FileText className="w-4 h-4 text-purple-500" />
-                    Resumes
+                    رزومه‌ها
                   </span>
-                  <span className="font-semibold">3</span>
+                  <span className="font-semibold">۳</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 flex items-center gap-2">
                     <Award className="w-4 h-4 text-yellow-500" />
-                    Skills
+                    مهارت‌ها
                   </span>
-                  <span className="font-semibold">{displayProfile.profile.skills?.length || 0}</span>
+                  <span className="font-semibold">{displayProfile.profile.skills?.length || "-"}</span>
                 </div>
               </div>
             </CardContent>
@@ -399,9 +411,9 @@ export default function ProfilePage() {
         <div className="lg:col-span-2">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-3 w-full">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="experience">Experience</TabsTrigger>
-              <TabsTrigger value="education">Education</TabsTrigger>
+              <TabsTrigger value="overview">نمای کلی</TabsTrigger>
+              <TabsTrigger value="experience">سابقه کاری</TabsTrigger>
+              <TabsTrigger value="education">تحصیلات</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -411,23 +423,23 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <User className="w-5 h-5 text-blue-600" />
-                    About Me
+                    درباره من
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {isEditing ? (
                     <div>
-                      <Label htmlFor="bio">Bio</Label>
+                      <Label htmlFor="bio">بیوگرافی</Label>
                       <textarea
                         id="bio"
                         value={editableProfile?.profile.bio}
                         onChange={(e) => handleChange('bio', e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
-                        placeholder="Tell us about yourself..."
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-right"
+                        placeholder="درباره خودتان بگویید..."
                       />
                     </div>
                   ) : (
-                    <p className="text-gray-700">{displayProfile.profile.bio || 'No bio added yet.'}</p>
+                    <p className="text-gray-700 text-right">{displayProfile.profile.bio || 'هنوز بیوگرافی اضافه نشده است.'}</p>
                   )}
                 </CardContent>
               </Card>
@@ -437,21 +449,22 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-blue-600" />
-                    Skills
+                    مهارت‌ها
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {isEditing ? (
                     <div>
-                      <Label htmlFor="skills">Skills (comma separated)</Label>
+                      <Label htmlFor="skills">مهارت‌ها (با کاما جدا کنید)</Label>
                       <Input
                         id="skills"
-                        value={editableProfile?.profile.skills?.join(', ') || ''}
+                        value={editableProfile?.profile.skills?.join('، ') || ''}
                         onChange={(e) => handleSkillsChange(e.target.value)}
-                        placeholder="React, TypeScript, Node.js"
+                        placeholder="React، TypeScript، Node.js"
+                        className="text-right"
                       />
                       <Button className="mt-2" onClick={handleSkillsSave} size="sm">
-                        Save Skills
+                        ذخیره مهارت‌ها
                       </Button>
                     </div>
                   ) : (
@@ -463,7 +476,7 @@ export default function ProfilePage() {
                           </Badge>
                         ))
                       ) : (
-                        <p className="text-gray-500 text-sm">No skills added yet.</p>
+                        <p className="text-gray-500 text-sm">هنوز مهارتی اضافه نشده است.</p>
                       )}
                     </div>
                   )}
@@ -475,69 +488,73 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <MapPin className="w-5 h-5 text-blue-600" />
-                    Location & Links
+                    موقعیت و لینک‌ها
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {isEditing ? (
                     <>
                       <div>
-                        <Label htmlFor="location">Location</Label>
+                        <Label htmlFor="location">موقعیت مکانی</Label>
                         <Input
                           id="location"
                           value={editableProfile?.profile.location || ''}
                           onChange={(e) => handleChange('location', e.target.value)}
-                          placeholder="City, Country"
+                          placeholder="شهر، کشور"
+                          className="text-right"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="website">Website</Label>
+                        <Label htmlFor="website">وب‌سایت</Label>
                         <Input
                           id="website"
                           value={editableProfile?.profile.website || ''}
                           onChange={(e) => handleChange('website', e.target.value)}
                           placeholder="https://yourwebsite.com"
+                          className="text-right"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="linkedin">LinkedIn</Label>
+                        <Label htmlFor="linkedin">لینکدین</Label>
                         <Input
                           id="linkedin"
                           value={editableProfile?.profile.linkedin || ''}
                           onChange={(e) => handleChange('linkedin', e.target.value)}
                           placeholder="https://linkedin.com/in/username"
+                          className="text-right"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="github">GitHub</Label>
+                        <Label htmlFor="github">گیت‌هاب</Label>
                         <Input
                           id="github"
                           value={editableProfile?.profile.github || ''}
                           onChange={(e) => handleChange('github', e.target.value)}
                           placeholder="https://github.com/username"
+                          className="text-right"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="twitter">Twitter</Label>
+                        <Label htmlFor="twitter">توییتر</Label>
                         <Input
                           id="twitter"
                           value={editableProfile?.profile.twitter || ''}
                           onChange={(e) => handleChange('twitter', e.target.value)}
                           placeholder="https://twitter.com/username"
+                          className="text-right"
                         />
                       </div>
                     </>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2 text-right">
                       {displayProfile.profile.location && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <MapPin className="w-4 h-4 text-gray-400" />
+                        <div className="flex items-center gap-2 text-sm justify-end">
                           <span className="text-gray-700">{displayProfile.profile.location}</span>
+                          <MapPin className="w-4 h-4 text-gray-400" />
                         </div>
                       )}
                       {displayProfile.profile.website && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Globe className="w-4 h-4 text-gray-400" />
+                        <div className="flex items-center gap-2 text-sm justify-end">
                           <a
                             href={displayProfile.profile.website}
                             target="_blank"
@@ -546,45 +563,46 @@ export default function ProfilePage() {
                           >
                             {displayProfile.profile.website}
                           </a>
+                          <Globe className="w-4 h-4 text-gray-400" />
                         </div>
                       )}
                       {displayProfile.profile.linkedin && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <FaLinkedin className="w-4 h-4 text-gray-400" />
+                        <div className="flex items-center gap-2 text-sm justify-end">
                           <a
                             href={displayProfile.profile.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:underline"
                           >
-                            LinkedIn Profile
+                            پروفایل لینکدین
                           </a>
+                          <FaLinkedin className="w-4 h-4 text-gray-400" />
                         </div>
                       )}
                       {displayProfile.profile.github && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <FaGithub className="w-4 h-4 text-gray-400" />
+                        <div className="flex items-center gap-2 text-sm justify-end">
                           <a
                             href={displayProfile.profile.github}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:underline"
                           >
-                            GitHub Profile
+                            پروفایل گیت‌هاب
                           </a>
+                          <FaGithub className="w-4 h-4 text-gray-400" />
                         </div>
                       )}
                       {displayProfile.profile.twitter && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <FaTwitter className="w-4 h-4 text-gray-400" />
+                        <div className="flex items-center gap-2 text-sm justify-end">
                           <a
                             href={displayProfile.profile.twitter}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:underline"
                           >
-                            Twitter Profile
+                            پروفایل توییتر
                           </a>
+                          <FaTwitter className="w-4 h-4 text-gray-400" />
                         </div>
                       )}
                     </div>
@@ -599,36 +617,36 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Briefcase className="w-5 h-5 text-blue-600" />
-                    Work Experience
+                    سابقه کاری
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {displayProfile.profile.experience && displayProfile.profile.experience.length > 0 ? (
                     displayProfile.profile.experience.map((exp, index) => (
-                      <div key={index} className="border-l-2 border-blue-200 pl-4 pb-6 last:pb-0">
+                      <div key={index} className="border-r-2 border-blue-200 pr-4 pb-6 last:pb-0">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="font-semibold text-gray-900">{exp.title}</h4>
-                            <p className="text-gray-600">{exp.company}</p>
+                            <h4 className="font-semibold text-gray-900 text-right">{exp.title}</h4>
+                            <p className="text-gray-600 text-right">{exp.company}</p>
                           </div>
                           <Badge variant={exp.current ? 'default' : 'secondary'}>
-                            {exp.current ? 'Current' : 'Past'}
+                            {exp.current ? 'فعلی' : 'گذشته'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {new Date(exp.startDate).toLocaleDateString('en-US', {
+                        <p className="text-sm text-gray-500 mt-1 text-right">
+                          {new Date(exp.startDate).toLocaleDateString('fa-IR', {
                             month: 'long',
                             year: 'numeric',
                           })}
                           {exp.endDate
-                            ? ` - ${new Date(exp.endDate).toLocaleDateString('en-US', {
+                            ? ` - ${new Date(exp.endDate).toLocaleDateString('fa-IR', {
                               month: 'long',
                               year: 'numeric',
                             })}`
-                            : ' - Present'}
+                            : ' - تاکنون'}
                         </p>
                         {exp.description && (
-                          <p className="text-sm text-gray-600 mt-2">{exp.description}</p>
+                          <p className="text-sm text-gray-600 mt-2 text-right">{exp.description}</p>
                         )}
                         {exp.technologies && exp.technologies.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
@@ -642,7 +660,7 @@ export default function ProfilePage() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-center py-4">No work experience added yet.</p>
+                    <p className="text-gray-500 text-center py-4">هنوز سابقه کاری اضافه نشده است.</p>
                   )}
                 </CardContent>
               </Card>
@@ -654,31 +672,31 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-blue-600" />
-                    Education
+                    تحصیلات
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {displayProfile.profile.education && displayProfile.profile.education.length > 0 ? (
                     displayProfile.profile.education.map((edu, index) => (
-                      <div key={index} className="border-l-2 border-purple-200 pl-4 pb-6 last:pb-0">
-                        <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
-                        <p className="text-gray-600">{edu.institution}</p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {new Date(edu.startDate).toLocaleDateString('en-US', {
+                      <div key={index} className="border-r-2 border-purple-200 pr-4 pb-6 last:pb-0">
+                        <h4 className="font-semibold text-gray-900 text-right">{edu.degree}</h4>
+                        <p className="text-gray-600 text-right">{edu.institution}</p>
+                        <p className="text-sm text-gray-500 mt-1 text-right">
+                          {new Date(edu.startDate).toLocaleDateString('fa-IR', {
                             month: 'long',
                             year: 'numeric',
                           })}
                           {edu.endDate
-                            ? ` - ${new Date(edu.endDate).toLocaleDateString('en-US', {
+                            ? ` - ${new Date(edu.endDate).toLocaleDateString('fa-IR', {
                               month: 'long',
                               year: 'numeric',
                             })}`
-                            : ' - Present'}
+                            : ' - تاکنون'}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-center py-4">No education added yet.</p>
+                    <p className="text-gray-500 text-center py-4">هنوز تحصیلاتی اضافه نشده است.</p>
                   )}
                 </CardContent>
               </Card>

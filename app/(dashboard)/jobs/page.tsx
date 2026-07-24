@@ -167,24 +167,24 @@ export default function SearchPage() {
   const parsedFilters = searchMode === 'ai' ? aiData?.parsedFilters : null;
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white">
+    <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" dir="rtl">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Find Your Dream Job
+              شغل رویایی خود را پیدا کنید
             </h1>
             <p className="text-gray-600">
               {searchMode === 'ai'
-                ? 'AI-powered search - just describe what you\'re looking for'
-                : 'Search thousands of jobs from top companies'}
+                ? 'جستجوی مبتنی بر هوش مصنوعی - فقط آنچه را که به دنبال آن هستید توصیف کنید'
+                : 'جستجو در هزاران شغل از شرکت‌های برتر'}
             </p>
           </div>
           <Link href="/employer/jobs/create">
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Post a Job
+              ثبت آگهی شغلی
             </Button>
           </Link>
         </div>
@@ -198,11 +198,11 @@ export default function SearchPage() {
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
             <TabsTrigger value="standard" className="flex items-center gap-2">
               <Search className="w-4 h-4" />
-              Standard Search
+              جستجوی استاندارد
             </TabsTrigger>
             <TabsTrigger value="ai" className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-blue-500" />
-              AI Search
+              جستجوی هوش مصنوعی
             </TabsTrigger>
           </TabsList>
 
@@ -211,29 +211,29 @@ export default function SearchPage() {
               <form onSubmit={handleStandardSearch} className="relative">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
                       type="text"
-                      placeholder="Job title, company, or keywords..."
+                      placeholder="عنوان شغل، شرکت یا کلمات کلیدی..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 pr-4 py-2 h-12 text-base"
+                      className="pr-10 pl-4 py-2 h-12 text-base text-right"
                     />
                   </div>
 
                   <div className="flex-1 relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
-                      placeholder="Location (city, state, remote)"
+                      placeholder="موقعیت مکانی (شهر، استان، دورکاری)"
                       value={filters.location || ''}
                       onChange={(e) => handleFilterChange('location', e.target.value)}
-                      className="pl-10 pr-4 py-2 h-12 text-base"
+                      className="pr-10 pl-4 py-2 h-12 text-base text-right"
                     />
                   </div>
 
                   <Button type="submit" size="lg" className="h-12 px-8">
-                    <Search className="w-5 h-5 mr-2" />
-                    Search
+                    <Search className="w-5 h-5 ml-2" />
+                    جستجو
                   </Button>
 
                   <Button
@@ -266,47 +266,47 @@ export default function SearchPage() {
               <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="text-sm font-semibold text-blue-900 flex items-center gap-2 mb-2">
                   <Sparkles className="w-4 h-4" />
-                  AI Parsed Filters
+                  فیلترهای استخراج شده توسط هوش مصنوعی
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {parsedFilters.title && (
                     <Badge variant="outline" className="bg-white">
-                      Title: {parsedFilters.title}
+                      عنوان: {parsedFilters.title}
                     </Badge>
                   )}
                   {parsedFilters.location && (
                     <Badge variant="outline" className="bg-white">
-                      Location: {parsedFilters.location}
+                      موقعیت: {parsedFilters.location}
                     </Badge>
                   )}
                   {parsedFilters.workMode && (
                     <Badge variant="outline" className="bg-white">
-                      Work: {parsedFilters.workMode}
+                      همکاری: {parsedFilters.workMode}
                     </Badge>
                   )}
                   {parsedFilters.employmentType && (
                     <Badge variant="outline" className="bg-white">
-                      Type: {parsedFilters.employmentType}
+                      نوع: {parsedFilters.employmentType}
                     </Badge>
                   )}
                   {parsedFilters.experienceLevel && (
                     <Badge variant="outline" className="bg-white">
-                      Level: {parsedFilters.experienceLevel}
+                      سطح: {parsedFilters.experienceLevel}
                     </Badge>
                   )}
                   {parsedFilters.minSalary && (
                     <Badge variant="outline" className="bg-white">
-                      Min Salary: ${parsedFilters.minSalary}
+                      حداقل حقوق: ${parsedFilters.minSalary}
                     </Badge>
                   )}
                   {parsedFilters.maxSalary && (
                     <Badge variant="outline" className="bg-white">
-                      Max Salary: ${parsedFilters.maxSalary}
+                      حداکثر حقوق: ${parsedFilters.maxSalary}
                     </Badge>
                   )}
                   {parsedFilters.skills?.map((skill: string) => (
                     <Badge key={skill} variant="outline" className="bg-white">
-                      Skill: {skill}
+                      مهارت: {skill}
                     </Badge>
                   ))}
                 </div>
@@ -320,7 +320,7 @@ export default function SearchPage() {
           <div className="flex flex-wrap gap-2 mb-6">
             {filters.title && (
               <Badge variant="secondary" className="flex items-center gap-1">
-                Title: {filters.title}
+                عنوان: {filters.title}
                 <X
                   className="w-3 h-3 cursor-pointer"
                   onClick={() => handleFilterChange('title', undefined)}
@@ -329,7 +329,7 @@ export default function SearchPage() {
             )}
             {filters.location && (
               <Badge variant="secondary" className="flex items-center gap-1">
-                Location: {filters.location}
+                موقعیت: {filters.location}
                 <X
                   className="w-3 h-3 cursor-pointer"
                   onClick={() => handleFilterChange('location', undefined)}
@@ -338,7 +338,7 @@ export default function SearchPage() {
             )}
             {filters.workMode && (
               <Badge variant="secondary" className="flex items-center gap-1">
-                Work: {filters.workMode}
+                همکاری: {filters.workMode}
                 <X
                   className="w-3 h-3 cursor-pointer"
                   onClick={() => handleFilterChange('workMode', undefined)}
@@ -347,7 +347,7 @@ export default function SearchPage() {
             )}
             {filters.employmentType && (
               <Badge variant="secondary" className="flex items-center gap-1">
-                Type: {filters.employmentType}
+                نوع: {filters.employmentType}
                 <X
                   className="w-3 h-3 cursor-pointer"
                   onClick={() => handleFilterChange('employmentType', undefined)}
@@ -356,7 +356,7 @@ export default function SearchPage() {
             )}
             {filters.experienceLevel && (
               <Badge variant="secondary" className="flex items-center gap-1">
-                Level: {filters.experienceLevel}
+                سطح: {filters.experienceLevel}
                 <X
                   className="w-3 h-3 cursor-pointer"
                   onClick={() => handleFilterChange('experienceLevel', undefined)}
@@ -365,7 +365,7 @@ export default function SearchPage() {
             )}
             {filters.skills?.map((skill) => (
               <Badge key={skill} variant="secondary" className="flex items-center gap-1">
-                Skill: {skill}
+                مهارت: {skill}
                 <X
                   className="w-3 h-3 cursor-pointer"
                   onClick={() => handleFilterChange(
@@ -381,7 +381,7 @@ export default function SearchPage() {
               onClick={clearFilters}
               className="text-sm text-blue-600"
             >
-              Clear all
+              پاک کردن همه
             </Button>
           </div>
         )}
@@ -406,15 +406,15 @@ export default function SearchPage() {
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
                   {isLoading
-                    ? 'Searching...'
+                    ? 'در حال جستجو...'
                     : searchMode === 'ai' && aiData
-                      ? `AI Search Results: "${aiData.query}"`
-                      : `${totalResults} job${totalResults !== 1 ? 's' : ''} found`}
+                      ? `نتایج جستجوی هوش مصنوعی: "${aiData.query}"`
+                      : `${totalResults} شغل یافت شد`}
                 </h2>
                 {!isLoading && totalResults > 0 && (
                   <p className="text-sm text-gray-500">
-                    Showing {((filters.page || 1) - 1) * (filters.limit || 10) + 1}-
-                    {Math.min((filters.page || 1) * (filters.limit || 10), totalResults)} of {totalResults}
+                    نمایش {((filters.page || 1) - 1) * (filters.limit || 10) + 1}-
+                    {Math.min((filters.page || 1) * (filters.limit || 10), totalResults)} از {totalResults}
                   </p>
                 )}
               </div>
@@ -422,7 +422,7 @@ export default function SearchPage() {
               {searchMode === 'ai' && aiData && (
                 <Badge variant="outline" className="gap-1">
                   <Sparkles className="w-3 h-3" />
-                  AI Powered
+                  مبتنی بر هوش مصنوعی
                 </Badge>
               )}
             </div>
@@ -454,15 +454,15 @@ export default function SearchPage() {
                 <CardContent className="p-12 text-center">
                   <div className="text-4xl mb-4">😕</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Something went wrong
+                    خطایی رخ داده است
                   </h3>
                   <p className="text-gray-600 mb-4">
                     {searchMode === 'ai'
-                      ? 'AI search failed. Please try a different query.'
-                      : 'We couldn\'t load the jobs. Please try again.'}
+                      ? 'جستجوی هوش مصنوعی با شکست مواجه شد. لطفاً عبارت دیگری را امتحان کنید.'
+                      : 'نمی‌توانیم مشاغل را بارگذاری کنیم. لطفاً دوباره تلاش کنید.'}
                   </p>
                   <Button onClick={() => searchMode === 'standard' ? refetchStandard() : refetchAI()}>
-                    Try Again
+                    تلاش مجدد
                   </Button>
                 </CardContent>
               </Card>
@@ -474,15 +474,15 @@ export default function SearchPage() {
                 <CardContent className="p-12 text-center">
                   <div className="text-4xl mb-4">🔍</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    No jobs found
+                    هیچ شغلی یافت نشد
                   </h3>
                   <p className="text-gray-600 mb-4">
                     {searchMode === 'ai'
-                      ? 'Try rephrasing your search query or use standard search with filters.'
-                      : 'Try adjusting your search or filters to find more jobs.'}
+                      ? 'سعی کنید عبارت جستجو را تغییر دهید یا از جستجوی استاندارد با فیلترها استفاده کنید.'
+                      : 'سعی کنید جستجو یا فیلترهای خود را تنظیم کنید تا مشاغل بیشتری پیدا کنید.'}
                   </p>
                   <Button variant="outline" onClick={clearFilters}>
-                    Clear all filters
+                    پاک کردن همه فیلترها
                   </Button>
                 </CardContent>
               </Card>

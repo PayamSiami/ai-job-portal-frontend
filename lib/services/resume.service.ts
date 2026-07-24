@@ -106,8 +106,8 @@ export const resumeService = {
   async getResumes(params?: { status?: string }): Promise<any> {
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append("status", params.status);
-    const response = await api.get(`/resumes?${queryParams.toString()}`);
-    return response.data;
+    const { data } = await api.get(`/resumes?${queryParams.toString()}`);
+    return data.data?.resumes;
   },
 
   // Get a single resume

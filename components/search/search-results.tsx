@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
 import { JobCard } from "@/components/jobs/job-card";
-import { Sparkles, Filter, Sliders,  } from "lucide-react";
+import { Sparkles, Filter, Sliders, } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Job, ParsedJobFilters } from "@/lib/types/job.types";
+import { Job } from "@/lib/types/job.types";
 
 interface SearchResultsProps {
   jobs: Job[];
-  parsedFilters?: ParsedJobFilters;
+  parsedFilters?: any;
   isLoading?: boolean;
   onSaveJob?: (jobId: string) => void;
   onApplyJob?: (jobId: string) => void;
@@ -70,9 +71,9 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     <div className="space-y-6">
       {/* AI Context Header */}
       {parsedFilters && (
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
+        <div className="bg-linear-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
           <div className="flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <Sparkles className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="text-sm text-gray-700">
                 <span className="font-medium">AI interpreted your search:</span>

@@ -21,17 +21,6 @@ api.interceptors.request.use((config) => {
 });
 
 export const jobService = {
-  // Get employer jobs
-  async getEmployerJobs(): Promise<any> {
-    try {
-      const response = await api.get("/jobs/employer");
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching employer jobs:", error);
-      throw error;
-    }
-  },
-
   // Search jobs with filters
   async searchJobs(filters: any): Promise<any> {
     try {
@@ -47,8 +36,30 @@ export const jobService = {
         }
       });
 
-      const response = await api.get(`/jobs?${params.toString()}`);
-      return response.data;
+      const { data } = await api.get(`/jobs?${params.toString()}`);
+      return data.data;
+    } catch (error) {
+      console.error("Error searching jobs:", error);
+      throw error;
+    }
+  },
+
+  async statsJobs(filters: any): Promise<any> {
+    try {
+      const params = new URLSearchParams();
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          if (Array.isArray(value)) {
+            value.forEach((item) => params.append(key, item));
+          } else {
+            params.append(key, String(value));
+          }
+        }
+      });
+
+      const { data } = await api.get("/jobs/stats/global");
+      return data.data;
     } catch (error) {
       console.error("Error searching jobs:", error);
       throw error;
@@ -61,7 +72,8 @@ export const jobService = {
       const response = await api.get(
         `/jobs/search/ai?query=${encodeURIComponent(query)}`,
       );
-      return response.data;
+      console.log("AI search response:", response.data);
+      return response.data.data.results.jobs; // Assuming the API returns results in this structure
     } catch (error) {
       console.error("Error performing AI search:", error);
       throw error;
@@ -71,65 +83,10 @@ export const jobService = {
   // Get job by ID
   async getJobById(id: string): Promise<any> {
     try {
-      const response = await api.get(`/jobs/${id}`);
-      return response.data;
+      const { data } = await api.get(`/jobs/${id}`);
+      return data.data;
     } catch (error) {
       console.error("Error fetching job:", error);
-      throw error;
-    }
-  },
-
-  // Create new job (employer only)
-  async createJob(jobData: any): Promise<any> {
-    try {
-      const response = await api.post("/jobs", jobData);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating job:", error);
-      throw error;
-    }
-  },
-
-  // Generate job content using AI (employer only)
-  async generateJobContent(request: { jobTitle: string }): Promise<any> {
-    try {
-      const response = await api.post("/jobs/generate-content", request);
-      return response.data;
-    } catch (error) {
-      console.error("Error generating content:", error);
-      throw error;
-    }
-  },
-
-  // Update job (employer only)
-  async updateJob(id: string, jobData: any): Promise<any> {
-    try {
-      const response = await api.put(`/jobs/${id}`, jobData);
-      return response.data;
-    } catch (error) {
-      console.error("Error updating job:", error);
-      throw error;
-    }
-  },
-
-  // Delete job (employer only)
-  async deleteJob(id: string): Promise<any> {
-    try {
-      const response = await api.delete(`/jobs/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error deleting job:", error);
-      throw error;
-    }
-  },
-
-  // Get job applications (employer only)
-  async getJobApplications(jobId: string): Promise<any> {
-    try {
-      const response = await api.get(`/jobs/${jobId}/applications`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching applications:", error);
       throw error;
     }
   },

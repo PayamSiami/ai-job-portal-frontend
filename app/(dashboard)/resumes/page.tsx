@@ -75,7 +75,7 @@ export default function ResumesPage() {
   const [previewResume, setPreviewResume] = useState<Resume | null>(null);
 
   // Fetch resumes
-  const { data, isLoading, refetch } = useQuery({
+  const { data: resumes, isLoading, refetch } = useQuery({
     queryKey: ['resumes', statusFilter],
     queryFn: () => {
       if (statusFilter !== 'all') {
@@ -89,14 +89,14 @@ export default function ResumesPage() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => resumeService.deleteResume(id),
     onSuccess: () => {
-      toast.success('Resume deleted successfully');
+      toast.success('رزومه با موفقیت حذف شد');
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
       setDeleteDialogOpen(false);
       setSelectedResume(null);
       refetch();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'Failed to delete resume');
+      toast.error(error?.response?.data?.error || 'حذف رزومه با شکست مواجه شد');
     },
   });
 
@@ -104,19 +104,17 @@ export default function ResumesPage() {
   const setDefaultMutation = useMutation({
     mutationFn: (id: string) => resumeService.setDefaultResume(id),
     onSuccess: () => {
-      toast.success('Default resume updated');
+      toast.success('رزومه پیش‌فرض بروزرسانی شد');
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
       refetch();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'Failed to set default resume');
+      toast.error(error?.response?.data?.error || 'تنظیم رزومه پیش‌فرض با شکست مواجه شد');
     },
   });
 
-  const resumes = data?.data || [];
-
   // Filter resumes by search
-  const filteredResumes = resumes.filter((resume: Resume) => {
+  const filteredResumes = resumes?.filter((resume: Resume) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     const fullName = `${resume.personalInfo.firstName} ${resume.personalInfo.lastName}`.toLowerCase();
@@ -163,10 +161,25 @@ export default function ResumesPage() {
     }
   };
 
+  const getTemplateLabel = (template: string) => {
+    switch (template) {
+      case 'modern':
+        return 'مدرن';
+      case 'classic':
+        return 'کلاسیک';
+      case 'minimal':
+        return 'مینیمال';
+      case 'creative':
+        return 'خلاق';
+      default:
+        return template;
+    }
+  };
+
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('fa-IR', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
     });
   };
@@ -179,14 +192,13 @@ export default function ResumesPage() {
     const days = Math.floor(hours / 24);
 
     if (days === 0) {
-      if (hours === 0) return 'Just now';
-      return `${hours}h ago`;
+      if (hours === 0) return 'همین الان';
+      return `${hours} ساعت پیش`;
     }
-    if (days === 1) return '1d ago';
-    if (days < 7) return `${days}d ago`;
+    if (days === 1) return '۱ روز پیش';
+    if (days < 7) return `${days} روز پیش`;
     return formatDate(date);
   };
-
 
   // Calculate resume completion percentage
   const calculateCompletion = (resume: Resume) => {
@@ -223,7 +235,7 @@ export default function ResumesPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl" dir="rtl">
         <div className="flex items-center justify-between mb-8">
           <div>
             <Skeleton className="h-8 w-48 mb-2" />
@@ -248,21 +260,21 @@ export default function ResumesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-8 max-w-6xl" dir="rtl">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
             <FileText className="w-8 h-8 text-blue-600" />
-            My Resumes
+            رزومه‌های من
           </h1>
           <p className="text-gray-600">
-            Create and manage multiple resume versions using our built-in templates
+            با استفاده از قالب‌های داخلی، چندین نسخه رزومه ایجاد و مدیریت کنید
           </p>
         </div>
         <Button onClick={() => setCreateModalOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4" />
-          Create New Resume
+          ایجاد رزومه جدید
         </Button>
       </div>
 
@@ -270,12 +282,12 @@ export default function ResumesPage() {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
         <div className="flex items-center gap-2 text-sm text-blue-800">
           <Star className="w-4 h-4 fill-current" />
-          <span className="font-medium">Default Resume:</span>
+          <span className="font-medium">رزومه پیش‌فرض:</span>
           <span>
-            {resumes.find((r: Resume) => r.isDefault)?.title || 'No default resume set'}
+            {resumes.find((r: Resume) => r.isDefault)?.title || 'هیچ رزومه پیش‌فرضی تنظیم نشده است'}
           </span>
-          <span className="text-blue-600 text-xs ml-2">
-            will be used when you apply without choosing a version.
+          <span className="text-blue-600 text-xs mr-2">
+            زمانی که بدون انتخاب نسخه، درخواست می‌دهید از این رزومه استفاده می‌شود.
           </span>
         </div>
       </div>
@@ -283,20 +295,20 @@ export default function ResumesPage() {
       {/* Search and Filters */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
         <div className="relative w-full md:w-80">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
-            placeholder="Search resumes..."
+            placeholder="جستجوی رزومه‌ها..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pr-9 text-right"
           />
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
           <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full md:w-auto">
             <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="draft">Drafts</TabsTrigger>
+              <TabsTrigger value="all">همه</TabsTrigger>
+              <TabsTrigger value="active">فعال</TabsTrigger>
+              <TabsTrigger value="draft">پیش‌نویس‌ها</TabsTrigger>
             </TabsList>
           </Tabs>
           <div className="flex items-center gap-1 border rounded-lg p-1">
@@ -326,21 +338,21 @@ export default function ResumesPage() {
           <CardContent className="p-12 text-center">
             <div className="text-6xl mb-4">📄</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {searchQuery ? 'No resumes found matching your search' : 'No resumes yet'}
+              {searchQuery ? 'هیچ رزومه‌ای با جستجوی شما مطابقت ندارد' : 'هنوز رزومه‌ای ایجاد نشده است'}
             </h3>
             <p className="text-gray-600 mb-4">
               {searchQuery
-                ? 'Try adjusting your search terms'
-                : 'Create your first resume to start applying for jobs'}
+                ? 'سعی کنید عبارت جستجو را تغییر دهید'
+                : 'اولین رزومه خود را ایجاد کنید تا شروع به درخواست شغل کنید'}
             </p>
             {searchQuery ? (
               <Button variant="outline" onClick={() => setSearchQuery('')}>
-                Clear Search
+                پاک کردن جستجو
               </Button>
             ) : (
               <Button onClick={() => setCreateModalOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
                 <Plus className="w-4 h-4" />
-                Create Your First Resume
+                ایجاد اولین رزومه
               </Button>
             )}
           </CardContent>
@@ -368,13 +380,13 @@ export default function ResumesPage() {
                         </h3>
                         {isDefault && (
                           <Badge className="bg-yellow-100 text-yellow-800 text-xs">
-                            <Star className="w-3 h-3 mr-1 fill-current" />
-                            Default
+                            <Star className="w-3 h-3 ml-1 fill-current" />
+                            پیش‌فرض
                           </Badge>
                         )}
                       </div>
-                      {resume?.personalInfo && <p className="text-sm text-gray-500">
-                        {resume?.personalInfo?.firstName} {resume?.personalInfo?.lastName} • {resume?.personalInfo?.title || 'No title'}
+                      {resume?.personalInfo && <p className="text-sm text-gray-500 text-right">
+                        {resume?.personalInfo?.firstName} {resume?.personalInfo?.lastName} • {resume?.personalInfo?.title || 'بدون عنوان'}
                       </p>}
                     </div>
                     <DropdownMenu>
@@ -385,49 +397,48 @@ export default function ResumesPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className='w-56'>
                         <DropdownMenuItem onClick={() => handlePreview(resume)}>
-                          <Eye className="w-4 h-4 mr-2" />
-                          View & Export
+                          <Eye className="w-4 h-4 ml-2" />
+                          مشاهده و خروجی
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => router.push(`/resumes/${resume._id}/edit`)}>
-                          <Edit2 className="w-4 h-4 mr-2" />
-                          Edit
+                          <Edit2 className="w-4 h-4 ml-2" />
+                          ویرایش
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleSetDefault(resume._id)}>
                           {isDefault ? (
                             <>
-                              <StarOff className="w-4 h-4 mr-2" />
-                              Remove Default
+                              <StarOff className="w-4 h-4 ml-2" />
+                              حذف پیش‌فرض
                             </>
                           ) : (
                             <>
-                              <Star className="w-4 h-4 mr-2" />
-                              Set as Default
+                              <Star className="w-4 h-4 ml-2" />
+                              تنظیم به عنوان پیش‌فرض
                             </>
                           )}
                         </DropdownMenuItem>
-                        {/* ✅ NEW: Download PDF option */}
                         <DropdownMenuItem onClick={() => {
                           resumeService.downloadPDF(resume._id);
                         }}>
-                          <Download className="w-4 h-4 mr-2" />
-                          Download PDF
+                          <Download className="w-4 h-4 ml-2" />
+                          دانلود PDF
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => {
                           router.push(`/resumes/${resume._id}`);
                         }}>
-                          <Eye className="w-4 h-4 mr-2" />
-                          Preview PDF
+                          <Eye className="w-4 h-4 ml-2" />
+                          پیش‌نمایش PDF
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          AI Career Feedback
+                          <Sparkles className="w-4 h-4 ml-2" />
+                          بازخورد شغلی هوش مصنوعی
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-600"
                           onClick={() => handleDelete(resume)}
                         >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Delete
+                          <Trash2 className="w-4 h-4 ml-2" />
+                          حذف
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -436,7 +447,7 @@ export default function ResumesPage() {
                   {/* Completion Progress */}
                   <div className="mb-3">
                     <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-gray-600">Completion</span>
+                      <span className="text-gray-600">تکمیل</span>
                       <span className="font-medium text-gray-900">{completion}%</span>
                     </div>
                     <Progress value={completion} className="h-2" />
@@ -457,7 +468,7 @@ export default function ResumesPage() {
                       {resume?.visibility && resume?.visibility?.toUpperCase()}
                     </span>
                     <Badge className={getTemplateColor(resume.template)} variant="outline">
-                      {resume.template}
+                      {getTemplateLabel(resume.template)}
                     </Badge>
                   </div>
 
@@ -465,15 +476,15 @@ export default function ResumesPage() {
                   <div className="flex items-center gap-4 text-xs text-gray-500 border-t pt-3">
                     <span className="flex items-center gap-1">
                       <Briefcase className="w-3 h-3" />
-                      {resume.experience?.length || 0} Experience
+                      {resume.experience?.length || 0} سابقه کاری
                     </span>
                     <span className="flex items-center gap-1">
                       <User className="w-3 h-3" />
-                      {resume.education?.length || 0} Education
+                      {resume.education?.length || 0} تحصیلات
                     </span>
                     <span className="flex items-center gap-1">
                       <Award className="w-3 h-3" />
-                      {resume.skills?.length || 0} Skills
+                      {resume.skills?.length || 0} مهارت
                     </span>
                   </div>
 
@@ -486,8 +497,8 @@ export default function ResumesPage() {
                         onClick={() => handlePreview(resume)}
                         className="text-xs"
                       >
-                        <Eye className="w-3 h-3 mr-1" />
-                        View
+                        <Eye className="w-3 h-3 ml-1" />
+                        مشاهده
                       </Button>
                       <Button
                         variant="outline"
@@ -495,8 +506,8 @@ export default function ResumesPage() {
                         onClick={() => router.push(`/resumes/${resume._id}/edit`)}
                         className="text-xs"
                       >
-                        <Edit2 className="w-3 h-3 mr-1" />
-                        Edit
+                        <Edit2 className="w-3 h-3 ml-1" />
+                        ویرایش
                       </Button>
                     </div>
                     <Button
@@ -506,9 +517,9 @@ export default function ResumesPage() {
                       className="text-xs"
                     >
                       {isDefault ? (
-                        'Default ✓'
+                        'پیش‌فرض ✓'
                       ) : (
-                        'Set as Default'
+                        'تنظیم به عنوان پیش‌فرض'
                       )}
                     </Button>
                   </div>
@@ -521,16 +532,16 @@ export default function ResumesPage() {
 
       {/* Footer */}
       <div className="mt-12 text-center border-t pt-8">
-        <h3 className="text-sm font-medium text-gray-900 mb-2">About Our Templates</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-2">درباره قالب‌های ما</h3>
         <p className="text-sm text-gray-500">
-          Choose from professionally designed templates to showcase your skills and experience.
-          Each template is optimized for ATS systems and hiring managers.
+          از بین قالب‌های طراحی شده حرفه‌ای برای نمایش مهارت‌ها و تجربه خود انتخاب کنید.
+          هر قالب برای سیستم‌های ATS و مدیران استخدام بهینه شده است.
         </p>
         <div className="flex justify-center gap-4 mt-4">
-          <Badge variant="outline" className="text-xs">Modern</Badge>
-          <Badge variant="outline" className="text-xs">Classic</Badge>
-          <Badge variant="outline" className="text-xs">Minimal</Badge>
-          <Badge variant="outline" className="text-xs">Creative</Badge>
+          <Badge variant="outline" className="text-xs">مدرن</Badge>
+          <Badge variant="outline" className="text-xs">کلاسیک</Badge>
+          <Badge variant="outline" className="text-xs">مینیمال</Badge>
+          <Badge variant="outline" className="text-xs">خلاق</Badge>
         </div>
       </div>
 
@@ -538,9 +549,9 @@ export default function ResumesPage() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Resume</AlertDialogTitle>
+            <AlertDialogTitle>حذف رزومه</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this resume? This action cannot be undone.
+              آیا مطمئن هستید که می‌خواهید این رزومه را حذف کنید؟ این عمل قابل بازگشت نیست.
               {selectedResume && (
                 <div className="mt-2 p-3 bg-gray-50 rounded-lg">
                   <p className="font-medium">{selectedResume.title}</p>
@@ -552,7 +563,7 @@ export default function ResumesPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>انصراف</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-red-600 hover:bg-red-700"
@@ -560,11 +571,11 @@ export default function ResumesPage() {
             >
               {deleteMutation.isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Deleting...
+                  <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                  در حال حذف...
                 </>
               ) : (
-                'Delete Resume'
+                'حذف رزومه'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -577,10 +588,10 @@ export default function ResumesPage() {
           <DialogHeader className="px-4 pt-4 sm:px-6 sm:pt-6 shrink-0">
             <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
               <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-              Resume Preview
+              پیش‌نمایش رزومه
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
-              Preview your resume in different templates and export as PDF
+              رزومه خود را در قالب‌های مختلف پیش‌نمایش کنید و به صورت PDF خروجی بگیرید
             </DialogDescription>
           </DialogHeader>
 
@@ -601,7 +612,7 @@ export default function ResumesPage() {
               onClick={() => setPreviewDialogOpen(false)}
               className="w-full sm:w-auto text-sm"
             >
-              Close
+              بستن
             </Button>
           </DialogFooter>
         </DialogContent>

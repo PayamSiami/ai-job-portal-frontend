@@ -21,8 +21,8 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import toast from "react-hot-toast";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email("لطفاً یک آدرس ایمیل معتبر وارد کنید"),
+  password: z.string().min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -45,34 +45,35 @@ export const LoginForm = () => {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
-      toast.success("Welcome back!");
+      toast.success("خوش آمدید!");
       router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Login failed");
+      toast.error(error instanceof Error ? error.message : "ورود با شکست مواجه شد");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg">
+    <Card className="w-full max-w-md mx-auto shadow-lg" dir="rtl">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl text-center font-bold">
-          Welcome Back
+          خوش آمدید
         </CardTitle>
         <CardDescription className="text-center">
-          Sign in to your account to continue
+          برای ادامه، وارد حساب کاربری خود شوید
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4 mb-2">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium">ایمیل</label>
             <Input
               type="email"
               placeholder="you@example.com"
               {...register("email")}
               className={errors.email ? "border-red-500" : ""}
+              dir="ltr"
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -80,18 +81,18 @@ export const LoginForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Password</label>
+            <label className="text-sm font-medium">رمز عبور</label>
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 {...register("password")}
-                className={errors.password ? "border-red-500 pr-10" : "pr-10"}
+                className={errors.password ? "border-red-500 pl-10" : "pl-10"}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -110,21 +111,21 @@ export const LoginForm = () => {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                در حال ورود...
               </>
             ) : (
-              "Sign In"
+              "ورود"
             )}
           </Button>
 
           <div className="text-sm text-center text-gray-600">
-            Don&apos;t have an account?{" "}
+            حساب کاربری ندارید؟{" "}
             <Link
               href="/register"
               className="text-blue-600 hover:underline font-medium"
             >
-              Sign up
+              ثبت نام کنید
             </Link>
           </div>
         </CardFooter>

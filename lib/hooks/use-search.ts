@@ -1,11 +1,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { jobService } from "../services/job.service";
-import { Job, ParsedJobFilters } from "../types/job.types";
+import { Job } from "../types/job.types";
 
 interface SearchResult {
   jobs: Job[];
-  parsedFilters?: ParsedJobFilters;
+  parsedFilters?: unknown;
 }
 
 export const useSearch = () => {
