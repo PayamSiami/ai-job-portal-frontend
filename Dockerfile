@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-COPY .env.production ./
+# COPY .env.production ./
 
 # Install dependencies
 RUN npm ci
