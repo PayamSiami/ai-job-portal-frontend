@@ -189,9 +189,9 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: any) {
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
       onOpenChange(false);
       if (onSuccess) onSuccess();
-      if (data?.data?._id) {
+      if (data?._id) {
         setTimeout(() => {
-          window.location.href = `/resumes/${data.data._id}/edit`;
+          window.location.href = `/resumes/${data._id}/edit`;
         }, 500);
       }
     },
@@ -344,7 +344,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: any) {
                       onChange={handleTitleChange}
                       maxLength={150}
                       className={cn(
-                        "pr-24 h-11 sm:h-12 text-sm sm:text-base",
+                        "pl-24 h-11 sm:h-12 text-sm sm:text-base",
                         characterCount > 0 && characterCount < 150 && "border-green-300 focus:border-green-500"
                       )}
                     />
@@ -412,7 +412,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: any) {
               >
                 {/* Template Selection */}
                 <div>
-                  <Label className="text-sm font-semibold block mb-3">
+                  <Label className="text-sm font-semibold flex mb-3">
                     {FA.chooseTemplate}
                     <span className="text-xs font-normal text-gray-500 mr-2">
                       {FA.selectDesign}
@@ -485,8 +485,8 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: any) {
 
                 {/* Visibility Selection */}
                 <div>
-                  <Label className="text-sm font-semibold block mb-3">
-                    {FA.visibility}
+                  <Label className="text-sm font-semibold flex mb-3">
+                    {FA.visibility} 
                     <span className="text-xs font-normal text-gray-500 mr-2">
                       {FA.controlVisibility}
                     </span>

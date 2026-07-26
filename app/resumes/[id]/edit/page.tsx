@@ -57,8 +57,6 @@ import {
   AlertTitle,
 } from '@/components/ui/alert';
 
-type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
-
 export default function EditResumePage() {
   const params = useParams();
   const router = useRouter();
@@ -72,7 +70,7 @@ export default function EditResumePage() {
   const [localResume, setLocalResume] = useState<Resume | null>(null);
 
   // Fetch resume
-  const { data, isLoading, refetch } = useQuery({
+  const { data: resume, isLoading, refetch } = useQuery({
     queryKey: ['resume', id],
     queryFn: () => resumeService.getResume(id),
     enabled: !!id,
@@ -80,11 +78,11 @@ export default function EditResumePage() {
 
   // Initialize local state when data loads
   useEffect(() => {
-    if (data?.data) {
-      setLocalResume(data.data);
+    if (resume) {
+      setLocalResume(resume);
       setHasChanges(false);
     }
-  }, [data]);
+  }, [resume]);
 
   // Update mutation - only called on save
   const updateMutation = useMutation({
@@ -225,7 +223,7 @@ export default function EditResumePage() {
   const handleCancel = () => {
     if (hasChanges) {
       if (confirm('تغییرات ذخیره نشده دارید. آیا مطمئن هستید که می‌خواهید خارج شوید؟')) {
-        setLocalResume(data?.data || null);
+        setLocalResume(null);
         setHasChanges(false);
         router.push('/resumes');
       }
@@ -790,9 +788,9 @@ export default function EditResumePage() {
                       <span className="text-sm">{skill.name}</span>
                       <Badge variant="outline" className="text-xs">
                         {skill.level === 'beginner' ? 'مبتدی' :
-                         skill.level === 'intermediate' ? 'متوسط' :
-                         skill.level === 'advanced' ? 'پیشرفته' :
-                         skill.level === 'expert' ? 'متخصص' : skill.level || 'متوسط'}
+                          skill.level === 'intermediate' ? 'متوسط' :
+                            skill.level === 'advanced' ? 'پیشرفته' :
+                              skill.level === 'expert' ? 'متخصص' : skill.level || 'متوسط'}
                       </Badge>
                       <button
                         onClick={() => removeItem('skills', index)}
@@ -983,9 +981,9 @@ export default function EditResumePage() {
                       <span className="text-sm font-medium">{lang.name}</span>
                       <Badge variant="outline" className="text-xs">
                         {lang.proficiency === 'basic' ? 'مقدماتی' :
-                         lang.proficiency === 'conversational' ? 'مکالمه' :
-                         lang.proficiency === 'professional' ? 'حرفه‌ای' :
-                         lang.proficiency === 'native' ? 'مادری' : lang.proficiency}
+                          lang.proficiency === 'conversational' ? 'مکالمه' :
+                            lang.proficiency === 'professional' ? 'حرفه‌ای' :
+                              lang.proficiency === 'native' ? 'مادری' : lang.proficiency}
                       </Badge>
                       <button
                         onClick={() => removeItem('languages', index)}

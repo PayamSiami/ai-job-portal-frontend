@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// lib/hooks/use-resume.ts
 "use client";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { resumeService } from "@/lib/services/resume.service";
-import { Resume, PersonalInfo } from "@/lib/types/resume.types";
+import {
+  resumeService,
+  Resume,
+  PersonalInfo,
+} from "@/lib/services/resume.service"; // ✅ Import from service
 import toast from "react-hot-toast";
 
 export const useResume = () => {
   const queryClient = useQueryClient();
-  const [currentResume, setCurrentResume] = useState<Resume | null>(null);
+  const [currentResume, setCurrentResume]: any = useState<Resume | null>(null);
 
   // Get all resumes
   const useGetMyResumes = () => {
@@ -27,7 +32,7 @@ export const useResume = () => {
     });
   };
 
-  // Create resume mutation
+  // ✅ Create resume mutation - now properly typed
   const createResume = useMutation({
     mutationFn: (data: Partial<Resume>) => resumeService.createResume(data),
     onSuccess: (data: Resume) => {

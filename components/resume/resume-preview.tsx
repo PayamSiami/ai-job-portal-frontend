@@ -32,7 +32,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
       creative: "bg-gradient-to-r from-pink-50 to-orange-50 border-2 border-pink-200",
       professional: "bg-gray-50 border-2 border-gray-300",
     };
-    return styles[template] || styles.classic;
+    return styles[template] || styles['classic'];
   };
 
   return (

@@ -284,7 +284,7 @@ export default function ResumesPage() {
           <Star className="w-4 h-4 fill-current" />
           <span className="font-medium">رزومه پیش‌فرض:</span>
           <span>
-            {resumes.find((r: Resume) => r.isDefault)?.title || 'هیچ رزومه پیش‌فرضی تنظیم نشده است'}
+            {resumes?.find((r: Resume) => r.isDefault)?.title || 'هیچ رزومه پیش‌فرضی تنظیم نشده است'}
           </span>
           <span className="text-blue-600 text-xs mr-2">
             زمانی که بدون انتخاب نسخه، درخواست می‌دهید از این رزومه استفاده می‌شود.
@@ -333,7 +333,7 @@ export default function ResumesPage() {
       </div>
 
       {/* Empty State */}
-      {filteredResumes.length === 0 && (
+      {filteredResumes?.length === 0 && (
         <Card>
           <CardContent className="p-12 text-center">
             <div className="text-6xl mb-4">📄</div>
@@ -360,12 +360,12 @@ export default function ResumesPage() {
       )}
 
       {/* Resume Grid */}
-      {filteredResumes.length > 0 && (
+      {filteredResumes && filteredResumes?.length > 0 && (
         <div className={viewMode === 'grid'
           ? 'grid grid-cols-1 md:grid-cols-2 gap-6'
           : 'space-y-4'
         }>
-          {filteredResumes.map((resume: Resume) => {
+          {filteredResumes?.map((resume: Resume) => {
             const completion = calculateCompletion(resume);
             const isDefault = resume.isDefault;
 

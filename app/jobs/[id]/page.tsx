@@ -36,23 +36,25 @@ export default function JobDetailsPage() {
   }
 
   return (
-    <div className="space-y-6" dir="rtl">
-      <JobDetails job={job} />
 
-      <div className="flex justify-end">
-        <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" className="gap-2">
-              درخواست دهید
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <JobApplicationForm
-              jobId={job._id}
-              onSuccess={() => setIsApplyDialogOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
+    <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" dir="rtl">
+      <div className="container mx-auto px-4 py-8">
+        <JobDetails job={job} />
+        <div className="flex justify-end">
+          <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg" className="gap-2">
+                درخواست دهید
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-full">
+              <JobApplicationForm
+                jobId={job._id}
+                onSuccess={() => setIsApplyDialogOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </div>
   );

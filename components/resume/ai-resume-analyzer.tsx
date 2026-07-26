@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -34,10 +35,10 @@ export const AIResumeAnalyzer = () => {
 
     try {
       // Use mutateAsync instead of calling analyzeResume directly
-      const result = await analyzeResume.mutateAsync(currentResume.id);
+      const result: any = await analyzeResume.mutateAsync(currentResume?.id);
       setAnalysis(result);
       toast.success("Resume analysis complete!");
-    } catch (error) {
+    } catch  {
       toast.error("Failed to analyze resume");
     }
   };

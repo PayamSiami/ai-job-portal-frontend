@@ -16,7 +16,8 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/:path*`,
+        // ✅ Use bracket notation to access environment variable
+        destination: `${process.env["NEXT_PUBLIC_API_GATEWAY_URL"]}/:path*`,
       },
     ];
   },

@@ -97,7 +97,13 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
     if (section === 'personalInfo') {
       setFormData((prev) => ({
         ...prev,
-        personalInfo: { ...prev.personalInfo, [field]: value },
+        personalInfo: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          ...prev.personalInfo,
+          [field]: value,
+        },
       }));
     } else {
       setFormData((prev) => ({ ...prev, [field]: value }));
@@ -105,36 +111,59 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
   };
 
   const addItem = (section: keyof Resume) => {
-    const newItem = {
-      experience: { company: '', position: '', startDate: new Date().toISOString().split('T')[0] },
-      education: { institution: '', degree: '', startDate: new Date().toISOString().split('T')[0] },
-      skills: { name: '' },
-      certifications: { name: '', issuer: '', date: new Date().toISOString().split('T')[0] },
-      languages: { name: '', proficiency: 'professional' },
-      projects: { name: '' },
-      customSections: { title: '', content: '', order: (formData.customSections?.length || 0) + 1 },
-    }[section] as any;
+    const newId = typeof window !== 'undefined' && window.crypto?.randomUUID
+      ? window.crypto.randomUUID()
+      : Date.now().toString();
+
+    const newItems = {
+      experience: { _id: newId, company: '', position: '', startDate: new Date().toISOString().split('T')[0] },
+      education: { _id: newId, institution: '', degree: '', startDate: new Date().toISOString().split('T')[0] },
+      skills: { _id: newId, name: '' },
+      certifications: { _id: newId, name: '', issuer: '', issueDate: new Date().toISOString().split('T')[0] },
+      languages: { _id: newId, language: '', proficiency: '' },
+      projects: { _id: newId, name: '', description: '' },
+      customSections: { _id: newId, title: '', items: [] },
+    };
+
+    const itemToAdd = newItems[section as keyof typeof newItems];
+
+    if (!itemToAdd) return;
 
     setFormData((prev) => ({
       ...prev,
-      [section]: [...(prev[section] || []), newItem],
+      [section]: Array.isArray(prev[section])
+        ? [...(prev[section] as any[]), itemToAdd]
+        : [itemToAdd],
     }));
   };
-
   const removeItem = (section: keyof Resume, index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: (prev[section] || []).filter((_, i) => i !== index),
-    }));
-  };
+    setFormData((prev) => {
+      const currentSection = prev[section];
 
+      if (!Array.isArray(currentSection)) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        [section]: currentSection.filter((_, i) => i !== index),
+      };
+    });
+  };
   const updateItem = (section: keyof Resume, index: number, field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: (prev[section] || []).map((item, i) =>
-        i === index ? { ...item, [field]: value } : item
-      ),
-    }));
+    setFormData((prev) => {
+      const currentSection = prev[section];
+
+      if (!Array.isArray(currentSection)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [section]: currentSection.map((item, i) =>
+          i === index ? { ...item, [field]: value } : item
+        ),
+      };
+    });
   };
 
   const isLoading = createMutation.isPending || updateMutation.isPending;
@@ -314,7 +343,7 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
                 </div>
                 {formData.experience?.length === 0 && (
                   <p className="text-gray-500 text-center py-8">
-                    هنوز سابقه کاری اضافه نشده است. برای شروع روی "افزودن سابقه کاری" کلیک کنید.
+                    هنوز سابقه کاری اضافه نشده است. برای شروع روی افزودن سابقه کاری کلیک کنید.
                   </p>
                 )}
                 {formData.experience?.map((exp, index) => (
@@ -399,7 +428,7 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
                 </div>
                 {formData.education?.length === 0 && (
                   <p className="text-gray-500 text-center py-8">
-                    هنوز تحصیلاتی اضافه نشده است. برای شروع روی "افزودن تحصیلات" کلیک کنید.
+                    هنوز تحصیلاتی اضافه نشده است. برای شروع روی افزودن تحصیلات کلیک کنید.
                   </p>
                 )}
                 {formData.education?.map((edu, index) => (
@@ -476,7 +505,7 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
                 </div>
                 {formData.skills?.length === 0 && (
                   <p className="text-gray-500 text-center py-8">
-                    هنوز مهارتی اضافه نشده است. برای شروع روی "افزودن مهارت" کلیک کنید.
+                    هنوز مهارتی اضافه نشده است. برای شروع روی افزودن مهارت کلیک کنید.
                   </p>
                 )}
                 {formData.skills?.map((skill, index) => (
@@ -512,7 +541,7 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
                 </div>
                 {formData.languages?.length === 0 && (
                   <p className="text-gray-500 text-center py-8">
-                    هنوز زبانی اضافه نشده است. برای شروع روی "افزودن زبان" کلیک کنید.
+                    هنوز زبانی اضافه نشده است. برای شروع روی افزودن زبان کلیک کنید.
                   </p>
                 )}
                 {formData.languages?.map((lang, index) => (
@@ -548,7 +577,7 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
                 </div>
                 {formData.projects?.length === 0 && (
                   <p className="text-gray-500 text-center py-8">
-                    هنوز پروژه‌ای اضافه نشده است. برای شروع روی "افزودن پروژه" کلیک کنید.
+                    هنوز پروژه‌ای اضافه نشده است. برای شروع روی افزودن پروژه کلیک کنید.
                   </p>
                 )}
                 {formData.projects?.map((project, index) => (

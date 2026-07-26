@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { Resume } from '@/lib/services/resume.service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Download, Loader2, Maximize2, Minimize2, Eye } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/lib/services/resume.service';
@@ -23,29 +22,32 @@ export function TemplatePreview({ resume }: TemplatePreviewProps) {
   const [isLoadingPdf, setIsLoadingPdf] = useState(false);
 
 
+
   // Load PDF preview when template changes
   useEffect(() => {
+    const loadPdfPreview = async () => {
+      if (!resume?._id) return;
+      console.log(resume)
+
+      setIsLoadingPdf(true);
+      try {
+        const url: any = await resumeService.downloadPDF(resume._id);
+        console.log(url)
+        setPdfUrl(url);
+      } catch (error) {
+        console.error('Failed to load PDF preview:', error);
+        toast.error('Failed to load preview');
+      } finally {
+        setIsLoadingPdf(false);
+      }
+    };
+
     if (resume?._id) {
       loadPdfPreview();
     }
   }, [resume]);
 
-  const loadPdfPreview = async () => {
-    if (!resume?._id) return;
-    console.log(resume)
 
-    setIsLoadingPdf(true);
-    try {
-      const url = await resumeService.downloadPDF(resume._id);
-      console.log(url)
-      setPdfUrl(url);
-    } catch (error) {
-      console.error('Failed to load PDF preview:', error);
-      toast.error('Failed to load preview');
-    } finally {
-      setIsLoadingPdf(false);
-    }
-  };
 
   const handleDownload = async () => {
     if (!resume?._id) {
@@ -170,12 +172,12 @@ export function TemplatePreview({ resume }: TemplatePreviewProps) {
                 p-2 sm:p-3 md:p-4 bg-gray-50 
                 ${isFullscreen
                   ? 'max-h-[calc(90vh-4rem)] overflow-y-auto'
-                  : 'max-h-[380px] sm:max-h-107.5 md:max-h-[520px] lg:max-h-[580px] overflow-y-auto'
+                  : 'max-h-95 sm:max-h-107.5 md:max-h-130 lg:max-h-145 overflow-y-auto'
                 }
                 flex items-start justify-center
               `}>
                 {isLoadingPdf ? (
-                  <div className="flex items-center justify-center w-full h-full min-h-[300px]">
+                  <div className="flex items-center justify-center w-full h-full min-h-75">
                     <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
                   </div>
                 ) : pdfUrl ? (

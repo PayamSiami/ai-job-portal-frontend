@@ -21,7 +21,7 @@ export default function ResumeViewPage() {
     enabled: !!id,
   });
 
-  const resume = data?.data as Resume | undefined;
+  const resume = data as Resume | undefined;
 
   // Load PDF preview
   useEffect(() => {

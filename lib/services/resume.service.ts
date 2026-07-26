@@ -101,43 +101,106 @@ export interface Resume {
   updatedAt: string;
 }
 
+export interface PersonalInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  website?: string;
+  linkedin?: string;
+  github?: string;
+  summary?: string;
+  title?: string;
+}
+
 export const resumeService = {
-  // Get all resumes
-  async getResumes(params?: { status?: string }): Promise<any> {
+  // ✅ Get all resumes (alias for getMyResumes)
+  async getMyResumes(): Promise<Resume[]> {
+    const { data } = await api.get("/resumes");
+    return data.data?.resumes || [];
+  },
+
+  // Get all resumes with optional status filter
+  async getResumes(params?: { status?: string }): Promise<Resume[]> {
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append("status", params.status);
     const { data } = await api.get(`/resumes?${queryParams.toString()}`);
-    return data.data?.resumes;
+    return data.data?.resumes || [];
   },
 
-  // Get a single resume
-  async getResume(id: string): Promise<any> {
+  // ✅ Get a single resume by ID
+  async getResumeById(id: string): Promise<Resume> {
     const response = await api.get(`/resumes/${id}`);
-    return response.data;
+    return response.data.data;
   },
 
-  // Create a new resume
-  async createResume(data: Partial<Resume>): Promise<any> {
+  // Get a single resume (alias)
+  async getResume(id: string): Promise<Resume> {
+    return this.getResumeById(id);
+  },
+
+  // ✅ Create a new resume
+  async createResume(data: Partial<Resume>): Promise<Resume> {
     const response = await api.post("/resumes", data);
-    return response.data;
+    return response.data.data;
+  },
+
+  // ✅ Update personal info
+  async updatePersonalInfo(
+    id: string,
+    data: Partial<PersonalInfo>,
+  ): Promise<Resume> {
+    const response = await api.put(`/resumes/${id}/personal-info`, data);
+    return response.data.data;
+  },
+
+  // ✅ Update summary
+  async updateSummary(id: string, summary: string): Promise<Resume> {
+    const response = await api.put(`/resumes/${id}/summary`, { summary });
+    return response.data.data;
   },
 
   // Update a resume
-  async updateResume(id: string, data: Partial<Resume>): Promise<any> {
+  async updateResume(id: string, data: Partial<Resume>): Promise<Resume> {
     const response = await api.put(`/resumes/${id}`, data);
-    return response.data;
+    return response.data.data;
   },
 
-  // Delete a resume
-  async deleteResume(id: string): Promise<any> {
+  // ✅ Delete a resume
+  async deleteResume(id: string): Promise<{ success: boolean }> {
     const response = await api.delete(`/resumes/${id}`);
     return response.data;
   },
 
   // Set default resume
-  async setDefaultResume(id: string): Promise<any> {
+  async setDefaultResume(id: string): Promise<Resume> {
     const response = await api.put(`/resumes/${id}/default`);
-    return response.data;
+    return response.data.data;
+  },
+
+  // ✅ Analyze resume
+  async analyzeResume(id: string): Promise<{ analysis: any }> {
+    const response = await api.get(`/resumes/${id}/analyze`);
+    return response.data.data;
+  },
+
+  // ✅ Generate AI cover letter
+  async generateCoverLetter(
+    resumeId: string,
+    jobId: string,
+  ): Promise<{ coverLetter: string }> {
+    const response = await api.post(
+      `/resumes/${resumeId}/generate-cover-letter`,
+      { jobId },
+    );
+    return response.data.data;
+  },
+
+  // ✅ Generate AI summary
+  async generateAISummary(resumeId: string): Promise<{ summary: string }> {
+    const response = await api.post(`/resumes/${resumeId}/generate-summary`);
+    return response.data.data;
   },
 
   // Generate AI content for resume
@@ -149,14 +212,12 @@ export const resumeService = {
     return response.data;
   },
 
-  // In resume.service.ts
+  // Get PDF preview URL
   async getPDFPreviewUrl(resumeId: string): Promise<string> {
     try {
-      // Use the Next.js API route instead of direct backend call
       const response = await api.get(`/resumes/${resumeId}/pdf`, {
         responseType: "blob",
       });
-
       const blob = new Blob([response.data], { type: "application/pdf" });
       return URL.createObjectURL(blob);
     } catch (error) {
@@ -165,13 +226,12 @@ export const resumeService = {
     }
   },
 
+  // Download PDF
   async downloadPDF(resumeId: string): Promise<void> {
     try {
-      // Use the Next.js API route for download too
       const response = await api.get(`/resumes/${resumeId}/pdf`, {
         responseType: "blob",
       });
-
       const url = window.URL.createObjectURL(
         new Blob([response.data], { type: "application/pdf" }),
       );

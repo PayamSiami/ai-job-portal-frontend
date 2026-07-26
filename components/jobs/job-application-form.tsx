@@ -54,7 +54,7 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     queryFn: () => resumeService.getResumes({ status: 'all' }),
   });
 
-  const hasResumes = resumes?.length > 0;
+  const hasResumes = resumes && resumes?.length > 0;
 
   // Get today's date in YYYY-MM-DD format safely
   const getTodayDate = (): string => {
@@ -264,7 +264,7 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
           {/* Cover Letter */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>نامه پوششی</Label>
+              <Label>جزییات</Label>
               <Button
                 type="button"
                 variant="outline"

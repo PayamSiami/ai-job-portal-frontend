@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch, FieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -12,28 +12,71 @@ import { Plus, X, Loader2 } from "lucide-react";
 import { useResume } from "@/lib/hooks/use-resume";
 import toast from "react-hot-toast";
 
-const workExperienceSchema = z.object({
-  experiences: z.array(
-    z.object({
-      companyName: z.string().min(1, "Company name is required"),
-      jobTitle: z.string().min(1, "Job title is required"),
-      location: z.string().optional(),
-      startDate: z.string().min(1, "Start date is required"),
-      endDate: z.string().optional(),
-      isCurrentJob: z.boolean().default(false),
-      description: z.string().optional(),
-      technologies: z.string().optional(),
-    })
-  ),
+const experienceItemSchema = z.object({
+  companyName: z.string().min(1, "Company name is required"),
+  jobTitle: z.string().min(1, "Job title is required"),
+  location: z.string().optional(),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().optional(),
+  isCurrentJob: z.boolean().default(false),
+  description: z.string().optional(),
+  technologies: z.string().optional(),
 });
 
-type WorkExperienceFormData = z.infer<typeof workExperienceSchema>;
+const workExperienceSchema = z
+  .object({
+    experiences: z.array(experienceItemSchema),
+  })
+  .superRefine((data, ctx) => {
+    data.experiences.forEach((exp, index) => {
+      if (
+        !exp.isCurrentJob &&
+        exp.endDate &&
+        exp.startDate &&
+        new Date(exp.endDate) < new Date(exp.startDate)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "End date cannot be before start date",
+          path: ["experiences", index, "endDate"],
+        });
+      }
+    });
+  });
 
-interface WorkExperienceFormProps {
-  resumeId?: string;
-}
+// Use z.input to match the form state structure with optional default values
+type WorkExperienceFormInput = z.input<typeof workExperienceSchema>;
 
-export const WorkExperienceForm: React.FC<WorkExperienceFormProps> = ({
+const emptyExperience = {
+  companyName: "",
+  jobTitle: "",
+  location: "",
+  startDate: "",
+  endDate: "",
+  isCurrentJob: false,
+  description: "",
+  technologies: "",
+};
+
+const FormField = ({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: FieldError;
+  children: React.ReactNode;
+}) => (
+  <div>
+    <label className="text-sm font-medium">{label}</label>
+    {children}
+    {error?.message && (
+      <p className="text-xs text-red-500 mt-1">{error.message}</p>
+    )}
+  </div>
+);
+
+export const WorkExperienceForm: React.FC<{ resumeId?: string }> = ({
   resumeId,
 }) => {
   const { currentResume } = useResume();
@@ -43,31 +86,20 @@ export const WorkExperienceForm: React.FC<WorkExperienceFormProps> = ({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<WorkExperienceFormData>({
+  } = useForm<WorkExperienceFormInput>({
     resolver: zodResolver(workExperienceSchema),
-    defaultValues: {
-      experiences: [
-        {
-          companyName: "",
-          jobTitle: "",
-          location: "",
-          startDate: "",
-          endDate: "",
-          isCurrentJob: false,
-          description: "",
-          technologies: "",
-        },
-      ],
-    },
+    defaultValues: { experiences: [emptyExperience] },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "experiences",
   });
+  const watchedExperiences = useWatch({ control, name: "experiences" });
 
-  const onSubmit = async (data: WorkExperienceFormData) => {
+  const onSubmit = async () => {
     if (!resumeId && !currentResume) {
       toast.error("Please create a resume first");
       return;
@@ -77,7 +109,7 @@ export const WorkExperienceForm: React.FC<WorkExperienceFormProps> = ({
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Work experience updated successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update work experience");
     } finally {
       setIsSubmitting(false);
@@ -94,116 +126,111 @@ export const WorkExperienceForm: React.FC<WorkExperienceFormProps> = ({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() =>
-                append({
-                  companyName: "",
-                  jobTitle: "",
-                  location: "",
-                  startDate: "",
-                  endDate: "",
-                  isCurrentJob: false,
-                  description: "",
-                  technologies: "",
-                })
-              }
+              onClick={() => append(emptyExperience)}
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Experience
             </Button>
           </div>
 
-          {fields.map((field, index) => (
-            <Card key={field.id} className="p-4 border relative">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2"
-                onClick={() => remove(index)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
+          {fields.map((field, index) => {
+            const expErrors = errors.experiences?.[index];
+            const isCurrent = watchedExperiences?.[index]?.isCurrentJob;
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium">Company</label>
-                  <Input
-                    {...register(`experiences.${index}.companyName`)}
-                    placeholder="Company name"
-                    className={
-                      errors.experiences?.[index]?.companyName
-                        ? "border-red-500"
-                        : ""
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Job Title</label>
-                  <Input
-                    {...register(`experiences.${index}.jobTitle`)}
-                    placeholder="Your job title"
-                    className={
-                      errors.experiences?.[index]?.jobTitle
-                        ? "border-red-500"
-                        : ""
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Location</label>
-                  <Input
-                    {...register(`experiences.${index}.location`)}
-                    placeholder="City, State"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Technologies</label>
-                  <Input
-                    {...register(`experiences.${index}.technologies`)}
-                    placeholder="React, Node.js, Python, etc."
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Start Date</label>
-                  <Input
-                    type="date"
-                    {...register(`experiences.${index}.startDate`)}
-                    className={
-                      errors.experiences?.[index]?.startDate
-                        ? "border-red-500"
-                        : ""
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">End Date</label>
-                  <Input
-                    type="date"
-                    {...register(`experiences.${index}.endDate`)}
-                  />
-                </div>
-              </div>
+            return (
+              <Card key={field.id} className="p-4 border relative space-y-3">
+                {fields.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={() => remove(index)}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
 
-              <div className="mt-2">
-                <label className="flex items-center gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField label="Company *" error={expErrors?.companyName}>
+                    <Input
+                      {...register(`experiences.${index}.companyName`)}
+                      placeholder="Company name"
+                      className={expErrors?.companyName ? "border-red-500" : ""}
+                    />
+                  </FormField>
+
+                  <FormField label="Job Title *" error={expErrors?.jobTitle}>
+                    <Input
+                      {...register(`experiences.${index}.jobTitle`)}
+                      placeholder="Your job title"
+                      className={expErrors?.jobTitle ? "border-red-500" : ""}
+                    />
+                  </FormField>
+
+                  <FormField label="Location">
+                    <Input
+                      {...register(`experiences.${index}.location`)}
+                      placeholder="City, State"
+                    />
+                  </FormField>
+
+                  <FormField label="Technologies">
+                    <Input
+                      {...register(`experiences.${index}.technologies`)}
+                      placeholder="React, Node.js, Python, etc."
+                    />
+                  </FormField>
+
+                  <FormField label="Start Date *" error={expErrors?.startDate}>
+                    <Input
+                      type="date"
+                      {...register(`experiences.${index}.startDate`)}
+                      className={expErrors?.startDate ? "border-red-500" : ""}
+                    />
+                  </FormField>
+
+                  <FormField label="End Date" error={expErrors?.endDate}>
+                    <Input
+                      type="date"
+                      disabled={isCurrent}
+                      {...register(`experiences.${index}.endDate`)}
+                      className={expErrors?.endDate ? "border-red-500" : ""}
+                    />
+                  </FormField>
+                </div>
+
+                <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    {...register(`experiences.${index}.isCurrentJob`)}
+                    id={`isCurrentJob-${index}`}
+                    {...register(`experiences.${index}.isCurrentJob`, {
+                      onChange: (e) => {
+                        if (e.target.checked)
+                          setValue(`experiences.${index}.endDate`, "");
+                      },
+                    })}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
                   />
-                  <span className="text-sm">I currently work here</span>
-                </label>
-              </div>
+                  <label
+                    htmlFor={`isCurrentJob-${index}`}
+                    className="text-sm cursor-pointer select-none"
+                  >
+                    I currently work here
+                  </label>
+                </div>
 
-              <div className="mt-2">
-                <label className="text-sm font-medium">Description</label>
-                <Textarea
-                  {...register(`experiences.${index}.description`)}
-                  placeholder="Describe your responsibilities and achievements"
-                  rows={3}
-                />
-              </div>
-            </Card>
-          ))}
+                <div>
+                  <label className="text-sm font-medium">Description</label>
+                  <Textarea
+                    {...register(`experiences.${index}.description`)}
+                    placeholder="Describe your responsibilities and achievements"
+                    rows={3}
+                  />
+                </div>
+              </Card>
+            );
+          })}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
