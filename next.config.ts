@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+   output: 'standalone',
   reactStrictMode: true,
 
   images: {
@@ -16,15 +17,6 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   
-  experimental: {
-    optimizeCss: true,
-  },
-  
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
-  },
-  
-  // Fix rewrites with proper destination
   async rewrites() {
     // Use a fallback URL if environment variable is not set
     const apiUrl = `${process.env["NEXT_PUBLIC_API_GATEWAY_URL"]}` || 'http://backend:5000';
