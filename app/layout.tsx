@@ -1,16 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Vazirmatn } from 'next/font/google';
+import localFont from 'next/font/local'
 import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
 
 // Persian font as primary
-const vazirmatn = Vazirmatn({
-  subsets: ['arabic'],
-  display: 'swap',
+const vazirmatn = localFont({
+  src: './fonts/Vazirmatn-VariableFont_wght.ttf',
   variable: '--font-vazirmatn',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
 // English font as fallback
