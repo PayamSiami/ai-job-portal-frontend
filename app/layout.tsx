@@ -4,17 +4,10 @@ import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
 
-// Persian font as primary
+// Local Persian & English font
 const vazirmatn = localFont({
   src: './fonts/Vazirmatn-VariableFont_wght.ttf',
   variable: '--font-vazirmatn',
-  display: 'swap',
-});
-
-// English font local fallback (Zero network requests during build)
-const inter = localFont({
-  src: './fonts/Inter-VariableFont_slnt,wght.ttf', // Place file in app/fonts/
-  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -40,7 +33,7 @@ export default function RootLayout({
       lang="fa" 
       dir="rtl"
       suppressHydrationWarning
-      className={`${vazirmatn.variable} ${inter.variable}`}
+      className={vazirmatn.variable}
     >
       <body className="font-vazirmatn antialiased">
         <Providers>

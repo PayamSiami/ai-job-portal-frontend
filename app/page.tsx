@@ -65,7 +65,7 @@ export default function HomePage() {
   // Loading state
   if (jobsLoading || statsLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex flex-col items-center" dir="rtl">
+      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex flex-col items-center">
         <section className="container px-4 py-16 md:py-24 flex flex-col items-center">
           <div className="text-center w-full max-w-4xl">
             <div className="flex items-center justify-center gap-3 mb-4">
