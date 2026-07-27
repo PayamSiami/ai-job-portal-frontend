@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import localFont from 'next/font/local'
+import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
@@ -9,13 +8,14 @@ import MainLayout from './(main)/layout';
 const vazirmatn = localFont({
   src: './fonts/Vazirmatn-VariableFont_wght.ttf',
   variable: '--font-vazirmatn',
+  display: 'swap',
 });
 
-// English font as fallback
-const inter = Inter({ 
-  subsets: ['latin'],
-  display: 'swap',
+// English font local fallback (Zero network requests during build)
+const inter = localFont({
+  src: './fonts/Inter-VariableFont_slnt,wght.ttf', // Place file in app/fonts/
   variable: '--font-inter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
