@@ -75,7 +75,7 @@ export function JobCard({ job, featured }: JobCardProps) {
                   )}
                 </h3>
               </Link>
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Badge
                   variant="outline"
                   className="flex items-center gap-1 text-xs"
@@ -105,7 +105,7 @@ export function JobCard({ job, featured }: JobCardProps) {
               <Badge className={getExperienceLevelColor(job.experienceLevel)}>
                 {job.experienceLevel}
               </Badge>
-              <Badge variant="outline">{job.employmentType}</Badge>
+              <Badge variant="outline">{job.jobType}</Badge>
               {job.salary?.min && job.salary?.max && (
                 <Badge variant="secondary">
                   <DollarSign className="w-3 h-3 mr-1" />

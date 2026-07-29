@@ -6,7 +6,7 @@ import { JobFilters } from "../types/job.types";
 
 export const useJobs = () => {
   // Get all jobs with filters
-  const useGetJobs = (filters?: JobFilters, page = 1, limit = 20) => {
+  const useGetJobs = (filters: JobFilters, page = 1, limit = 20) => {
     return useQuery({
       queryKey: ["jobs", filters, page, limit],
       queryFn: () => jobService.searchJobs(filters),

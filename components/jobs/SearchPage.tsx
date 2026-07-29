@@ -9,7 +9,6 @@ import {
     X,
     Sparkles,
     SlidersHorizontal,
-    Plus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +23,6 @@ import { AISearchBar } from '@/components/search/AISearchBar';
 import { FilterSidebar } from '@/components/search/FilterSidebar';
 import { JobCard } from '@/components/jobs/JobCard';
 import { Pagination } from '@/components/shared/pagination';
-import Link from 'next/link';
 
 export default function SearchPage() {
     const router = useRouter();
@@ -181,12 +179,6 @@ export default function SearchPage() {
                                 : 'جستجو در هزاران شغل از شرکت‌های برتر'}
                         </p>
                     </div>
-                    <Link href="/employer/jobs/create">
-                        <Button className="gap-2">
-                            <Plus className="w-4 h-4" />
-                            ثبت آگهی شغلی
-                        </Button>
-                    </Link>
                 </div>
 
                 {/* Search Tabs */}
