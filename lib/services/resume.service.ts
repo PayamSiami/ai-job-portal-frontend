@@ -1,24 +1,6 @@
+import { apiClient } from "../api/client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
-
-const API_URL =
-  process.env["NEXT_PUBLIC_API_URL"] || "http://localhost:5000/api";
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 export interface Resume {
   _id: string;
   user: string;
@@ -117,7 +99,7 @@ export interface PersonalInfo {
 export const resumeService = {
   // ✅ Get all resumes (alias for getMyResumes)
   async getMyResumes(): Promise<Resume[]> {
-    const { data } = await api.get("/resumes");
+    const { data } = await apiClient.get("/resumes");
     return data.data?.resumes || [];
   },
 
@@ -125,13 +107,13 @@ export const resumeService = {
   async getResumes(params?: { status?: string }): Promise<Resume[]> {
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append("status", params.status);
-    const { data } = await api.get(`/resumes?${queryParams.toString()}`);
+    const { data } = await apiClient.get(`/resumes?${queryParams.toString()}`);
     return data.data?.resumes || [];
   },
 
   // ✅ Get a single resume by ID
   async getResumeById(id: string): Promise<Resume> {
-    const response = await api.get(`/resumes/${id}`);
+    const response = await apiClient.get(`/resumes/${id}`);
     return response.data.data;
   },
 
@@ -142,7 +124,7 @@ export const resumeService = {
 
   // ✅ Create a new resume
   async createResume(data: Partial<Resume>): Promise<Resume> {
-    const response = await api.post("/resumes", data);
+    const response = await apiClient.post("/resumes", data);
     return response.data.data;
   },
 
@@ -151,37 +133,37 @@ export const resumeService = {
     id: string,
     data: Partial<PersonalInfo>,
   ): Promise<Resume> {
-    const response = await api.put(`/resumes/${id}/personal-info`, data);
+    const response = await apiClient.put(`/resumes/${id}/personal-info`, data);
     return response.data.data;
   },
 
   // ✅ Update summary
   async updateSummary(id: string, summary: string): Promise<Resume> {
-    const response = await api.put(`/resumes/${id}/summary`, { summary });
+    const response = await apiClient.put(`/resumes/${id}/summary`, { summary });
     return response.data.data;
   },
 
   // Update a resume
   async updateResume(id: string, data: Partial<Resume>): Promise<Resume> {
-    const response = await api.put(`/resumes/${id}`, data);
+    const response = await apiClient.put(`/resumes/${id}`, data);
     return response.data.data;
   },
 
   // ✅ Delete a resume
   async deleteResume(id: string): Promise<{ success: boolean }> {
-    const response = await api.delete(`/resumes/${id}`);
+    const response = await apiClient.delete(`/resumes/${id}`);
     return response.data;
   },
 
   // Set default resume
   async setDefaultResume(id: string): Promise<Resume> {
-    const response = await api.put(`/resumes/${id}/default`);
+    const response = await apiClient.put(`/resumes/${id}/default`);
     return response.data.data;
   },
 
   // ✅ Analyze resume
   async analyzeResume(id: string): Promise<{ analysis: any }> {
-    const response = await api.get(`/resumes/${id}/analyze`);
+    const response = await apiClient.get(`/resumes/${id}/analyze`);
     return response.data.data;
   },
 
@@ -190,7 +172,7 @@ export const resumeService = {
     resumeId: string,
     jobId: string,
   ): Promise<{ coverLetter: string }> {
-    const response = await api.post(
+    const response = await apiClient.post(
       `/resumes/${resumeId}/generate-cover-letter`,
       { jobId },
     );
@@ -199,7 +181,7 @@ export const resumeService = {
 
   // ✅ Generate AI summary
   async generateAISummary(resumeId: string): Promise<{ summary: string }> {
-    const response = await api.post(`/resumes/${resumeId}/generate-summary`);
+    const response = await apiClient.post(`/resumes/${resumeId}/generate-summary`);
     return response.data.data;
   },
 
@@ -208,14 +190,14 @@ export const resumeService = {
     jobTitle?: string;
     experience?: string;
   }): Promise<any> {
-    const response = await api.post("/resumes/generate-content", data);
+    const response = await apiClient.post("/resumes/generate-content", data);
     return response.data;
   },
 
   // Get PDF preview URL
   async getPDFPreviewUrl(resumeId: string): Promise<string> {
     try {
-      const response = await api.get(`/resumes/${resumeId}/pdf`, {
+      const response = await apiClient.get(`/resumes/${resumeId}/pdf`, {
         responseType: "blob",
       });
       const blob = new Blob([response.data], { type: "application/pdf" });
@@ -229,7 +211,7 @@ export const resumeService = {
   // Download PDF
   async downloadPDF(resumeId: string): Promise<void> {
     try {
-      const response = await api.get(`/resumes/${resumeId}/pdf`, {
+      const response = await apiClient.get(`/resumes/${resumeId}/pdf`, {
         responseType: "blob",
       });
       const url = window.URL.createObjectURL(

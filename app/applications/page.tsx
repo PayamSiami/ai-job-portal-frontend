@@ -7,12 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Briefcase,
   Loader2,
-  Filter,
   X,
-  CheckCircle,
-  XCircle,
-  Clock as ClockIcon,
-  MessageCircle,
   Eye,
   ChevronLeft,
   ChevronRight,
@@ -47,17 +42,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-hot-toast";
-
-// Status filter options with Farsi labels and icons
-const STATUS_FILTERS = [
-  { value: "all", label: "همه", icon: Filter, color: "text-gray-600" },
-  { value: "pending", label: "درحال بررسی", icon: ClockIcon, color: "text-amber-600" },
-  { value: "reviewing", label: "در حال بررسی", icon: Eye, color: "text-blue-600" },
-  { value: "interview", label: "مصاحبه", icon: MessageCircle, color: "text-purple-600" },
-  { value: "accepted", label: "پذیرفته شده", icon: CheckCircle, color: "text-emerald-600" },
-  { value: "rejected", label: "رد شده", icon: XCircle, color: "text-rose-600" },
-  { value: "withdrawn", label: "منصرف شده", icon: Undo2, color: "text-gray-600" },
-];
+import { STATUS_FILTERS } from "@/lib/constants/application-status";
 
 // Helper to render status badges with distinct colors
 const getStatusBadge = (status: string) => {
@@ -217,7 +202,7 @@ export default function ApplicationsListPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-4 py-8 space-y-3">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

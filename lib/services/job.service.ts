@@ -1,28 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
-
-const API_URL =
-  process.env["NEXT_PUBLIC_API_URL"] || "http://localhost:5000/api";
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Add auth token to requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+import { apiClient } from "../api/client";
+import { JobFilters, JobSearchResponse } from "../types/job.types";
 
 export const jobService = {
   // Search jobs with filters
-  async searchJobs(filters: any): Promise<any> {
+  async searchJobs(filters: JobFilters): Promise<JobSearchResponse> {
     try {
       const params = new URLSearchParams();
 
@@ -36,7 +18,7 @@ export const jobService = {
         }
       });
 
-      const { data } = await api.get(`/jobs?${params.toString()}`);
+      const { data } = await apiClient.get(`/jobs?${params.toString()}`);
       return data.data;
     } catch (error) {
       console.error("Error searching jobs:", error);
@@ -58,8 +40,8 @@ export const jobService = {
         }
       });
 
-      const { data } = await api.get("/jobs/stats/global");
-      return data.data;
+      const response  = await apiClient.get("/jobs/stats/global");
+      return response.data.data; // Assumes nested structure
     } catch (error) {
       console.error("Error searching jobs:", error);
       throw error;
@@ -69,7 +51,7 @@ export const jobService = {
   // AI-powered natural language search
   async aiSearch(query: string): Promise<any> {
     try {
-      const response = await api.get(
+      const response = await apiClient.get(
         `/jobs/search/ai?query=${encodeURIComponent(query)}`,
       );
       console.log("AI search response:", response.data);
@@ -83,7 +65,7 @@ export const jobService = {
   // Get job by ID
   async getJobById(id: string): Promise<any> {
     try {
-      const { data } = await api.get(`/jobs/${id}`);
+      const { data } = await apiClient.get(`/jobs/${id}`);
       return data.data;
     } catch (error) {
       console.error("Error fetching job:", error);
@@ -97,7 +79,7 @@ export const jobService = {
     status: string,
   ): Promise<any> {
     try {
-      const response = await api.put(`/applications/${applicationId}`, {
+      const response = await apiClient.put(`/applications/${applicationId}`, {
         status,
       });
       return response.data;

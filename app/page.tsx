@@ -22,7 +22,7 @@ import JobStats from '@/components/jobs/JobStats';
 export default function HomePage() {
   const { results, isLoading: searchLoading, error, searchJobs } = useSearch();
 
-  // ✅ Fetch featured jobs
+  //  Fetch featured jobs
   const { data: jobsData, isLoading: jobsLoading } = useQuery({
     queryKey: ['jobs', 'featured'],
     queryFn: () => jobService.searchJobs({
@@ -32,13 +32,13 @@ export default function HomePage() {
     }),
   });
 
-  // ✅ Fetch job stats
+  // Fetch job stats
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['jobStats', 'global'],
     queryFn: () => jobService.statsJobs({}),
   });
 
-  // ✅ Memoize featured jobs
+  // Memoize featured jobs
   const featuredJobs = useMemo(() => {
     return jobsData?.jobs?.slice(0, 6) || [];
   }, [jobsData]);
@@ -127,7 +127,7 @@ export default function HomePage() {
           )}
         </motion.div>
 
-        {/* ✅ JobStats Component */}
+        {/* JobStats Component */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

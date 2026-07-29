@@ -13,26 +13,17 @@ import {
   Filter,
   X,
   CheckCircle,
-  XCircle,
-  Clock as ClockIcon,
   MessageCircle,
-  Eye,
 } from "lucide-react";
 import { useApplications } from "@/lib/hooks/use-application";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { STATUS_FILTERS } from "@/lib/constants/application-status";
 
 // Status filter options with Farsi labels and icons
-const STATUS_FILTERS = [
-  { value: "all", label: "همه", icon: Filter, color: "text-gray-600" },
-  { value: "pending", label: "درحال بررسی", icon: ClockIcon, color: "text-amber-600" },
-  { value: "reviewing", label: "در حال بررسی", icon: Eye, color: "text-blue-600" },
-  { value: "interview", label: "مصاحبه", icon: MessageCircle, color: "text-purple-600" },
-  { value: "accepted", label: "پذیرفته شده", icon: CheckCircle, color: "text-emerald-600" },
-  { value: "rejected", label: "رد شده", icon: XCircle, color: "text-rose-600" },
-];
+
 
 // Helper to render status badges with distinct colors
 const getStatusBadge = (status: string) => {

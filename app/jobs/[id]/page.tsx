@@ -37,7 +37,7 @@ export default function JobDetailsPage() {
 
   return (
 
-    <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" dir="rtl">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white" dir="rtl">
       <div className="container mx-auto px-4 py-8">
         <JobDetails job={job} />
         <div className="flex justify-end">
