@@ -3,7 +3,6 @@ import { apiClient } from "../api/client";
 import { JobFilters, JobSearchResponse } from "../types/job.types";
 
 export const jobService = {
-  // Search jobs with filters
   async searchJobs(filters: JobFilters): Promise<JobSearchResponse> {
     try {
       const params = new URLSearchParams();
