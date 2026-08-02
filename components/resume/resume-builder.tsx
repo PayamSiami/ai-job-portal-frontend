@@ -169,7 +169,7 @@ export function ResumeBuilder({ resume, mode = 'create' }: ResumeBuilderProps) {
   const isLoading = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="space-y-6" dir="rtl">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

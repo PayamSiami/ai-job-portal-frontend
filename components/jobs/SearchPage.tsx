@@ -165,7 +165,7 @@ export default function SearchPage() {
     const parsedFilters = searchMode === 'ai' ? aiData?.parsedFilters : null;
 
     return (
-        <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" dir="rtl">
+        <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" >
             <div className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -483,8 +483,8 @@ export default function SearchPage() {
                         {/* Job Cards */}
                         {!isLoading && !isError && jobs.length > 0 && (
                             <div className="space-y-4">
-                                {jobs.map((job: Job) => (
-                                    <JobCard key={job._id} job={job} featured={job.skills.length > 0} />
+                                {jobs.map((job: Job, id: React.Key | null | undefined) => (
+                                    <JobCard key={id} job={job} featured={job.skills.length > 0} />
                                 ))}
                             </div>
                         )}

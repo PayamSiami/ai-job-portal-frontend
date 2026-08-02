@@ -67,7 +67,7 @@ export default function ResumeViewPage() {
 
   if (isLoading || isLoadingPdf) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]" dir="rtl">
+      <div className="flex justify-center items-center min-h-[60vh]">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
@@ -75,7 +75,7 @@ export default function ResumeViewPage() {
 
   if (error || !resume) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center" dir="rtl">
+      <div className="container mx-auto px-4 py-8 text-center">
         <p className="text-red-500">رزومه یافت نشد یا بارگذاری با شکست مواجه شد.</p>
         <Button variant="outline" className="mt-4" onClick={() => router.push('/resumes')}>
           بازگشت به رزومه‌ها
@@ -85,7 +85,7 @@ export default function ResumeViewPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl" dir="rtl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Actions */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6 print:hidden">
         <Button variant="ghost" onClick={() => router.push('/resumes')}>

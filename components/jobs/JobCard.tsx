@@ -70,7 +70,7 @@ export function JobCard({ job, featured }: JobCardProps) {
                   {featured && (
                     <Badge className="bg-blue-600 text-white text-xs">
                       <Sparkles className="w-3 h-3 mr-1" />
-                      Featured
+                      مهارت ها
                     </Badge>
                   )}
                 </h3>
@@ -156,7 +156,7 @@ export function JobCard({ job, featured }: JobCardProps) {
 
               <Link href={`/jobs/${job._id}`}>
                 <Button variant="outline" size="sm" className="hover:bg-blue-50">
-                  View Details
+                  نمایش جزییات
                 </Button>
               </Link>
             </div>

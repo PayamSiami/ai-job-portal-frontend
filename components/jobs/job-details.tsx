@@ -97,7 +97,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({
   };
 
   return (
-    <div className="space-y-6" dir="rtl">
+    <div className="space-y-6" >
       {/* Header Card */}
       <Card>
         <CardContent className="p-6">

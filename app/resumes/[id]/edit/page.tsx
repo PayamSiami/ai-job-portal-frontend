@@ -261,7 +261,7 @@ export default function EditResumePage() {
 
   if (isLoading || !localResume) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-6xl" dir="rtl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl" >
         <div className="flex items-center justify-center min-h-100">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
@@ -270,7 +270,7 @@ export default function EditResumePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl" dir="rtl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl" >
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

@@ -55,7 +55,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg" dir="rtl">
+    <Card className="w-full max-w-md mx-auto shadow-lg" >
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl text-center font-bold">
           خوش آمدید

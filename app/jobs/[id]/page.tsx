@@ -18,7 +18,7 @@ export default function JobDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-100" dir="rtl">
+      <div className="flex justify-center items-center min-h-100" >
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent" />
       </div>
     );
@@ -26,7 +26,7 @@ export default function JobDetailsPage() {
 
   if (!job) {
     return (
-      <div className="text-center py-12" dir="rtl">
+      <div className="text-center py-12" >
         <h2 className="text-2xl font-semibold text-gray-900">شغل یافت نشد</h2>
         <p className="text-gray-600 mt-2">
           شغلی که به دنبال آن هستید وجود ندارد.
@@ -36,8 +36,7 @@ export default function JobDetailsPage() {
   }
 
   return (
-
-    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white" dir="rtl">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white" >
       <div className="container mx-auto px-4 py-8">
         <JobDetails job={job} />
         <div className="flex justify-end">

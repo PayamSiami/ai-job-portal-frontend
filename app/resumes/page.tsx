@@ -235,7 +235,7 @@ export default function ResumesPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-6xl" dir="rtl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl" >
         <div className="flex items-center justify-between mb-8">
           <div>
             <Skeleton className="h-8 w-48 mb-2" />
@@ -260,7 +260,7 @@ export default function ResumesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl" dir="rtl">
+    <div className="container mx-auto px-4 py-8 max-w-6xl" >
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>

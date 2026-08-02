@@ -69,7 +69,7 @@ export default function ProfileClient() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" dir="rtl">
+      <div className="flex items-center justify-center min-h-screen" >
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto" />
           <p className="mt-4 text-gray-600">در حال بارگذاری پروفایل...</p>
@@ -81,7 +81,7 @@ export default function ProfileClient() {
   // Handle error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen" dir="rtl">
+      <div className="flex items-center justify-center min-h-screen" >
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-red-600 mx-auto" />
           <p className="mt-4 text-gray-600">بارگذاری پروفایل با شکست مواجه شد</p>
@@ -96,7 +96,7 @@ export default function ProfileClient() {
   // If no profile data, show empty state
   if (!profile) {
     return (
-      <div className="flex items-center justify-center min-h-screen" dir="rtl">
+      <div className="flex items-center justify-center min-h-screen" >
         <div className="text-center">
           <User className="w-12 h-12 text-gray-400 mx-auto" />
           <p className="mt-4 text-gray-600">داده‌ای برای پروفایل موجود نیست</p>
@@ -221,7 +221,7 @@ export default function ProfileClient() {
   const isImageUploading = uploadProfileImage.isPending;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl" dir="rtl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl" >
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>

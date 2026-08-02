@@ -6,7 +6,7 @@ export const Footer = () => {
   const isProduction = process.env.NODE_ENV === 'production';
 
   return (
-    <footer className="border-t bg-white" dir="rtl">
+    <footer className="border-t bg-white" >
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}

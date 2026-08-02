@@ -159,7 +159,7 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="p-12 text-center" dir="rtl">
+        <CardContent className="p-12 text-center" >
           <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
           <p className="mt-4 text-gray-600">در حال بارگذاری رزومه‌های شما...</p>
         </CardContent>
@@ -171,7 +171,7 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
   if (error) {
     return (
       <Card>
-        <CardContent className="p-12 text-center" dir="rtl">
+        <CardContent className="p-12 text-center" >
           <p className="text-red-500">بارگذاری رزومه‌ها با شکست مواجه شد</p>
           <Button
             variant="outline"
@@ -189,7 +189,7 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
   if (!hasResumes) {
     return (
       <Card>
-        <CardContent className="p-12 text-center" dir="rtl">
+        <CardContent className="p-12 text-center" >
           <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">هیچ رزومه‌ای یافت نشد</h3>
           <p className="text-gray-600 mb-4">

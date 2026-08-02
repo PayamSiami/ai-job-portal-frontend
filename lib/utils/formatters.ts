@@ -10,10 +10,10 @@ export const formatSalary = (min: number, max: number): string => {
 
 export const getExperienceLabel = (level: string): string => {
   const labels: Record<string, string> = {
-    entry: "Entry Level",
-    mid: "Mid Level",
-    senior: "Senior",
-    lead: "Lead",
+    entry: "کارآموز",
+    mid: "متوسط",
+    senior: "ارشد",
+    lead: "رهبر تیم",
   };
   return labels[level] || level;
 };

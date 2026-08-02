@@ -58,7 +58,7 @@ export const Navbar = () => {
   const displayNavItems = isEmployer ? employerNavItems : navItems;
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 flex justify-center" dir="rtl">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 flex justify-center" >
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
