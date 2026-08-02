@@ -1,7 +1,8 @@
 import axios from "axios";
+import { config } from "../config";
 
 // Access environment variable using bracket notation
-const API_GATEWAY = process.env['NEXT_PUBLIC_API_GATEWAY_URL'] || "http://localhost:5000/api";
+const API_GATEWAY = config.NEXT_PUBLIC_API_GATEWAY_URL;
 
 export const apiClient = axios.create({
   baseURL: API_GATEWAY,
@@ -57,7 +58,7 @@ apiClient.interceptors.response.use(
         });
 
         const { accessToken } = response.data;
-        
+
         if (accessToken) {
           localStorage.setItem("accessToken", accessToken);
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -76,9 +77,10 @@ apiClient.interceptors.response.use(
     }
 
     // Handle other errors with better messaging
-    const errorMessage = error.response?.data?.message || error.message || "An error occurred";
+    const errorMessage =
+      error.response?.data?.message || error.message || "An error occurred";
     console.error("API Error:", errorMessage);
-    
+
     return Promise.reject(error);
   },
 );

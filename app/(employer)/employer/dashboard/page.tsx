@@ -1,9 +1,19 @@
 "use client";
+import type { Metadata } from 'next';
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, Users, FileText, TrendingUp, Sparkles } from "lucide-react";
 import AIScreeningDashboard from "@/components/employer/ai-screening-dashboard";
+
+export const metadata: Metadata = {
+  title: 'داشبورد کارفرما | جاب‌آی',
+  description: 'مدیریت آگهی‌های استخدام، بررسی درخواست‌ها و پایش آمار استخدام با هوش مصنوعی',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function EmployerDashboardPage() {
   const stats = [

@@ -1,5 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Metadata } from 'next';
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
@@ -43,6 +45,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-hot-toast";
 import { STATUS_FILTERS } from "@/lib/constants/application-status";
+
+export const metadata: Metadata = {
+  title: 'درخواست‌های شغلی من | جاب‌آی',
+  description: 'مشاهده و مدیریت تمام درخواست‌های شغلی شما، پیگیری وضعیت و لغو درخواست‌ها',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 // Helper to render status badges with distinct colors
 const getStatusBadge = (status: string) => {

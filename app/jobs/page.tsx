@@ -1,6 +1,17 @@
-// app/(dashboard)/jobs/page.tsx
+import type { Metadata } from 'next';
 import SearchPage from "@/components/jobs/SearchPage";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: 'جستجوی شغل | جاب‌آی',
+  description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
+  keywords: 'جستجوی شغل, کاریابی, استخدام, شغل‌های باز, فرصت‌های شغلی',
+  openGraph: {
+    title: 'جستجوی شغل | جاب‌آی',
+    description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
+    type: 'website',
+  },
+};
 
 // Extract loading component for reusability
 function JobsLoadingFallback() {
