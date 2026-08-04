@@ -27,7 +27,7 @@ import {
 } from "@/lib/utils/formatters";
 import { Job } from "@/lib/types/job.types";
 
-interface JobDetailsProps {
+export interface JobDetailsProps {
   job: Job;
   onSave?: (jobId: string) => void;
   isSaved?: boolean;

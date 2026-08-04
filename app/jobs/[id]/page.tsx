@@ -1,60 +1,90 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { config } from '@/lib/config';
+import { JobDetailsClient } from '@/components/jobs/JobDetailsClient';
+import { JobStructuredData } from '@/components/jobs/JobStructuredData';
+import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
+import { Job } from '@/lib/types/job.types';
 
-import React, { useState } from "react";
-import { useParams } from "next/navigation";
-import { JobDetails } from "@/components/jobs/job-details";
-import { JobApplicationForm } from "@/components/jobs/job-application-form";
-import { useJobs } from "@/lib/hooks/use-jobs";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+async function getJobById(jobId: string): Promise<Job | null> {
+  const apiBaseUrl = config.NEXT_PUBLIC_API_GATEWAY_URL || '';
+  try {
+    const response = await fetch(`${apiBaseUrl}/jobs/${jobId}`, {
+      next: { revalidate: 600 }, // Revalidate every 10 minutes
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
 
-export default function JobDetailsPage() {
-  const params: any = useParams();
-  const { useGetJobById } = useJobs();
-  const jobId = params?.id as string;
-  const { data: job, isLoading } = useGetJobById(jobId);
-  const [isApplyDialogOpen, setIsApplyDialogOpen] = useState(false);
+    if (!response.ok) {
+      return null;
+    }
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-100" >
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent" />
-      </div>
-    );
+    const data = await response.json();
+    return data?.data?.job || data?.job || null;
+  } catch (error) {
+    console.error('Failed to fetch job:', error);
+    return null;
   }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const job = await getJobById(id);
+  const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
   if (!job) {
-    return (
-      <div className="text-center py-12" >
-        <h2 className="text-2xl font-semibold text-gray-900">شغل یافت نشد</h2>
-        <p className="text-gray-600 mt-2">
-          شغلی که به دنبال آن هستید وجود ندارد.
-        </p>
-      </div>
-    );
+    return {
+      title: 'شغل یافت نشد | جاب‌آی',
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const jobUrl = `${baseUrl}/jobs/${job._id}`;
+
+  return {
+    title: `${job.title} در ${job.company} | جاب‌آی`,
+    description: job.description?.slice(0, 160) || `فرصت شغلی ${job.title} در شرکت ${job.company}`,
+    keywords: [job.title, job.company, job.location, ...(job.skills || [])].filter(Boolean).join(', '),
+    openGraph: {
+      title: `${job.title} در ${job.company}`,
+      description: job.description?.slice(0, 160) || `فرصت شغلی ${job.title} در شرکت ${job.company}`,
+      type: 'website',
+      url: jobUrl,
+      siteName: 'جاب‌آی',
+      locale: 'fa_IR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${job.title} در ${job.company}`,
+      description: job.description?.slice(0, 160) || `فرصت شغلی ${job.title} در شرکت ${job.company}`,
+    },
+    alternates: {
+      canonical: jobUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+const baseUrl = config.NEXT_PUBLIC_APP_URL;
+
+export default async function JobDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const job = await getJobById(id);
+
+  if (!job) {
+    notFound();
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white" >
-      <div className="container mx-auto px-4 py-8">
-        <JobDetails job={job} />
-        <div className="flex justify-end">
-          <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="gap-2">
-                درخواست دهید
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-full">
-              <JobApplicationForm
-                jobId={job._id}
-                onSuccess={() => setIsApplyDialogOpen(false)}
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </div>
+    <>
+      <BreadcrumbStructuredData items={generateBreadcrumbs.jobDetail(baseUrl, job.title, job._id)} />
+      <JobStructuredData job={job} />
+      <JobDetailsClient job={job} />
+    </>
   );
 }

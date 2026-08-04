@@ -1,6 +1,10 @@
 import { Metadata } from "next";
+import { config } from '@/lib/config';
 import ApplicationClient from "./applicationClient";
+import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 
+const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
   title: 'درخواست‌های شغلی من | جاب‌آی',
@@ -12,8 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function ApplicationsPage() {
-  // Your component logic
   return (
-    <ApplicationClient />
+    <>
+      <BreadcrumbStructuredData items={generateBreadcrumbs.applications(baseUrl)} />
+      <ApplicationClient />
+    </>
   );
 }

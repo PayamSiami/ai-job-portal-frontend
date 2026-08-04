@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import SearchPage from "@/components/jobs/SearchPage";
 import { Suspense } from "react";
+import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
+
+const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
   title: 'جستجوی شغل | جاب‌آی',
@@ -10,6 +15,9 @@ export const metadata: Metadata = {
     title: 'جستجوی شغل | جاب‌آی',
     description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
     type: 'website',
+  },
+  alternates: {
+    canonical: `${baseUrl}/jobs`,
   },
 };
 
@@ -27,8 +35,11 @@ function JobsLoadingFallback() {
 
 export default function JobsPage() {
   return (
-    <Suspense fallback={<JobsLoadingFallback />}>
-      <SearchPage />
-    </Suspense>
+    <>
+      <BreadcrumbStructuredData items={generateBreadcrumbs.jobs(baseUrl)} />
+      <Suspense fallback={<JobsLoadingFallback />}>
+        <SearchPage />
+      </Suspense>
+    </>
   );
 }

@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import ProfileClient from './ProfileClient';
+import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
+
+const baseUrl = config.NEXT_PUBLIC_APP_URL ;
 
 export const metadata: Metadata = {
   title: 'پروفایل کاربری | جاب‌آی',
@@ -11,5 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function ProfilePage() {
-  return <ProfileClient />;
+  return (
+    <>
+      <BreadcrumbStructuredData items={generateBreadcrumbs.profile(baseUrl)} />
+      <ProfileClient />
+    </>
+  );
 }

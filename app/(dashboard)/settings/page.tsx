@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import SettingsClient from './SettingsClient';
+import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
+
+const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
   title: 'تنظیمات حساب کاربری | جاب‌آی',
@@ -11,5 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function SettingsPage() {
-  return <SettingsClient />;
+  return (
+    <>
+      <BreadcrumbStructuredData items={generateBreadcrumbs.settings(baseUrl)} />
+      <SettingsClient />
+    </>
+  );
 }
