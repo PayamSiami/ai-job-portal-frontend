@@ -129,8 +129,36 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
       'max-image-preview': 'large',
       'max-video-preview': -1,
     },
-
   };
+}
+
+/**
+ * Generate static params for popular jobs (optional - for static generation)
+ */
+export async function generateStaticParams() {
+  // Only enable if you have a way to fetch popular jobs
+  // and you want to pre-render them
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      const apiBaseUrl = config.NEXT_PUBLIC_API_GATEWAY_URL || '';
+      const response = await fetch(`${apiBaseUrl}/jobs/popular`, {
+        headers: { 'Accept': 'application/json' },
+        next: { revalidate: 3600 }, // 1 hour
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const jobs = data?.data?.jobs || data?.jobs || [];
+        return jobs.map((job: Job) => ({
+          id: job._id,
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to generate static params:', error);
+    }
+  }
+
+  return [];
 }
 
 /**
@@ -164,6 +192,3 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
     </>
   );
 }
-
-// Enable ISR with revalidation
-export const revalidate = REVALIDATE_TIME;
