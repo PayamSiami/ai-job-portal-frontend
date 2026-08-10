@@ -176,28 +176,28 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
             {
                 icon: Briefcase,
                 label: 'مشاغل فعال',
-                value: `${summary.activeJobs || 0}`,
+                value: `${summary?.activeJobs || 0}`,
                 key: 'activeJobs',
                 color: 'blue'
             },
             {
                 icon: Building,
                 label: 'شرکت‌ها',
-                value: `${uniqueCompanies.size || 0}`,
+                value: `${uniqueCompanies?.size || 0}`,
                 key: 'companies',
                 color: 'purple'
             },
             {
                 icon: FileText,
                 label: 'درخواست‌ها',
-                value: `${summary.totalApplications || 0}`,
+                value: `${summary?.totalApplications || 0}`,
                 key: 'applications',
                 color: 'green'
             },
             {
                 icon: TrendingUp,
                 label: 'نرخ تبدیل',
-                value: `${rates.conversionRate || 0}%`,
+                value: `${rates?.conversionRate || 0}%`,
                 key: 'conversionRate',
                 color: 'orange'
             },

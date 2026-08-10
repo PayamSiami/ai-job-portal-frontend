@@ -3,7 +3,6 @@ import { Sparkles } from 'lucide-react';
 import { FaGithub, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 export const Footer = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
 
   return (
     <footer className="border-t bg-white" >
@@ -72,68 +71,44 @@ export const Footer = () => {
             <h4 className="font-semibold text-gray-900 mb-4">برای کارفرمایان</h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                {isProduction ? (
-                  <a
-                    href="https://panel.gigger.ir/login"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors"
-                  >
-                    داشبورد
-                  </a>
-                ) : (
-                  <Link href="/employer/dashboard" className="hover:text-blue-600 transition-colors">
-                    داشبورد
-                  </Link>
-                )}
+                <a
+                  href="https://panel.jobmatch.ir/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  داشبورد
+                </a>
               </li>
               <li>
-                {isProduction ? (
-                  <a
-                    href="https://panel.gigger.ir/login"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors"
-                  >
-                    ثبت آگهی شغلی
-                  </a>
-                ) : (
-                  <Link href="/employer/jobs/create" className="hover:text-blue-600 transition-colors">
-                    ثبت آگهی شغلی
-                  </Link>
-                )}
+                <a
+                  href="https://panel.jobmatch.ir/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  ثبت آگهی شغلی
+                </a>
               </li>
               <li>
-                {isProduction ? (
-                  <a
-                    href="https://panel.gigger.ir/login"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors"
-                  >
-                    بررسی درخواست‌ها
-                  </a>
-                ) : (
-                  <Link href="/employer/applications" className="hover:text-blue-600 transition-colors">
-                    بررسی درخواست‌ها
-                  </Link>
-                )}
+                <a
+                  href="https://panel.jobmatch.ir/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  بررسی درخواست‌ها
+                </a>
               </li>
               <li>
-                {isProduction ? (
-                  <a
-                    href="https://panel.gigger.ir/login"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors"
-                  >
-                    پروفایل شرکت
-                  </a>
-                ) : (
-                  <Link href="/employer/company" className="hover:text-blue-600 transition-colors">
-                    پروفایل شرکت
-                  </Link>
-                )}
+                <a
+                  href="https://panel.jobmatch.ir/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  پروفایل شرکت
+                </a>
               </li>
             </ul>
           </div>

@@ -47,7 +47,7 @@ export const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      await login({ email: data.email, password: data.password });
       toast.success("خوش آمدید!");
       router.push("/dashboard");
     } catch (error) {

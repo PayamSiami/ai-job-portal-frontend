@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Home,
-  Search,
   Briefcase,
   Heart,
   User,
@@ -17,7 +16,6 @@ import {
   Settings,
   LogOut,
   FileText,
-  Building,
   LayoutDashboard,
   FileCheck,
 } from "lucide-react";
@@ -42,20 +40,11 @@ const navItems = [
   { href: "/applications", label: "درخواست ها", icon: FileCheck },
 ];
 
-const employerNavItems = [
-  { href: "/employer/dashboard", label: "داشبورد", icon: LayoutDashboard },
-  { href: "/employer/jobs", label: "مشاغل من", icon: Briefcase },
-  { href: "/employer/applications", label: "درخواست‌ها", icon: Search },
-  { href: "/employer/company", label: "شرکت", icon: Building },
-];
-
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const isEmployer = user?.role === "employer";
 
-  const displayNavItems = isEmployer ? employerNavItems : navItems;
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 flex justify-center" >
@@ -70,7 +59,7 @@ export const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-1">
-          {displayNavItems.map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
@@ -193,7 +182,7 @@ export const Navbar = () => {
           className="border-t bg-white p-4 md:hidden"
         >
           <div className="flex flex-col space-y-2">
-            {displayNavItems.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (

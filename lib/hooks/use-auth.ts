@@ -1,126 +1,109 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/lib/services/auth.service";
 import toast from "react-hot-toast";
 import { RegisterRequest, User } from "../types/auth.types";
 
+const authKeys = {
+  user: ["auth", "user"] as const,
+};
+
+// Safely read user from localStorage (Runs strictly client-side)
+const getStoredUser = (): User | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error("Failed to parse user from localStorage:", error);
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  // Initialize auth state from localStorage
-  useEffect(() => {
-    const initializeAuth = () => {
-      try {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error("Failed to parse user from localStorage:", error);
-        localStorage.removeItem("user");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // 1. Single source of truth managed by TanStack Query
+  const { data: user = null, isLoading } = useQuery<User | null>({
+    queryKey: authKeys.user,
+    queryFn: getStoredUser,
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
-    initializeAuth();
-  }, []);
-
-  // Login function
-  const login = useCallback(async (email: string, password: string) => {
-    try {
-      const response = await authService.login({ email, password });
-      localStorage.setItem("accessToken", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-      setUser(response.user);
-      toast.success(`Welcome back, ${response.user.fullName}!`);
-      return response;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Login failed";
-      toast.error(message);
-      throw error;
+  // Helper to sync query cache + localStorage
+  const setAuthData = (user: User | null, token?: string) => {
+    if (user && token) {
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
+    } else if (!user) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
     }
-  }, []);
+    queryClient.setQueryData(authKeys.user, user);
+  };
 
-  // Google OAuth login
-  const loginWithGoogle = useCallback(async (idToken: string) => {
-    try {
-      const response: any = await authService.loginWithGoogle(idToken);
-      console.log("Google login response:", response);
-      if (!response?.data?.token || !response?.data?.user) {
-        return;
-      }
-      localStorage.setItem("accessToken", response?.data?.token);
-      localStorage.setItem("user", JSON.stringify(response?.data?.user));
-      setUser(response?.data?.user);
-      toast.success(`خوش آمدید، ${response?.data?.user.username}!`);
-      return response;
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Google login failed";
-      toast.error(message);
-      throw error;
-    }
-  }, []);
+  // Login Mutation
+  const loginMutation = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      authService.login({ email, password }),
+    onSuccess: (data) => {
+      setAuthData(data.user, data.token);
+      toast.success(`Welcome back, ${data.user.fullName}!`);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Login failed");
+    },
+  });
 
-  // Register function
-  const register = useCallback(async (data: RegisterRequest) => {
-    try {
-      const response = await authService.register(data);
-      localStorage.setItem("accessToken", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-      setUser(response.user);
-      toast.success(`Welcome, ${response.user.fullName}!`);
-      return response;
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Registration failed";
-      toast.error(message);
-      throw error;
-    }
-  }, []);
+  // Google OAuth Mutation
+  const googleLoginMutation = useMutation({
+    mutationFn: (idToken: string) => authService.loginWithGoogle(idToken),
+    onSuccess: (response: { token: string; user: User }) => {
+      const token = response?.token;
+      const user = response?.user;
+      if (!token || !user) return;
 
-  // Logout function
-  const logout = useCallback(() => {
+      setAuthData(user, token);
+      toast.success(`Welcome back, ${user.username}!`);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Google login failed");
+    },
+  });
+
+  // Register Mutation
+  const registerMutation = useMutation({
+    mutationFn: (data: RegisterRequest) => authService.register(data),
+    onSuccess: (data) => {
+      setAuthData(data.user, data.token);
+      toast.success(`Welcome, ${data.user.fullName}!`);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Registration failed");
+    },
+  });
+
+  // Logout Handler
+  const logout = () => {
     authService.logout();
-    setUser(null);
+    setAuthData(null);
     toast.success("Logged out successfully");
-  }, []);
-
-  // Update user function
-  const updateUser = useCallback((updatedUser: User) => {
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-  }, []);
-
-  // Refresh token function
-  const refreshToken = useCallback(async () => {
-    try {
-      const response = await authService.refreshToken();
-      if (response.accessToken) {
-        localStorage.setItem("accessToken", response.accessToken);
-        return response.accessToken;
-      }
-      return null;
-    } catch (error) {
-      console.error("Failed to refresh token:", error);
-      logout();
-      return null;
-    }
-  }, [logout]);
+  };
 
   return {
     user,
     isLoading,
-    login,
-    loginWithGoogle,
-    register,
-    logout,
-    updateUser,
-    refreshToken,
     isAuthenticated: !!user,
+    // Actions
+    login: loginMutation.mutateAsync,
+    loginWithGoogle: googleLoginMutation.mutateAsync,
+    register: registerMutation.mutateAsync,
+    logout,
+    // Status Flags
+    isLoggingIn: loginMutation.isPending,
+    isRegistering: registerMutation.isPending,
   };
 };

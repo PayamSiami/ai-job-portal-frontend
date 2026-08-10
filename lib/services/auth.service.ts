@@ -23,7 +23,7 @@ export const authService = {
       idToken,
       role: "job-seeker",
     });
-    return response.data;
+    return response.data.data;
   },
 
   async logout(): Promise<void> {
