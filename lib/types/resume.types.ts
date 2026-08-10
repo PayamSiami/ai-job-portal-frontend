@@ -130,17 +130,3 @@ export interface Certification {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface PersonalInfo {
-  firstName: string;
-  lastName: string;
-  headline: string;
-  email: string;
-  phone: string;
-  city: string;
-  country: string;
-  linkedinUrl?: string | undefined;
-  githubUrl?: string | undefined;
-  portfolioUrl?: string | undefined;
-  websiteUrl?: string | undefined;
-}

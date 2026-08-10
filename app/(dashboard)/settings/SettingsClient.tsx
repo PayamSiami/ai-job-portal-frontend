@@ -168,8 +168,8 @@ export default function SettingsClient() {
         if (userData?.data) {
             const { profile } = userData?.data;
             profileForm.reset({
-                lastName: profile.firstName || '',
-                firstName: profile.lastName || '',
+                firstName: profile.firstName || '',
+                lastName: profile.lastName || '',
                 email: userData?.data.email || '',
                 phone: profile.phone || '',
                 bio: profile.bio || '',

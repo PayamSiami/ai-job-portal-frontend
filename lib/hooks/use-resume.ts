@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // lib/hooks/use-resume.ts
 "use client";
 
@@ -13,7 +12,7 @@ import toast from "react-hot-toast";
 
 export const useResume = () => {
   const queryClient = useQueryClient();
-  const [currentResume, setCurrentResume]: any = useState<Resume | null>(null);
+  const [currentResume, setCurrentResume] = useState<Resume | null>(null);
 
   // Get all resumes
   const useGetMyResumes = () => {

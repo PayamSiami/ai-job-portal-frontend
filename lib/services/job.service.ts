@@ -1,6 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { apiClient } from "../api/client";
-import { JobFilters, JobSearchResponse } from "../types/job.types";
+// lib/services/job.service.ts
+import { apiClient } from "@/lib/api/client";
+import { ApiResponse } from "@/lib/types/api.types";
+import {
+  Job,
+  JobFilters,
+  JobStatsResponse,
+  AISearchResponse,
+  JobSearchResponse,
+} from "@/lib/types/job.types";
+import { Application } from "@/lib/services/application.service";
 
 export const jobService = {
   async searchJobs(filters: JobFilters): Promise<JobSearchResponse> {
@@ -17,7 +25,9 @@ export const jobService = {
         }
       });
 
-      const { data } = await apiClient.get(`/jobs?${params.toString()}`);
+      const { data } = await apiClient.get<ApiResponse<JobSearchResponse>>(
+        `/jobs?${params.toString()}`,
+      );
       return data.data;
     } catch (error) {
       console.error("Error searching jobs:", error);
@@ -25,7 +35,7 @@ export const jobService = {
     }
   },
 
-  async statsJobs(filters: any): Promise<any> {
+  async statsJobs(filters: JobFilters): Promise<JobStatsResponse> {
     try {
       const params = new URLSearchParams();
 
@@ -39,22 +49,22 @@ export const jobService = {
         }
       });
 
-      const response  = await apiClient.get("/jobs/stats/global");
-      return response.data.data; // Assumes nested structure
+      const response =
+        await apiClient.get<ApiResponse<JobStatsResponse>>(`/jobs/stats/global?${params.toString()}`);
+      return response.data.data;
     } catch (error) {
-      console.error("Error searching jobs:", error);
+      console.error("Error fetching job stats:", error);
       throw error;
     }
   },
 
   // AI-powered natural language search
-  async aiSearch(query: string): Promise<any> {
+  async aiSearch(query: string): Promise<AISearchResponse> {
     try {
-      const response = await apiClient.get(
+      const response = await apiClient.get<ApiResponse<AISearchResponse>>(
         `/jobs/search/ai?query=${encodeURIComponent(query)}`,
       );
-      console.log("AI search response:", response.data);
-      return response.data.data.results.jobs; // Assuming the API returns results in this structure
+      return response.data.data;
     } catch (error) {
       console.error("Error performing AI search:", error);
       throw error;
@@ -62,9 +72,9 @@ export const jobService = {
   },
 
   // Get job by ID
-  async getJobById(id: string): Promise<any> {
+  async getJobById(id: string): Promise<Job> {
     try {
-      const { data } = await apiClient.get(`/jobs/${id}`);
+      const { data } = await apiClient.get<ApiResponse<Job>>(`/jobs/${id}`);
       return data.data;
     } catch (error) {
       console.error("Error fetching job:", error);
@@ -76,11 +86,12 @@ export const jobService = {
   async updateApplicationStatus(
     applicationId: string,
     status: string,
-  ): Promise<any> {
+  ): Promise<ApiResponse<Application>> {
     try {
-      const response = await apiClient.put(`/applications/${applicationId}`, {
-        status,
-      });
+      const response = await apiClient.put<ApiResponse<Application>>(
+        `/applications/${applicationId}`,
+        { status },
+      );
       return response.data;
     } catch (error) {
       console.error("Error updating application:", error);

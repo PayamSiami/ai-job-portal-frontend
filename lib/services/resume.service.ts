@@ -1,6 +1,6 @@
 import { apiClient } from "../api/client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// lib/services/resume.service.ts
 export interface Resume {
   _id: string;
   user: string;

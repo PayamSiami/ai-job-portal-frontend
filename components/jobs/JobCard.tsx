@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
 
 import React from 'react';
@@ -13,11 +11,20 @@ import { Job } from '@/lib/types/job.types';
 import { formatDistanceToNow, formatSalary } from '@/lib/utils/index';
 
 interface JobCardProps {
-  job: Job | any;
+  job: Job;
   featured?: boolean;
 }
 
 export function JobCard({ job, featured }: JobCardProps) {
+  const companyLogo =
+    typeof job.company === 'object' && job.company?.logo ? job.company.logo : undefined;
+  const companyName =
+    typeof job.company === 'object'
+      ? job.company?.name
+      : typeof job.company === 'string'
+        ? job.company
+        : undefined;
+
   const getExperienceLevelColor = (level: string) => {
     const colors: Record<string, string> = {
       entry: 'bg-green-100 text-green-800',
@@ -56,9 +63,9 @@ export function JobCard({ job, featured }: JobCardProps) {
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <Avatar className="h-12 w-12 rounded-lg">
-            <AvatarImage src={job.company?.logo} />
+            {companyLogo && <AvatarImage src={companyLogo} />}
             <AvatarFallback className="bg-blue-100 text-blue-600 text-lg rounded-lg">
-              {job.company?.name?.charAt(0) || 'C'}
+              {companyName?.charAt(0) || 'C'}
             </AvatarFallback>
           </Avatar>
 
@@ -89,11 +96,11 @@ export function JobCard({ job, featured }: JobCardProps) {
             <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-600">
               <span className="flex items-center gap-1">
                 <Building className="w-4 h-4" />
-                {job.company?.name}
+                {companyName}
               </span>
               <span className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
-                {job.location?.city}, {job.location?.state}
+                {job.location}
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
@@ -106,13 +113,13 @@ export function JobCard({ job, featured }: JobCardProps) {
                 {job.experienceLevel}
               </Badge>
               <Badge variant="outline">{job.jobType}</Badge>
-              {job.salary?.min && job.salary?.max && (
+              {job.minSalary && job.maxSalary && (
                 <Badge variant="secondary">
                   <DollarSign className="w-3 h-3 mr-1" />
-                  {formatSalary(job.salary.min)} - {formatSalary(job.salary.max)}
+                  {formatSalary(job.minSalary, job.maxSalary)}
                 </Badge>
               )}
-              {job.isFeatured && (
+              {job?.isFeatured && (
                 <Badge className="bg-yellow-100 text-yellow-800">
                   <Sparkles className="w-3 h-3 mr-1" />
                   Top Match
@@ -124,16 +131,16 @@ export function JobCard({ job, featured }: JobCardProps) {
               {job.description}
             </p>
 
-            {job.requiredSkills?.length > 0 && (
+            {job.skills && job.skills.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-3">
-                {job.requiredSkills.slice(0, 5).map((skill: any) => (
+                {job.skills.slice(0, 5).map((skill: string) => (
                   <Badge key={skill} variant="secondary" className="text-xs">
                     {skill}
                   </Badge>
                 ))}
-                {job.requiredSkills.length > 5 && (
+                {job.skills.length > 5 && (
                   <Badge variant="secondary" className="text-xs">
-                    +{job.requiredSkills.length - 5} more
+                    +{job.skills.length - 5} more
                   </Badge>
                 )}
               </div>
@@ -141,15 +148,15 @@ export function JobCard({ job, featured }: JobCardProps) {
 
             <div className="flex items-center justify-between mt-4 pt-4 border-t">
               <div className="flex items-center gap-4 text-sm text-gray-500">
-                {job.applications && (
+                {job.applicantCount && (
                   <span className="flex items-center gap-1">
-                    <span className="font-medium">{job.applications.length}</span> applicants
+                    <span className="font-medium">{job.applicantCount}</span> applicants
                   </span>
                 )}
-                {job.employmentType && (
+                {job.jobType && (
                   <span className="flex items-center gap-1">
                     <Briefcase className="w-4 h-4" />
-                    {job.employmentType}
+                    {job.jobType}
                   </span>
                 )}
               </div>

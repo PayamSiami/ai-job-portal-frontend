@@ -1,10 +1,14 @@
-export const formatSalary = (min: number, max: number): string => {
-  const formatter = new Intl.NumberFormat("en-US", {
+export const formatSalary = (min: number, max?: number): string => {
+  const formatter = new Intl.NumberFormat("fa-IR", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
+
+  if (max === undefined || max === min) {
+    return formatter.format(min);
+  }
   return `${formatter.format(min)} - ${formatter.format(max)}`;
 };
 

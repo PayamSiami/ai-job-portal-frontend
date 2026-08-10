@@ -39,6 +39,7 @@ export interface Job {
   applicantCount?: number;
   createdAt: string;
   updatedAt: string;
+  isFeatured?: boolean;
 }
 export interface JobFilters {
   page?: number;
@@ -80,6 +81,47 @@ export interface AISearchResponse {
     skills?: string[];
   };
   results: JobSearchResponse;
+}
+
+export interface JobStatsResponse {
+  summary: {
+    totalJobs: number;
+    activeJobs: number;
+    inactiveJobs: number;
+    featuredJobs: number;
+    totalApplications: number;
+    avgApplicationsPerJob: number;
+  };
+  jobDistribution: {
+    byType: Record<string, number>;
+    byWorkMode: Record<string, number>;
+    byExperience: Record<string, number>;
+  };
+  applicationStatus: {
+    pending: number;
+    reviewing: number;
+    shortlisted: number;
+    interviewing: number;
+    hired: number;
+    rejected: number;
+    withdrawn: number;
+  };
+  rates: {
+    conversionRate: number;
+    shortlistRate: number;
+    rejectionRate: number;
+  };
+  topPerformingJobs: Array<{
+    jobId: string;
+    title: string;
+    company: string;
+    applications: number;
+  }>;
+  trends: {
+    monthlyJobs: Array<{ month: string; count: number }>;
+    monthlyApplications: Array<{ month: string; count: number }>;
+  };
+  generatedAt: string;
 }
 
 export interface GenerateJobContentRequest {
