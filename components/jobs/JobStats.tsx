@@ -246,8 +246,6 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
         return statsResponse.topPerformingJobs || [];
     }, [statsResponse]);
 
-    // ... rest of the component remains the same ...
-
     // If loading, show animated skeleton
     if (loading) {
         return (

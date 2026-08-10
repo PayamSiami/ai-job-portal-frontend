@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,7 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import toast from "react-hot-toast";
 
 const loginSchema = z.object({
@@ -30,8 +32,9 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
 
   const {
     register,
@@ -54,6 +57,18 @@ export const LoginForm = () => {
     }
   };
 
+  const handleGoogleLogin = async (credential: string) => {
+    setGoogleLoading(true);
+    try {
+      await loginWithGoogle(credential);
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "ورود با گوگل ناموفق بود");
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg" >
       <CardHeader className="space-y-1">
@@ -65,16 +80,33 @@ export const LoginForm = () => {
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Google Login Button */}
         <CardContent className="space-y-4 mb-2">
+          <GoogleLoginButton
+            onSuccess={handleGoogleLogin}
+            disabled={isLoading || googleLoading}
+          />
+
+          {/* Divider */}
+          <div className="relative my-4">
+            <Separator />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
+              یا با ایمیل وارد شوید
+            </span>
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium">ایمیل</label>
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              {...register("email")}
-              className={errors.email ? "border-red-500" : ""}
-              dir="ltr"
-            />
+            <div className="relative">
+              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                {...register("email")}
+                className={`${errors.email ? "border-red-500" : ""} pl-10`}
+                dir="ltr"
+              />
+            </div>
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
             )}
@@ -108,7 +140,7 @@ export const LoginForm = () => {
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading || googleLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="ml-2 h-4 w-4 animate-spin" />

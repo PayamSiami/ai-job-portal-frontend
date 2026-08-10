@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -39,6 +40,27 @@ export const useAuth = () => {
       return response;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
+      toast.error(message);
+      throw error;
+    }
+  }, []);
+
+  // Google OAuth login
+  const loginWithGoogle = useCallback(async (idToken: string) => {
+    try {
+      const response: any = await authService.loginWithGoogle(idToken);
+      console.log("Google login response:", response);
+      if (!response?.data?.token || !response?.data?.user) {
+        return;
+      }
+      localStorage.setItem("accessToken", response?.data?.token);
+      localStorage.setItem("user", JSON.stringify(response?.data?.user));
+      setUser(response?.data?.user);
+      toast.success(`خوش آمدید، ${response?.data?.user.username}!`);
+      return response;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Google login failed";
       toast.error(message);
       throw error;
     }
@@ -94,6 +116,7 @@ export const useAuth = () => {
     user,
     isLoading,
     login,
+    loginWithGoogle,
     register,
     logout,
     updateUser,

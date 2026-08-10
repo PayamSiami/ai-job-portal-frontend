@@ -32,8 +32,51 @@ const JobStatsSkeleton = () => (
     </>
 )
 
+const defaultStats = {
+    data: {
+        summary: {
+            totalJobs: 0,
+            activeJobs: 0,
+            inactiveJobs: 0,
+            featuredJobs: 0,
+            totalApplications: 0,
+            avgApplicationsPerJob: 0,
+        },
+        jobDistribution: {
+            byType: {},
+            byWorkMode: {},
+            byExperience: {},
+        },
+        applicationStatus: {
+            pending: 0,
+            reviewing: 0,
+            shortlisted: 0,
+            interviewing: 0,
+            hired: 0,
+            rejected: 0,
+            withdrawn: 0,
+        },
+        rates: {
+            conversionRate: 0,
+            shortlistRate: 0,
+            rejectionRate: 0,
+        },
+        topPerformingJobs: [],
+        trends: {
+            monthlyJobs: [],
+            monthlyApplications: [],
+        },
+        generatedAt: new Date().toISOString(),
+    }
+};
+
 async function getStats() {
-    return jobService.statsJobs({});
+    try {
+        return await jobService.statsJobs({});
+    } catch (error) {
+        console.error('Failed to fetch job stats:', error);
+        return defaultStats;
+    }
 }
 
 export default async function HomePage() {
@@ -44,13 +87,10 @@ export default async function HomePage() {
             <HomeStructuredData />
             <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex flex-col items-center">
                 <section className="container px-4 py-16 md:py-24 flex flex-col items-center">
-                    <div className="text-center w-full max-w-4xl">
+                    <div className="text-center w-full max-w-4xl mb-5">
                         <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
                             شغل رویایی خود را با <span className="text-blue-600"> هوش مصنوعی</span> پیدا کنید
                         </h1>
-                        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                            شغل ایده‌آل خود را به زبان طبیعی توصیف کنید...
-                        </p>
                     </div>
                     <Suspense fallback={<JobStatsSkeleton />}>
                         <JobStats statsResponse={statsData} />
