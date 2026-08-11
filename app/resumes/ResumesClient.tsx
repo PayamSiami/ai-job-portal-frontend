@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus,
   FileText,
@@ -31,7 +31,6 @@ import { resumeService, Resume } from '@/lib/services/resume.service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
@@ -61,12 +60,89 @@ import {
 } from '@/components/ui/alert-dialog';
 import { CreateResumeModal } from '@/components/resume/CreateResumeModal';
 import { TemplatePreview } from '@/components/resume/TemplatePreview';
+import { useResume } from '@/lib/hooks/use-resume';
 
-interface ResumesClientProps {
-  initialResumes: Resume[];
-}
+// Loading Skeleton Components
+const ResumeCardSkeleton = () => (
+  <Card className="animate-pulse">
+    <CardContent className="p-6">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <div className="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div className="h-8 w-8 bg-gray-200 rounded"></div>
+      </div>
+      <div className="mb-3">
+        <div className="flex items-center justify-between text-sm mb-1">
+          <span className="h-3 bg-gray-200 rounded w-16"></span>
+          <span className="h-3 bg-gray-200 rounded w-12"></span>
+        </div>
+        <div className="h-2 bg-gray-200 rounded w-full"></div>
+      </div>
+      <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+        <span className="h-3 bg-gray-200 rounded w-20"></span>
+        <span className="h-3 bg-gray-200 rounded w-16"></span>
+        <span className="h-5 bg-gray-200 rounded w-14"></span>
+      </div>
+      <div className="flex items-center gap-4 text-xs border-t pt-3">
+        <span className="h-3 bg-gray-200 rounded w-24"></span>
+        <span className="h-3 bg-gray-200 rounded w-20"></span>
+        <span className="h-3 bg-gray-200 rounded w-20"></span>
+      </div>
+      <div className="flex items-center justify-between mt-4 pt-3 border-t">
+        <div className="flex gap-2">
+          <span className="h-8 bg-gray-200 rounded w-20"></span>
+          <span className="h-8 bg-gray-200 rounded w-20"></span>
+        </div>
+        <span className="h-8 bg-gray-200 rounded w-32"></span>
+      </div>
+    </CardContent>
+  </Card>
+);
 
-export default function ResumesClient({ initialResumes }: ResumesClientProps) {
+const ListItemSkeleton = () => (
+  <Card className="animate-pulse">
+    <CardContent className="p-4">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <div className="h-5 bg-gray-200 rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="h-5 bg-gray-200 rounded w-20"></div>
+          <div className="h-8 w-8 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+// Loading Overlay Component
+const LoadingOverlay = ({ message = 'در حال بارگذاری...' }) => (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-8 max-w-sm w-full mx-4 shadow-xl">
+      <div className="flex flex-col items-center gap-4">
+        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+        <p className="text-gray-700 font-medium">{message}</p>
+      </div>
+    </div>
+  </div>
+);
+
+// Initial Loading Component
+const InitialLoading = () => (
+  <div className="flex flex-col items-center justify-center min-h-100 gap-4">
+    <div className="relative">
+      <div className="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
+      <div className="w-16 h-16 border-4 border-blue-600 rounded-full border-t-transparent animate-spin absolute top-0 left-0"></div>
+    </div>
+    <p className="text-gray-600 font-medium">در حال بارگذاری رزومه‌ها...</p>
+    <p className="text-sm text-gray-400">لطفاً چند لحظه صبر کنید</p>
+  </div>
+);
+
+export default function ResumesClient() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,6 +153,8 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
   const [previewResume, setPreviewResume] = useState<Resume | null>(null);
+
+  const { data: resumes, isLoading, isFetching, error, refetch } = useResume().useGetMyResumes();
 
   // Delete mutation
   const deleteMutation = useMutation({
@@ -105,7 +183,7 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
   });
 
   // Filter resumes by search
-  const filteredResumes = initialResumes?.filter((resume: Resume) => {
+  const filteredResumes = resumes?.filter((resume: Resume) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     const fullName = `${resume.personalInfo.firstName} ${resume.personalInfo.lastName}`.toLowerCase();
@@ -198,7 +276,7 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
 
     // Personal Info
     const personalFields = ['firstName', 'lastName', 'email'];
-    if (!resume?.personalInfo) return 0
+    if (!resume?.personalInfo) return 0;
     personalFields.forEach(field => {
       total++;
       if (resume?.personalInfo && resume?.personalInfo[field as keyof typeof resume.personalInfo]) completed++;
@@ -224,8 +302,55 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
     return Math.round((completed / total) * 100);
   };
 
+  // Error state
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <Card>
+          <CardContent className="p-12 text-center">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h3 className="text-xl font-semibold text-red-600 mb-2">
+              خطا در بارگذاری رزومه‌ها
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {error instanceof Error ? error.message : 'خطایی رخ داده است. لطفاً دوباره تلاش کنید.'}
+            </p>
+            <Button onClick={() => refetch()} className="gap-2">
+              <Loader2 className="w-4 h-4" />
+              تلاش مجدد
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Initial loading state
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <InitialLoading />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
+      {/* Refreshing indicator */}
+      {isFetching && !isLoading && (
+        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          در حال بروزرسانی...
+        </div>
+      )}
+
+      {/* Loading Overlay for mutations */}
+      {(deleteMutation.isPending || setDefaultMutation.isPending) && (
+        <LoadingOverlay
+          message={deleteMutation.isPending ? 'در حال حذف رزومه...' : 'در حال بروزرسانی رزومه پیش‌فرض...'}
+        />
+      )}
+
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
@@ -237,8 +362,16 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
             با استفاده از قالب‌های داخلی، چندین نسخه رزومه ایجاد و مدیریت کنید
           </p>
         </div>
-        <Button onClick={() => setCreateModalOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-4 h-4" />
+        <Button
+          onClick={() => setCreateModalOpen(true)}
+          className="gap-2 bg-blue-600 hover:bg-blue-700"
+          disabled={isFetching}
+        >
+          {isFetching ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Plus className="w-4 h-4" />
+          )}
           ایجاد رزومه جدید
         </Button>
       </div>
@@ -249,7 +382,7 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
           <Star className="w-4 h-4 fill-current" />
           <span className="font-medium">رزومه پیش‌فرض:</span>
           <span>
-            {initialResumes?.find((r: Resume) => r.isDefault)?.title || 'هیچ رزومه پیش‌فرضی تنظیم نشده است'}
+            {resumes?.find((r: Resume) => r.isDefault)?.title || 'هیچ رزومه پیش‌فرضی تنظیم نشده است'}
           </span>
           <span className="text-blue-600 text-xs mr-2">
             زمانی که بدون انتخاب نسخه، درخواست می‌دهید از این رزومه استفاده می‌شود.
@@ -480,8 +613,14 @@ export default function ResumesClient({ initialResumes }: ResumesClientProps) {
                       onClick={() => handleSetDefault(resume._id)}
                       variant={isDefault ? 'secondary' : 'ghost'}
                       className="text-xs"
+                      disabled={setDefaultMutation.isPending}
                     >
-                      {isDefault ? (
+                      {setDefaultMutation.isPending && setDefaultMutation.variables === resume._id ? (
+                        <>
+                          <Loader2 className="w-3 h-3 ml-1 animate-spin" />
+                          در حال بروزرسانی...
+                        </>
+                      ) : isDefault ? (
                         'پیش‌فرض ✓'
                       ) : (
                         'تنظیم به عنوان پیش‌فرض'

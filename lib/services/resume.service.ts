@@ -105,18 +105,17 @@ export interface PersonalInfo {
 }
 
 export const resumeService = {
-  // ✅ Get all resumes (alias for getMyResumes)
   async getMyResumes(): Promise<Resume[]> {
-    const { data } = await apiClient.get("/resumes");
-    return data.data?.resumes || [];
+    const response = await apiClient.get("/resumes");
+    return response.data.data?.resumes || [];
   },
 
   // Get all resumes with optional status filter
   async getResumes(params?: { status?: string }): Promise<Resume[]> {
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append("status", params.status);
-    const { data } = await apiClient.get(`/resumes?${queryParams.toString()}`);
-    return data.data?.resumes || [];
+    const response = await apiClient.get(`/resumes?${queryParams.toString()}`);
+    return response.data.data?.resumes || [];
   },
 
   // ✅ Get a single resume by ID
@@ -137,10 +136,7 @@ export const resumeService = {
   },
 
   // ✅ Update personal info
-  async updatePersonalInfo(
-    id: string,
-    data: Partial<PersonalInfo>,
-  ): Promise<Resume> {
+  async updatePersonalInfo(id: string, data: Partial<PersonalInfo>): Promise<Resume> {
     const response = await apiClient.put(`/resumes/${id}/personal-info`, data);
     return response.data.data;
   },
@@ -176,14 +172,8 @@ export const resumeService = {
   },
 
   // ✅ Generate AI cover letter
-  async generateCoverLetter(
-    resumeId: string,
-    jobId: string,
-  ): Promise<{ coverLetter: string }> {
-    const response = await apiClient.post(
-      `/resumes/${resumeId}/generate-cover-letter`,
-      { jobId },
-    );
+  async generateCoverLetter(resumeId: string, jobId: string): Promise<{ coverLetter: string }> {
+    const response = await apiClient.post(`/resumes/${resumeId}/generate-cover-letter`, { jobId });
     return response.data.data;
   },
 
@@ -194,10 +184,7 @@ export const resumeService = {
   },
 
   // Generate AI content for resume
-  async generateContent(data: {
-    jobTitle?: string;
-    experience?: string;
-  }): Promise<any> {
+  async generateContent(data: { jobTitle?: string; experience?: string }): Promise<any> {
     const response = await apiClient.post("/resumes/generate-content", data);
     return response.data;
   },
