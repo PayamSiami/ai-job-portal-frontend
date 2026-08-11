@@ -83,6 +83,14 @@ export interface Resume {
   updatedAt: string;
 }
 
+export interface AnalysisResult {
+  score: number;
+  strengths: string[];
+  weaknesses: string[];
+  suggestions: string[];
+  recommendedJobs: string[];
+}
+
 export interface PersonalInfo {
   firstName: string;
   lastName: string;
@@ -162,7 +170,7 @@ export const resumeService = {
   },
 
   // ✅ Analyze resume
-  async analyzeResume(id: string): Promise<{ analysis: any }> {
+  async analyzeResume(id: string): Promise<{ analysis: AnalysisResult }> {
     const response = await apiClient.get(`/resumes/${id}/analyze`);
     return response.data.data;
   },

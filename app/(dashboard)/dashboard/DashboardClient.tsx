@@ -74,7 +74,7 @@ export default function DashboardClient() {
 
   // Get applications array from response
   const applicationsData = useMemo(() => {
-    return applications || [];
+    return applications?.applications || [];
   }, [applications]);
 
   // Filter applications based on status

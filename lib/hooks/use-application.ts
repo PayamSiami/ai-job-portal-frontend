@@ -3,10 +3,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { applicationService } from "../services/application.service";
 
+import type { ApplicationListResponse } from "../services/application.service";
+
 export const useApplications = () => {
-  // Get all applications
   const useGetMyApplications = () => {
-    return useQuery({
+    return useQuery<ApplicationListResponse>({
       queryKey: ["applications"],
       queryFn: () => applicationService.getMyApplications(),
     });

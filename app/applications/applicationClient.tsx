@@ -97,7 +97,7 @@ export default function ApplicationClient() {
 
   // Get applications array from response
   const applicationsData = useMemo(() => {
-    return applications?.data?.applications || applications || [];
+    return applications?.applications || [];
   }, [applications]);
 
   // Filter and search applications
@@ -106,7 +106,7 @@ export default function ApplicationClient() {
 
     // Filter by status
     if (activeFilter !== "all") {
-      filtered = filtered.filter(
+      filtered = filtered?.filter(
         (app: any) => app.status?.toLowerCase() === activeFilter
       );
     }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -13,15 +12,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { useResume } from "@/lib/hooks/use-resume";
+import { AnalysisResult } from "@/lib/services/resume.service";
 import toast from "react-hot-toast";
-
-interface AnalysisResult {
-  score: number;
-  strengths: string[];
-  weaknesses: string[];
-  suggestions: string[];
-  recommendedJobs: string[];
-}
 
 export const AIResumeAnalyzer = () => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
@@ -35,8 +27,8 @@ export const AIResumeAnalyzer = () => {
 
     try {
       // Use mutateAsync instead of calling analyzeResume directly
-      const result: any = await analyzeResume.mutateAsync(currentResume?.id);
-      setAnalysis(result);
+      const result = await analyzeResume.mutateAsync(currentResume?._id);
+      setAnalysis(result.analysis);
       toast.success("Resume analysis complete!");
     } catch  {
       toast.error("Failed to analyze resume");

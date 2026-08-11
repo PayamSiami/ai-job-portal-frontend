@@ -49,8 +49,11 @@ export const jobService = {
         }
       });
 
-      const response =
-        await apiClient.get<ApiResponse<JobStatsResponse>>(`/jobs/stats/global?${params.toString()}`);
+      const response = await apiClient.get<ApiResponse<JobStatsResponse>>(
+        `/jobs/stats/global?${params.toString()}`,
+      );
+
+      console.log("Fetched job stats response:", response.data);
       return response.data.data;
     } catch (error) {
       console.error("Error fetching job stats:", error);
