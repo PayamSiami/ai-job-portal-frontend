@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +18,7 @@ import {
   Undo2,
 } from "lucide-react";
 import { useApplications } from "@/lib/hooks/use-application";
+import { Application } from "@/lib/services/application.service";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -107,7 +106,7 @@ export default function ApplicationClient() {
     // Filter by status
     if (activeFilter !== "all") {
       filtered = filtered?.filter(
-        (app: any) => app.status?.toLowerCase() === activeFilter
+        (app: Application) => app.status?.toLowerCase() === activeFilter
       );
     }
 
@@ -115,7 +114,7 @@ export default function ApplicationClient() {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(
-        (app: any) =>
+        (app: Application) =>
           app?.job?.title?.toLowerCase().includes(query) ||
           app?.job?.company?.toLowerCase().includes(query)
       );

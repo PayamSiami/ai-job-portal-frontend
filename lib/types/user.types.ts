@@ -23,7 +23,8 @@ export interface User {
 }
 
 export interface UpdateProfileData {
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
   bio?: string;
   location?: string;
@@ -44,4 +45,9 @@ export interface NotificationPreferences {
   marketingEmails: boolean;
   pushNotifications: boolean;
   weeklyDigest: boolean;
+}
+
+export interface UserProfileResponse {
+  user: User;
+  profile: UpdateProfileData;
 }

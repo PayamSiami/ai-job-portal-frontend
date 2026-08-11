@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -21,9 +20,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { userService } from '@/lib/services/user.service';
+import { UserProfileResponse, UpdateProfileData } from '@/lib/types/user.types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
     Card,
@@ -72,6 +71,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { Label } from '@/components/ui/label';
 
 // Zod schemas
 const profileSchema = z.object({
@@ -108,6 +108,15 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 type NotificationFormData = z.infer<typeof notificationSchema>;
 
+interface ApiErrorMessage {
+    response?: { data?: { error?: string; message?: string } };
+    message?: string;
+}
+
+const isApiError = (error: unknown): error is ApiErrorMessage => {
+    return typeof error === 'object' && error !== null;
+};
+
 export default function SettingsClient() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('profile');
@@ -119,7 +128,7 @@ export default function SettingsClient() {
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     // Fetch user profile
-    const { data: userData, isLoading, refetch } = useQuery({
+    const { data: userData, isLoading, refetch } = useQuery<UserProfileResponse>({
         queryKey: ['user-profile'],
         queryFn: () => userService.getProfile(),
     });
@@ -165,45 +174,49 @@ export default function SettingsClient() {
 
     // Update profile when data loads
     useEffect(() => {
-        if (userData?.data) {
-            const { profile } = userData?.data;
+        if (userData) {
+            const { user, profile } = userData;
             profileForm.reset({
-                firstName: profile.firstName || '',
-                lastName: profile.lastName || '',
-                email: userData?.data.email || '',
-                phone: profile.phone || '',
-                bio: profile.bio || '',
-                location: profile.location || '',
-                company: profile.company || '',
-                title: profile.title || '',
-                website: profile.website || '',
+                firstName: profile?.firstName || '',
+                lastName: profile?.lastName || '',
+                email: user?.email || '',
+                phone: profile?.phone || '',
+                bio: profile?.bio || '',
+                location: profile?.location || '',
+                company: profile?.company || '',
+                title: profile?.title || '',
+                website: profile?.website || '',
             });
-
-            // if (user.notificationPreferences) {
-            //     notificationForm.reset({
-            //         emailNotifications: user.notificationPreferences.emailNotifications ?? true,
-            //         jobAlerts: user.notificationPreferences.jobAlerts ?? true,
-            //         applicationUpdates: user.notificationPreferences.applicationUpdates ?? true,
-            //         marketingEmails: user.notificationPreferences.marketingEmails ?? false,
-            //         pushNotifications: user.notificationPreferences.pushNotifications ?? true,
-            //         weeklyDigest: user.notificationPreferences.weeklyDigest ?? false,
-            //     });
-            // }
         }
-    }, [userData, profileForm, notificationForm]);
+    }, [userData, profileForm]);
 
     // Update profile mutation
     const updateProfileMutation = useMutation({
         mutationFn: (data: ProfileFormData) => {
-            const payload = { profile: data };
+            const payload: { profile: UpdateProfileData } = {
+                profile: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    phone: data.phone,
+                    bio: data.bio,
+                    location: data.location,
+                    company: data.company,
+                    title: data.title,
+                    website: data.website,
+                },
+            };
             return userService.updateProfile(payload);
         },
         onSuccess: () => {
             toast.success('Profile updated successfully');
             refetch();
         },
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.error || 'Failed to update profile');
+        onError: (error: unknown) => {
+            if (isApiError(error)) {
+                toast.error(error.response?.data?.error || error.message || 'Failed to update profile');
+            } else {
+                toast.error('Failed to update profile');
+            }
         },
     });
 
@@ -214,8 +227,12 @@ export default function SettingsClient() {
             toast.success('Password changed successfully');
             passwordForm.reset();
         },
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.error || 'Failed to change password');
+        onError: (error: unknown) => {
+            if (isApiError(error)) {
+                toast.error(error.response?.data?.error || error.message || 'Failed to change password');
+            } else {
+                toast.error('Failed to change password');
+            }
         },
     });
 
@@ -225,8 +242,12 @@ export default function SettingsClient() {
         onSuccess: () => {
             toast.success('Notification preferences updated');
         },
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.error || 'Failed to update notifications');
+        onError: (error: unknown) => {
+            if (isApiError(error)) {
+                toast.error(error.response?.data?.error || error.message || 'Failed to update notifications');
+            } else {
+                toast.error('Failed to update notifications');
+            }
         },
     });
 
@@ -239,8 +260,12 @@ export default function SettingsClient() {
             setAvatarPreview(null);
             refetch();
         },
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.error || 'Failed to upload avatar');
+        onError: (error: unknown) => {
+            if (isApiError(error)) {
+                toast.error(error.response?.data?.error || error.message || 'Failed to upload avatar');
+            } else {
+                toast.error('Failed to upload avatar');
+            }
         },
     });
 
@@ -249,11 +274,15 @@ export default function SettingsClient() {
         mutationFn: () => userService.deleteAccount(),
         onSuccess: () => {
             toast.success('Account deleted successfully');
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
             router.push('/');
         },
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.error || 'Failed to delete account');
+        onError: (error: unknown) => {
+            if (isApiError(error)) {
+                toast.error(error.response?.data?.error || error.message || 'Failed to delete account');
+            } else {
+                toast.error('Failed to delete account');
+            }
         },
     });
 
@@ -555,7 +584,7 @@ export default function SettingsClient() {
                                                             <Textarea
                                                                 {...field}
                                                                 placeholder="Tell us about yourself..."
-                                                                className="min-h-[100px]"
+                                                                className="min-h-25"
                                                             />
                                                         </FormControl>
                                                         <FormDescription>
@@ -975,44 +1004,44 @@ export default function SettingsClient() {
                                                 )}
                                             </Button>
                                         </form>
-                                    </Form>
 
-                                    <Separator className="my-6" />
+                                        <Separator className="my-6" />
 
-                                    <div>
-                                        <h4 className="font-medium text-gray-900 mb-2">Active Sessions</h4>
-                                        <div className="space-y-3">
-                                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                                    <div>
-                                                        <p className="text-sm font-medium">Current Session</p>
-                                                        <p className="text-xs text-gray-500">Chrome • Windows • IP: 192.168.1.1</p>
+                                        <div>
+                                            <h4 className="font-medium text-gray-900 mb-2">Active Sessions</h4>
+                                            <div className="space-y-3">
+                                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                        <div>
+                                                            <p className="text-sm font-medium">Current Session</p>
+                                                            <p className="text-xs text-gray-500">Chrome • Windows • IP: 192.168.1.1</p>
+                                                        </div>
                                                     </div>
+                                                    <Badge className="bg-green-100 text-green-800">Active</Badge>
                                                 </div>
-                                                <Badge className="bg-green-100 text-green-800">Active</Badge>
-                                            </div>
-                                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-                                                    <div>
-                                                        <p className="text-sm font-medium">Mobile Device</p>
-                                                        <p className="text-xs text-gray-500">Safari • iOS • Last active: 2 days ago</p>
+                                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                                        <div>
+                                                            <p className="text-sm font-medium">Mobile Device</p>
+                                                            <p className="text-xs text-gray-500">Safari • iOS • Last active: 2 days ago</p>
+                                                        </div>
                                                     </div>
+                                                    <Button variant="outline" size="sm">Revoke</Button>
                                                 </div>
-                                                <Button variant="outline" size="sm">Revoke</Button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Form>
                                 </CardContent>
                             </Card>
                         </TabsContent>
                     </Tabs>
                 </div>
-            </div>
+            </div >
 
             {/* Delete Account Dialog */}
-            <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+            < Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog} >
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Delete Account</DialogTitle>
@@ -1054,7 +1083,7 @@ export default function SettingsClient() {
                         </Button>
                     </DialogFooter>
                 </DialogContent>
-            </Dialog>
-        </div>
+            </Dialog >
+        </div >
     );
 }

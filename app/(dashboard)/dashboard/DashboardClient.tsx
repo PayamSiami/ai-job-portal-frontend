@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useMemo } from "react";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +15,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useApplications } from "@/lib/hooks/use-application";
+import { Application } from "@/lib/services/application.service";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -83,14 +83,14 @@ export default function DashboardClient() {
       return applicationsData;
     }
     return applicationsData.filter(
-      (app: any) => app.status?.toLowerCase() === activeFilter
+      (app: Application) => app.status?.toLowerCase() === activeFilter
     );
   }, [applicationsData, activeFilter]);
 
   // Calculate status counts for badges
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    applicationsData.forEach((app: any) => {
+    applicationsData.forEach((app: Application) => {
       const status = app.status?.toLowerCase() || "pending";
       counts[status] = (counts[status] || 0) + 1;
     });
@@ -101,16 +101,16 @@ export default function DashboardClient() {
   const stats = useMemo(() => {
     const total = applicationsData.length;
     const pending = applicationsData.filter(
-      (app: any) => app.status?.toLowerCase() === "pending" || app.status?.toLowerCase() === "reviewing"
+      (app: Application) => app.status?.toLowerCase() === "pending" || app.status?.toLowerCase() === "reviewing"
     ).length;
     const interview = applicationsData.filter(
-      (app: any) => app.status?.toLowerCase() === "interview"
+      (app: Application) => app.status?.toLowerCase() === "interview"
     ).length;
     const accepted = applicationsData.filter(
-      (app: any) => app.status?.toLowerCase() === "accepted"
+      (app: Application) => app.status?.toLowerCase() === "accepted"
     ).length;
     const rejected = applicationsData.filter(
-      (app: any) => app.status?.toLowerCase() === "rejected"
+      (app: Application) => app.status?.toLowerCase() === "rejected"
     ).length;
 
     return [
@@ -342,21 +342,21 @@ export default function DashboardClient() {
               </div>
             ) : filteredApplications.length > 0 ? (
               <div className="space-y-3">
-                {filteredApplications.slice(0, 5).map((app: any, index: number) => (
+                {filteredApplications.slice(0, 5).map((app: Application, index: number) => (
                   <div
-                    key={app?._id || app?.id || index}
+                    key={index}
                     className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50/80 hover:bg-gray-100/80 rounded-xl transition-colors gap-3"
                   >
                     <div className="space-y-1">
                       <p className="font-semibold text-gray-900 text-sm">
-                        {app?.jobId?.title || "عنوان شغلی نامشخص"}
+                        {app?.job?.title || "عنوان شغلی نامشخص"}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {app?.jobId?.company || "شرکت نامشخص"}
+                        {app?.job?.company || "شرکت نامشخص"}
                       </p>
-                      {app?.jobId?.location && (
+                      {app?.job?.location && (
                         <p className="text-xs text-gray-400">
-                          📍 {app.jobId.location}
+                          📍 {app.job.location}
                         </p>
                       )}
                     </div>
@@ -414,22 +414,22 @@ export default function DashboardClient() {
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
-            {applicationsData.some((app: any) => app.status?.toLowerCase() === "interview") ? (
+            {applicationsData.some((app: Application) => app.status?.toLowerCase() === "interview") ? (
               <div className="space-y-3">
                 {applicationsData
-                  .filter((app: any) => app.status?.toLowerCase() === "interview")
+                  .filter((app: Application) => app.status?.toLowerCase() === "interview")
                   .slice(0, 3)
-                  .map((app: any, index: number) => (
+                  .map((app: Application, index: number) => (
                     <div
                       key={app?._id || index}
                       className="flex items-center justify-between p-4 bg-purple-50/80 hover:bg-purple-100/80 rounded-xl transition-colors border border-purple-100"
                     >
                       <div className="space-y-1">
                         <p className="font-semibold text-gray-900 text-sm">
-                          {app?.jobId?.title || "عنوان شغلی"}
+                          {app?.job?.title || "عنوان شغلی"}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {app?.jobId?.company || "شرکت"}
+                          {app?.job?.company || "شرکت"}
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
@@ -444,7 +444,7 @@ export default function DashboardClient() {
                       </div>
                     </div>
                   ))}
-                {applicationsData.filter((app: any) => app.status?.toLowerCase() === "interview").length > 3 && (
+                {applicationsData.filter((app: Application) => app.status?.toLowerCase() === "interview").length > 3 && (
                   <div className="text-center pt-2">
                     <Button variant="ghost" size="sm" className="text-purple-600">
                       مشاهده همه مصاحبه‌ها
