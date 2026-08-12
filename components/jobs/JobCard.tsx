@@ -50,11 +50,11 @@ export function JobCard({ job, featured }: JobCardProps) {
   const getWorkModeLabel = (mode: string) => {
     switch (mode) {
       case 'remote':
-        return 'Remote';
+        return 'دورکاری';
       case 'hybrid':
-        return 'Hybrid';
+        return 'ترکیبی (حضوری و دورکاری)';
       default:
-        return 'On-site';
+        return 'حضوری';
     }
   };
 

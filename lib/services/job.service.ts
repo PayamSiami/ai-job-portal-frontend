@@ -50,7 +50,7 @@ export const jobService = {
       });
 
       const response = await apiClient.get<ApiResponse<JobStatsResponse>>(
-        `/jobs/stats/global?${params.toString()}`,
+        `/jobs/stats?${params.toString()}`,
       );
 
       console.log("Fetched job stats response:", response.data);
