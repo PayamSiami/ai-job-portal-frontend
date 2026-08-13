@@ -4,7 +4,7 @@ import { config } from '@/lib/config';
 import React from 'react';
 
 export const HomeStructuredData: React.FC = () => {
-  const baseUrl = config.NEXT_PUBLIC_APP_URL
+  const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -46,7 +46,7 @@ export const HomeStructuredData: React.FC = () => {
         ],
         contactPoint: {
           '@type': 'ContactPoint',
-          telephone: '+98-21-XXXXX',
+          telephone: '+98-921-8087195',
           contactType: 'customer service',
           availableLanguage: ['Persian', 'English'],
         },

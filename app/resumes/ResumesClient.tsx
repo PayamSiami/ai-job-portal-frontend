@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -165,8 +164,9 @@ export default function ResumesClient() {
       setDeleteDialogOpen(false);
       setSelectedResume(null);
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'حذف رزومه با شکست مواجه شد');
+    onError: (error) => {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err?.response?.data?.error || 'حذف رزومه با شکست مواجه شد');
     },
   });
 
@@ -177,8 +177,9 @@ export default function ResumesClient() {
       toast.success('رزومه پیش‌فرض بروزرسانی شد');
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || 'تنظیم رزومه پیش‌فرض با شکست مواجه شد');
+    onError: (error) => {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err?.response?.data?.error || 'تنظیم رزومه پیش‌فرض با شکست مواجه شد');
     },
   });
 

@@ -72,7 +72,7 @@ export const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
                 <a
-                  href="https://panel.jobmatch.ir/login"
+                  href="https://panel.jobmatch.ir"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors"
@@ -82,7 +82,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://panel.jobmatch.ir/login"
+                  href="https://panel.jobmatch.ir"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors"
@@ -92,7 +92,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://panel.jobmatch.ir/login"
+                  href="https://panel.jobmatch.ir"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors"
@@ -102,7 +102,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://panel.jobmatch.ir/login"
+                  href="https://panel.jobmatch.ir"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors"

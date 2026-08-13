@@ -190,8 +190,9 @@ export default function ApplicationClient() {
       setWithdrawDialogOpen(false);
       setSelectedApplicationId(null);
       setSelectedApplicationTitle("");
-    } catch (error: any) {
-      toast.error(error?.response?.data?.error || "خطا در لغو درخواست");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err?.response?.data?.error || "خطا در لغو درخواست");
     }
   };
 

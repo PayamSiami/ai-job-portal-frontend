@@ -2,7 +2,7 @@ import { config } from "@/lib/config";
 import type { MetadataRoute } from "next";
 
 // Provide a fallback URL
-const baseUrl = config.NEXT_PUBLIC_APP_URL || 'https://default-domain.com';
+const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date();
@@ -21,13 +21,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/auth/login`,
+      url: `${baseUrl}/login`,
       lastModified: currentDate,
       changeFrequency: "monthly" as const,
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/auth/register`,
+      url: `${baseUrl}/register`,
       lastModified: currentDate,
       changeFrequency: "monthly" as const,
       priority: 0.5,
