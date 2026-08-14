@@ -56,6 +56,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from '@/components/ui/alert';
+import { TemplatePreviewDialog } from '@/components/resume/TemplatePreviewDialog';
 
 export default function EditResumePage() {
   const params = useParams();
@@ -68,6 +69,7 @@ export default function EditResumePage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [localResume, setLocalResume] = useState<Resume | null>(null);
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
 
   // Fetch resume
   const { data: resume, isLoading, refetch } = useQuery({
@@ -291,10 +293,10 @@ export default function EditResumePage() {
           </Button>
           <Button
             variant="outline"
-            onClick={() => router.push(`/resumes/${id}`)}
+            onClick={() => setPreviewDialogOpen(true)}
           >
             <Eye className="w-4 h-4 ml-2" />
-            پیش‌نمایش
+            نمایش
           </Button>
           <Button
             onClick={handleSave}
@@ -1240,6 +1242,14 @@ export default function EditResumePage() {
           )}
         </div>
       </div>
+
+      {resume && previewDialogOpen && (
+        <TemplatePreviewDialog
+          resume={resume?.pdfFile?.path}
+          open={previewDialogOpen}
+          onOpenChange={setPreviewDialogOpen}
+        />
+      )}
 
       {/* AI Generate Dialog */}
       <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>

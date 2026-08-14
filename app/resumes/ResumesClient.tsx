@@ -39,14 +39,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -58,7 +51,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { CreateResumeModal } from '@/components/resume/CreateResumeModal';
-import { TemplatePreview } from '@/components/resume/TemplatePreview';
+import { TemplatePreviewDialog } from '@/components/resume/TemplatePreviewDialog';
 import { useResume } from '@/lib/hooks/use-resume';
 
 // Loading Overlay Component
@@ -626,23 +619,14 @@ export default function ResumesClient() {
       </AlertDialog>
 
       {/* Preview Dialog */}
-      <Dialog
-        open={previewDialogOpen}
-        onOpenChange={setPreviewDialogOpen}
-      >
-        <DialogContent
-          size="fullscreen"
-          className="overflow-hidden p-0"
-        >
-          <div className="flex-1 min-h-0 overflow-hidden px-4">
-            {previewResume && (
-              <TemplatePreview
-                resume={previewResume.pdfFile?.path || ""}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      {previewResume && (
+        <TemplatePreviewDialog
+          resume={previewResume.pdfFile?.path}
+          open={previewDialogOpen}
+          onOpenChange={setPreviewDialogOpen}
+        />
+      )}
+
 
       {/* Create Resume Modal */}
       <CreateResumeModal
