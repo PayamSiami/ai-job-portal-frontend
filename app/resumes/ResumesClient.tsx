@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -60,62 +60,6 @@ import {
 import { CreateResumeModal } from '@/components/resume/CreateResumeModal';
 import { TemplatePreview } from '@/components/resume/TemplatePreview';
 import { useResume } from '@/lib/hooks/use-resume';
-
-// Loading Skeleton Components
-const ResumeCardSkeleton = () => (
-  <Card className="animate-pulse">
-    <CardContent className="p-6">
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1">
-          <div className="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-        </div>
-        <div className="h-8 w-8 bg-gray-200 rounded"></div>
-      </div>
-      <div className="mb-3">
-        <div className="flex items-center justify-between text-sm mb-1">
-          <span className="h-3 bg-gray-200 rounded w-16"></span>
-          <span className="h-3 bg-gray-200 rounded w-12"></span>
-        </div>
-        <div className="h-2 bg-gray-200 rounded w-full"></div>
-      </div>
-      <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-        <span className="h-3 bg-gray-200 rounded w-20"></span>
-        <span className="h-3 bg-gray-200 rounded w-16"></span>
-        <span className="h-5 bg-gray-200 rounded w-14"></span>
-      </div>
-      <div className="flex items-center gap-4 text-xs border-t pt-3">
-        <span className="h-3 bg-gray-200 rounded w-24"></span>
-        <span className="h-3 bg-gray-200 rounded w-20"></span>
-        <span className="h-3 bg-gray-200 rounded w-20"></span>
-      </div>
-      <div className="flex items-center justify-between mt-4 pt-3 border-t">
-        <div className="flex gap-2">
-          <span className="h-8 bg-gray-200 rounded w-20"></span>
-          <span className="h-8 bg-gray-200 rounded w-20"></span>
-        </div>
-        <span className="h-8 bg-gray-200 rounded w-32"></span>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const ListItemSkeleton = () => (
-  <Card className="animate-pulse">
-    <CardContent className="p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <div className="h-5 bg-gray-200 rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="h-5 bg-gray-200 rounded w-20"></div>
-          <div className="h-8 w-8 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
 
 // Loading Overlay Component
 const LoadingOverlay = ({ message = 'در حال بارگذاری...' }) => (
@@ -497,7 +441,7 @@ export default function ResumesClient() {
                       <DropdownMenuContent align="end" className='w-56'>
                         <DropdownMenuItem onClick={() => handlePreview(resume)}>
                           <Eye className="w-4 h-4 ml-2" />
-                          مشاهده و خروجی
+                          مشاهده PDF
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => router.push(`/resumes/${resume._id}/edit`)}>
                           <Edit2 className="w-4 h-4 ml-2" />
@@ -521,12 +465,6 @@ export default function ResumesClient() {
                         }}>
                           <Download className="w-4 h-4 ml-2" />
                           دانلود PDF
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
-                          router.push(`/resumes/${resume._id}`);
-                        }}>
-                          <Eye className="w-4 h-4 ml-2" />
-                          پیش‌نمایش PDF
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Sparkles className="w-4 h-4 ml-2" />
@@ -597,7 +535,7 @@ export default function ResumesClient() {
                         className="text-xs"
                       >
                         <Eye className="w-3 h-3 ml-1" />
-                        مشاهده
+                        مشاهده PDF
                       </Button>
                       <Button
                         variant="outline"
@@ -688,38 +626,21 @@ export default function ResumesClient() {
       </AlertDialog>
 
       {/* Preview Dialog */}
-      <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
-        <DialogContent className="w-screen max-w-screen max-h-[95vh] overflow-hidden p-0 sm:p-0 md:p-1">
-          <DialogHeader className="px-4 pt-4 sm:px-6 sm:pt-6 shrink-0">
-            <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-              پیش‌نمایش رزومه
-            </DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm">
-              رزومه خود را در قالب‌های مختلف پیش‌نمایش کنید و به صورت PDF خروجی بگیرید
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="flex-1 overflow-y-auto px-2 sm:px-4 md:px-6 py-2 sm:py-4">
+      <Dialog
+        open={previewDialogOpen}
+        onOpenChange={setPreviewDialogOpen}
+      >
+        <DialogContent
+          size="fullscreen"
+          className="overflow-hidden p-0"
+        >
+          <div className="flex-1 min-h-0 overflow-hidden px-4">
             {previewResume && (
               <TemplatePreview
-                resume={previewResume}
-                onExport={() => {
-                  // Handle export complete
-                }}
+                resume={previewResume.pdfFile?.path || ""}
               />
             )}
           </div>
-
-          <DialogFooter className="px-4 pb-4 sm:px-6 sm:pb-6 shrink-0">
-            <Button
-              variant="outline"
-              onClick={() => setPreviewDialogOpen(false)}
-              className="w-full sm:w-auto text-sm"
-            >
-              بستن
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -729,6 +650,6 @@ export default function ResumesClient() {
         onOpenChange={setCreateModalOpen}
         onSuccess={() => queryClient.invalidateQueries({ queryKey: ['resumes'] })}
       />
-    </div>
+    </div >
   );
 }

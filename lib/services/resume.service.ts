@@ -76,6 +76,13 @@ export interface Resume {
     content: string;
     order: number;
   }>;
+  pdfFile: {
+    filename: string;
+    mimeType: "application/pdf";
+    path: string;
+    size: number;
+    uploadedAt: string;
+  };
   template: "modern" | "classic" | "minimal" | "creative";
   visibility: "private" | "public" | "shared";
   status: "draft" | "active" | "archived";
