@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname:  getHostname(config.NEXT_PUBLIC_APP_URL),
+        hostname: getHostname(config.NEXT_PUBLIC_APP_URL),
         pathname: "/**",
       },
       {
@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // Security headers for images
+  // Security headers
   async headers() {
     return [
       {
@@ -50,15 +50,6 @@ const nextConfig: NextConfig = {
           {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
-          },
-        ],
-      },
-      {
-        source: "/_next/image/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
           },
         ],
       },
