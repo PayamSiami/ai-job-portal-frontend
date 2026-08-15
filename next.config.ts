@@ -1,6 +1,15 @@
 import { config } from "./lib/config";
 import type { NextConfig } from "next";
 
+function getHostname(urlString: string | undefined, fallback: string = "localhost"): string {
+  if (!urlString) return fallback;
+  try {
+    return new URL(urlString).hostname;
+  } catch {
+    return fallback;
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -10,12 +19,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: new URL(config.NEXT_PUBLIC_APP_URL).hostname,
+        hostname:  getHostname(config.NEXT_PUBLIC_APP_URL),
         pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: new URL(config.NEXT_PUBLIC_API_GATEWAY_URL).hostname,
+        hostname: getHostname(config.NEXT_PUBLIC_API_GATEWAY_URL),
         pathname: "/uploads/**",
       },
     ],
