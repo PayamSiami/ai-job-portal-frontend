@@ -7,7 +7,7 @@ import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
-  title: 'رزومه‌های من | جاب‌آی',
+  title: 'رزومه‌های من | جاب مچ',
   description: 'ایجاد، ویرایش و مدیریت رزومه‌های مختلف برای درخواست‌های شغلی با قالب‌های حرفه‌ای',
   robots: {
     index: false,

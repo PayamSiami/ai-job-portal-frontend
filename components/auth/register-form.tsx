@@ -83,7 +83,7 @@ export const RegisterForm = () => {
           ایجاد حساب کاربری
         </CardTitle>
         <CardDescription className="text-center">
-          برای دسترسی به تمام امکانات جاب‌آی، ثبت نام کنید
+          برای دسترسی به تمام امکانات جاب مچ، ثبت نام کنید
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>

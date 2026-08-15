@@ -13,7 +13,7 @@ export const HomeStructuredData: React.FC = () => {
         '@type': 'WebSite',
         '@id': `${baseUrl}/#website`,
         url: baseUrl,
-        name: 'جاب‌آی',
+        name: 'جاب مچ',
         description: 'پلتفرم استخدام با هوش مصنوعی - شغل رویایی خود را با جستجو و تطابق مبتنی بر هوش مصنوعی پیدا کنید',
         inLanguage: 'fa-IR',
         publisher: {
@@ -31,7 +31,7 @@ export const HomeStructuredData: React.FC = () => {
       {
         '@type': 'Organization',
         '@id': `${baseUrl}/#organization`,
-        name: 'جاب‌آی',
+        name: 'جاب مچ',
         alternateName: 'JobAI',
         url: baseUrl,
         logo: {

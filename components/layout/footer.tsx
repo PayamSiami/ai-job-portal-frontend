@@ -14,7 +14,7 @@ export const Footer = () => {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
                 <Sparkles className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">جاب‌آی</span>
+              <span className="text-xl font-bold text-gray-900">جاب مچ</span>
             </Link>
             <p className="text-sm text-gray-600 max-w-sm">
               شغل رویایی خود را با جستجوی مبتنی بر هوش مصنوعی پیدا کنید. به شرکت‌های برتر متصل شوید و حرفه خود را به سطح بعدی ببرید.
@@ -115,7 +115,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
-          <p>© ۲۰۲۶ جاب‌آی. تمام حقوق محفوظ است.</p>
+          <p>© ۲۰۲۶ جاب مچ. تمام حقوق محفوظ است.</p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-blue-600 transition-colors">
               سیاست حریم خصوصی

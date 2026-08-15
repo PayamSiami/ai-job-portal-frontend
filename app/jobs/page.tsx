@@ -8,11 +8,11 @@ import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
-  title: 'جستجوی شغل | جاب‌آی',
+  title: 'جستجوی شغل | جاب مچ',
   description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
   keywords: 'جستجوی شغل, کاریابی, استخدام, شغل‌های باز, فرصت‌های شغلی',
   openGraph: {
-    title: 'جستجوی شغل | جاب‌آی',
+    title: 'جستجوی شغل | جاب مچ',
     description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
     type: 'website',
   },

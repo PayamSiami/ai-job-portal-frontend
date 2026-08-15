@@ -7,8 +7,8 @@ import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 const baseUrl = config.NEXT_PUBLIC_APP_URL ;
 
 export const metadata: Metadata = {
-  title: 'پروفایل کاربری | جاب‌آی',
-  description: 'مدیریت اطلاعات پروفایل، مهارت‌ها، سابقه کاری و تحصیلات در جاب‌آی',
+  title: 'پروفایل کاربری | جاب مچ',
+  description: 'مدیریت اطلاعات پروفایل، مهارت‌ها، سابقه کاری و تحصیلات در جاب مچ',
   robots: {
     index: false,
     follow: false,

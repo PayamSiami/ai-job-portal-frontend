@@ -95,7 +95,7 @@ export const JobStructuredData: React.FC<{ job: Job }> = ({ job }) => {
       description: job.description,
       identifier: {
         '@type': 'PropertyValue',
-        name: 'جاب‌آی',
+        name: 'جاب مچ',
         value: job._id,
       },
       datePosted: job.createdAt || undefined,

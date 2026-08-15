@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
   // Validate ID
   if (!id || typeof id !== 'string' || id.trim().length === 0) {
     return {
-      title: 'شغل یافت نشد | جاب‌آی',
+      title: 'شغل یافت نشد | جاب مچ',
       robots: { index: false, follow: false },
     };
   }
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
 
   if (!job) {
     return {
-      title: 'شغل یافت نشد | جاب‌آی',
+      title: 'شغل یافت نشد | جاب مچ',
       description: 'متاسفانه شغل مورد نظر یافت نشد.',
       robots: { index: false, follow: false },
     };
@@ -96,13 +96,13 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
     .join(', ');
 
   return {
-    title: `${job.title} در ${job.company} | جاب‌آی`,
+    title: `${job.title} در ${job.company} | جاب مچ`,
     description,
     keywords,
-    applicationName: 'جاب‌آی',
+    applicationName: 'جاب مچ',
     referrer: 'origin-when-cross-origin',
-    authors: [{ name: 'جاب‌آی', url: baseUrl }],
-    publisher: 'جاب‌آی',
+    authors: [{ name: 'جاب مچ', url: baseUrl }],
+    publisher: 'جاب مچ',
     formatDetection: {
       telephone: false,
     },
@@ -111,7 +111,7 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
       description,
       type: 'website',
       url: jobUrl,
-      siteName: 'جاب‌آی',
+      siteName: 'جاب مچ',
       locale: 'fa_IR',
     },
     twitter: {

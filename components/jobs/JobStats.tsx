@@ -1,6 +1,4 @@
-// components/jobs/JobStats.tsx
-
-'use client';
+'use client'
 
 import React, { useMemo } from 'react';
 import { motion, Variants } from 'framer-motion';

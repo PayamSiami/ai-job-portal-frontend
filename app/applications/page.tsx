@@ -7,7 +7,7 @@ import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
-  title: 'درخواست‌های شغلی من | جاب‌آی',
+  title: 'درخواست‌های شغلی من | جاب مچ',
   description: 'مشاهده و مدیریت تمام درخواست‌های شغلی شما، پیگیری وضعیت و لغو درخواست‌ها',
   robots: {
     index: false,

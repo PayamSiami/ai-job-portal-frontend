@@ -7,7 +7,7 @@ import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
-    title: 'داشبورد کارفرما | جاب‌آی',
+    title: 'داشبورد کارفرما | جاب مچ',
     description: 'مدیریت آگهی‌های استخدام، بررسی درخواست‌ها و پایش آمار استخدام با هوش مصنوعی',
     robots: {
         index: false,

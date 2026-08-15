@@ -7,8 +7,8 @@ import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
-  title: 'داشبورد کاربر | جاب‌آی',
-  description: 'مدیریت درخواست‌های شغلی، پیگیری مصاحبه‌ها و مشاهده آمار استخدامی شما در جاب‌آی',
+  title: 'داشبورد کاربر | جاب مچ',
+  description: 'مدیریت درخواست‌های شغلی، پیگیری مصاحبه‌ها و مشاهده آمار استخدامی شما در جاب مچ',
   robots: {
     index: false,
     follow: false,
