@@ -33,8 +33,6 @@ export default function SearchPage({ initialData }: SearchPageProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    console.log(initialData)
-
     // Check if we're using initial data based on URL params
     const hasSearchParams = searchParams.get('q') || searchParams.get('title') || searchParams.get('location');
 
