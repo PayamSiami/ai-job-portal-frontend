@@ -102,23 +102,6 @@ export default async function HomePage() {
           <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-linear-to-r from-cyan-400/10 to-blue-400/10 rounded-full blur-2xl" />
           <div className="absolute bottom-1/3 left-1/4 w-48 h-48 bg-linear-to-r from-purple-400/10 to-pink-400/10 rounded-full blur-2xl" />
 
-          {/* Floating Icons with CSS animations */}
-          <div
-            className="absolute top-12 right-20 text-5xl opacity-10"
-            style={{
-              animation: 'floatBounce 4s ease-in-out infinite',
-            }}
-          >
-            🤖
-          </div>
-          <div
-            className="absolute bottom-20 left-16 text-4xl opacity-10"
-            style={{
-              animation: 'floatBounce 5s ease-in-out infinite 1s',
-            }}
-          >
-            🧠
-          </div>
           <div
             className="absolute top-1/3 left-1/4 text-3xl opacity-10"
             style={{
@@ -140,7 +123,7 @@ export default async function HomePage() {
           <Neural />
         </div>
 
-        <div className="container max-w-7xl px-4 py-16 md:py-24 flex flex-col items-center relative z-10">
+        <div className="container max-w-7xl px-4 py-16 md:py-24 flex flex-col items-center relative z-10 m-auto">
           <div className="w-full mb-5 text-center md:text-right">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
               شغل رویایی خود را با{' '}
