@@ -53,7 +53,6 @@ export const jobService = {
         `/jobs/stats?${params.toString()}`,
       );
 
-      console.log("Fetched job stats response:", response.data);
       return response.data.data;
     } catch (error) {
       console.error("Error fetching job stats:", error);
@@ -65,7 +64,7 @@ export const jobService = {
   async aiSearch(query: string): Promise<AISearchResponse> {
     try {
       const response = await apiClient.get<ApiResponse<AISearchResponse>>(
-        `/jobs/search/ai?query=${encodeURIComponent(query)}`,
+        `/jobs?query=${encodeURIComponent(query)}`,
       );
       return response.data.data;
     } catch (error) {

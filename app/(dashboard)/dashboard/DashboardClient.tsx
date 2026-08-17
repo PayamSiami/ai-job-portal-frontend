@@ -155,7 +155,7 @@ export default function DashboardClient() {
   };
 
   return (
-    <div className="space-y-8 dir-rtl">
+    <div className="space-y-8">
       {/* Welcome Hero Section */}
       <div className="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg">
         <div className="relative z-10">

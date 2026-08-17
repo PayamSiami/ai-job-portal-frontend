@@ -545,7 +545,7 @@ export const AIScreeningDashboard = () => {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full md:w-[200px]">
+          <SelectTrigger className="w-full md:w-50">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>

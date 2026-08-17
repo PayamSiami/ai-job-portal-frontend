@@ -163,7 +163,7 @@ export default function ApplicationDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-6 dir-rtl">
+      <div className="space-y-">
         <div className="flex items-center gap-4">
           <Skeleton className="h-10 w-10 rounded-lg" />
           <div className="space-y-2">
@@ -187,7 +187,7 @@ export default function ApplicationDetailPage() {
   // Not found
   if (!app) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 dir-rtl">
+      <div className="flex flex-col items-center justify-center py-16">
         <AlertCircle className="w-16 h-16 text-gray-300 mb-4" />
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
           درخواست یافت نشد
@@ -210,7 +210,7 @@ export default function ApplicationDetailPage() {
   const companyName = typeof app.job === 'object' ? app.job?.company : undefined;
 
   return (
-    <div className="space-y-6 dir-rtl">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-center gap-3">

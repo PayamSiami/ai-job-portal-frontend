@@ -123,7 +123,6 @@ export const RegisterForm = () => {
                 placeholder="you@example.com"
                 {...register("email")}
                 className={`${errors.email ? "border-red-500" : ""} pl-10`}
-                dir="ltr"
               />
             </div>
             {errors.email && (

@@ -54,7 +54,7 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/search" className="hover:text-blue-600 transition-colors">
+                <Link href="/jobs" className="hover:text-blue-600 transition-colors">
                   جستجوی هوش مصنوعی
                 </Link>
               </li>

@@ -39,7 +39,6 @@ export interface Job {
   applicantCount?: number;
   createdAt: string;
   updatedAt: string;
-  isFeatured?: boolean;
 }
 export interface JobFilters {
   page?: number;
@@ -54,7 +53,6 @@ export interface JobFilters {
   experienceLevel?: "entry" | "mid" | "senior" | "lead" | "executive";
   skills?: string[];
   isActive?: boolean;
-  isFeatured?: boolean;
   postedBy?: string;
 }
 

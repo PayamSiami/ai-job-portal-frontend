@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MapPin, Briefcase, DollarSign, Clock, Building, Globe, Sparkles } from 'lucide-react';
+import { MapPin, Briefcase, DollarSign, Clock, Building, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,6 +14,27 @@ interface JobCardProps {
   job: Job;
   featured?: boolean;
 }
+
+const getEmploymentTypeLabel = (type: string) => {
+  const labels: Record<string, string> = {
+    'full-time': 'تمام وقت',
+    'part-time': 'پاره وقت',
+    contract: 'قراردادی',
+    internship: 'کارآموزی',
+  };
+  return labels[type] || type;
+};
+
+const getExperienceLabel = (level: string) => {
+  const labels: Record<string, string> = {
+    entry: 'تازه‌کار',
+    mid: 'متوسط',
+    senior: 'ارشد',
+    lead: 'رهبر تیم',
+    executive: 'مدیریتی',
+  };
+  return labels[level] || level;
+};
 
 export function JobCard({ job, featured }: JobCardProps) {
   const companyLogo =
@@ -74,12 +95,6 @@ export function JobCard({ job, featured }: JobCardProps) {
               <Link href={`/jobs/${job._id}`} className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors flex items-center gap-2">
                   {job.title}
-                  {featured && (
-                    <Badge className="bg-blue-600 text-white text-xs">
-                      <Sparkles className="w-3 h-3 mr-1" />
-                      مهارت ها
-                    </Badge>
-                  )}
                 </h3>
               </Link>
               <div className="shrink-0">
@@ -110,19 +125,13 @@ export function JobCard({ job, featured }: JobCardProps) {
 
             <div className="flex flex-wrap gap-2 mt-3">
               <Badge className={getExperienceLevelColor(job.experienceLevel)}>
-                {job.experienceLevel}
+                {getExperienceLabel(job.experienceLevel)}
               </Badge>
-              <Badge variant="outline">{job.jobType}</Badge>
+              <Badge variant="outline">{getEmploymentTypeLabel(job.jobType)}</Badge>
               {job.minSalary && job.maxSalary && (
                 <Badge variant="secondary">
                   <DollarSign className="w-3 h-3 mr-1" />
                   {formatSalary(job.minSalary, job.maxSalary)}
-                </Badge>
-              )}
-              {job?.isFeatured && (
-                <Badge className="bg-yellow-100 text-yellow-800">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Top Match
                 </Badge>
               )}
             </div>
@@ -151,12 +160,6 @@ export function JobCard({ job, featured }: JobCardProps) {
                 {job.applicantCount && (
                   <span className="flex items-center gap-1">
                     <span className="font-medium">{job.applicantCount}</span> applicants
-                  </span>
-                )}
-                {job.jobType && (
-                  <span className="flex items-center gap-1">
-                    <Briefcase className="w-4 h-4" />
-                    {job.jobType}
                   </span>
                 )}
               </div>
