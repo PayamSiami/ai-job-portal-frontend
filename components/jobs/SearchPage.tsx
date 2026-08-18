@@ -240,7 +240,7 @@ export default function SearchPage({ initialData }: SearchPageProps) {
                 </TabsList>
 
                 <TabsContent value="standard">
-                    <div className="bg-white rounded-xl shadow-sm p-6">
+                    <div className="bg-white rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border dark:border-gray-700">
                         <form onSubmit={handleStandardSearch} className="relative">
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex-1 relative">

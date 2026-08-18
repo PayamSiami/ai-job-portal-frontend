@@ -203,12 +203,12 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
     const total = Object.values(applicationStatus).reduce((a, b) => a + b, 0) || 1;
 
     const statusConfig: Record<string, { label: string; color: string; bgLight: string; icon: LucideIcon }> = {
-      pending: { label: 'در انتظار بررسی', color: '#F59E0B', bgLight: 'bg-amber-50 text-amber-700', icon: Clock },
-      reviewing: { label: 'در حال بررسی', color: '#3B82F6', bgLight: 'bg-blue-50 text-blue-700', icon: BarChart3 },
-      shortlisted: { label: 'لیست کوتاه', color: '#8B5CF6', bgLight: 'bg-purple-50 text-purple-700', icon: Award },
-      interviewing: { label: 'مصاحبه', color: '#EC4899', bgLight: 'bg-pink-50 text-pink-700', icon: Users },
-      hired: { label: 'استخدام شده', color: '#10B981', bgLight: 'bg-emerald-50 text-emerald-700', icon: CheckCircle2 },
-      rejected: { label: 'رد شده', color: '#EF4444', bgLight: 'bg-rose-50 text-rose-700', icon: XCircle },
+      pending: { label: 'در انتظار بررسی', color: '#F59E0B', bgLight: 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400', icon: Clock },
+      reviewing: { label: 'در حال بررسی', color: '#3B82F6', bgLight: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400', icon: BarChart3 },
+      shortlisted: { label: 'لیست کوتاه', color: '#8B5CF6', bgLight: 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400', icon: Award },
+      interviewing: { label: 'مصاحبه', color: '#EC4899', bgLight: 'bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-400', icon: Users },
+      hired: { label: 'استخدام شده', color: '#10B981', bgLight: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400', icon: CheckCircle2 },
+      rejected: { label: 'رد شده', color: '#EF4444', bgLight: 'bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400', icon: XCircle },
       withdrawn: { label: 'انصراف داده', color: '#6B7280', bgLight: 'bg-gray-100 text-gray-700', icon: UserX },
     };
 
@@ -218,7 +218,7 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
         const config = statusConfig[key] || {
           label: key,
           color: '#6B7280',
-          bgLight: 'bg-gray-50 text-gray-700',
+          bgLight: 'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
           icon: FileText,
         };
         return {
@@ -299,7 +299,7 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
               key={stat.key}
               variants={cardVariants}
               whileHover={{ y: -2, transition: { duration: 0.2 } }}
-              className="group relative bg-white rounded-2xl border border-gray-100/80 p-5 shadow-xs hover:shadow-md hover:border-gray-200/80 transition-all duration-200"
+              className="group relative bg-white dark:bg-gray-800 rounded-2xl border border-gray-100/80 p-5 shadow-xs hover:shadow-md hover:border-gray-200/80 transition-all duration-200"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
@@ -325,7 +325,7 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
         {/* Application Status Breakdown */}
         <motion.div
           variants={cardVariants}
-          className="lg:col-span-7 bg-white rounded-2xl border border-gray-100 p-6 shadow-xs flex flex-col justify-between"
+          className="lg:col-span-7 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 p-6 shadow-xs flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between mb-6">
@@ -333,9 +333,9 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
                 <div className="p-1.5 rounded-lg bg-gray-100 text-gray-600">
                   <Layers className="h-4 w-4" />
                 </div>
-                <h3 className="text-sm font-semibold text-gray-900">وضعیت درخواست‌ها</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-300">وضعیت درخواست‌ها</h3>
               </div>
-              <span className="font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 tabular-nums">
+              <span className="font-medium px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 tabular-nums">
                 {statusData.reduce((acc, item) => acc + item.value, 0).toLocaleString('fa-IR')} مورد ثبت‌شده
               </span>
             </div>
@@ -343,7 +343,7 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
             {/* Stacked Visual Bar */}
             {statusData.length > 0 && (
               <div className="mb-6">
-                <div className="h-3 w-full rounded-full bg-gray-100 flex overflow-hidden p-0.5 gap-0.5">
+                <div className="h-3 w-full rounded-full bg-gray-100 dark:bg-gray-800 flex overflow-hidden p-0.5 gap-0.5">
                   {statusData.map((item) => (
                     <div
                       key={item.key}
@@ -406,21 +406,18 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
         {/* Top Performing Jobs */}
         <motion.div
           variants={cardVariants}
-          className="lg:col-span-5 bg-white rounded-2xl border border-gray-100 p-6 shadow-xs flex flex-col justify-between"
+          className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 p-6 shadow-xs flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600">
-                  <Sparkles className="h-4 w-4" />
-                </div>
-                <h3 className="text-sm font-semibold text-gray-900">مشاغل پرمتقاضی</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-300">مشاغل پرمتقاضی</h3>
               </div>
-              <span className=" text-gray-400">۵ شغل برتر</span>
+              <span className=" text-gray-400 dark:text-gray-500">۵ شغل برتر</span>
             </div>
 
             {topJobs.length === 0 ? (
-              <p className=" text-gray-400 text-center py-12">فرصت شغلی فعال یافت نشد</p>
+              <p className=" text-gray-400 dark:text-gray-500 text-center py-12">فرصت شغلی فعال یافت نشد</p>
             ) : (
               <div className="divide-y divide-gray-50">
                 {topJobs.slice(0, 5).map((job, index) => (
@@ -476,15 +473,15 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
           <motion.div
             key={title}
             variants={cardVariants}
-            className="bg-white rounded-2xl border border-gray-100 p-5 shadow-xs"
+            className="bg-white rounded-2xl border border-gray-100 p-5 shadow-xs dark:bg-gray-800 dark:border-gray-700 flex flex-col justify-between"
           >
             <div className="flex items-center gap-2 mb-4">
               <span className={`h-2 w-2 rounded-full ${accent}`} />
-              <h4 className=" font-semibold text-gray-700">{title}</h4>
+              <h4 className=" font-semibold text-gray-700 dark:text-gray-300">{title}</h4>
             </div>
 
             {Object.entries(data).length === 0 ? (
-              <p className=" text-gray-400 text-center py-4">داده‌ای ثبت نشده</p>
+              <p className=" text-gray-400 dark:text-gray-500 text-center py-4">داده‌ای ثبت نشده</p>
             ) : (
               <div className="space-y-2">
                 {Object.entries(data).map(([key, value]) => (
@@ -492,7 +489,7 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
                     key={key}
                     className="flex items-center justify-between  py-1.5 px-2 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <span className="text-gray-600 truncate">{key}</span>
+                    <span className="text-gray-600 truncate dark:text-gray-400">{key}</span>
                     <span className="font-semibold text-gray-900 bg-gray-100/80 px-2 py-0.5 rounded-md tabular-nums">
                       {value.toLocaleString('fa-IR')}
                     </span>
@@ -502,25 +499,6 @@ const JobStats: React.FC<JobStatsProps> = ({ statsResponse, loading = false }) =
             )}
           </motion.div>
         ))}
-      </motion.div>
-
-      {/* Footer Info */}
-      <motion.div
-        className="flex items-center justify-between rounded-xl border border-gray-100 bg-white/50 px-4 py-2.5  text-gray-400"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <div className="flex items-center gap-1.5">
-          <RefreshCw className="h-3.5 w-3.5 text-gray-400" />
-          <span>آخرین به‌روزرسانی داده‌ها</span>
-        </div>
-        <span className="font-medium text-gray-600 tabular-nums">
-          {new Date(statsResponse.generatedAt).toLocaleDateString('fa-IR', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </span>
       </motion.div>
     </motion.div>
   );

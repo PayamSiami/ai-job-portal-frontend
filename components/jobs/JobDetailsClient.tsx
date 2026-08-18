@@ -24,7 +24,7 @@ export const JobDetailsClient: React.FC<JobDetailsClientProps> = ({ job, onSave,
                 درخواست دهید
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-full max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[95vw] md:max-w-2xl max-h-[95vh] p-0 gap-0 bg-linear-to-b from-blue-50 to-white overflow-hidden">
               <JobApplicationForm
                 jobId={job._id}
                 onSuccess={() => setIsApplyDialogOpen(false)}

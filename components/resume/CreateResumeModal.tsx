@@ -246,7 +246,7 @@ export function CreateResumeModal({ open, onOpenChange, onSuccess }: any) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-5xl xl:max-w-6xl max-h-[95vh] p-0 gap-0 bg-linear-to-b from-blue-50 to-white overflow-hidden">
+      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-4xl max-h-[95vh] p-0 gap-0 bg-linear-to-b from-blue-50 to-white overflow-hidden">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">

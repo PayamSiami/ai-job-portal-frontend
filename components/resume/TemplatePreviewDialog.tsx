@@ -21,9 +21,6 @@ export function TemplatePreviewDialog({ resume, open, onOpenChange }: TemplatePr
         size="fullscreen"
         className="overflow-hidden p-0"
       >
-
-
-
         <div className="flex-1 min-h-0 overflow-hidden px-4">
           <Card
             className={"overflow-hidden transition-all duration-300 w-full flex flex-col h-full"}
