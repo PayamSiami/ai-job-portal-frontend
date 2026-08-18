@@ -9,7 +9,7 @@ import {
 export const authService = {
   async login(data: LoginRequest): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/login", data);
-    return response.data;
+    return response.data.data;
   },
 
   async register(data: RegisterRequest): Promise<AuthResponse> {

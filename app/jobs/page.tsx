@@ -81,18 +81,16 @@ export default async function SearchPageWrapper() {
 
   return (
     <Suspense fallback={<JobsLoadingFallback />}>
-      <div className="min-h-screen bg-linear-to-b from-blue-50/50 to-white" >
-        <div className="container mx-auto px-4 py-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                شغل رویایی خود را پیدا کنید
-              </h1>
-            </div>
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2 dark:text-gray-100">
+              شغل رویایی خود را پیدا کنید
+            </h1>
           </div>
-          <SearchPage initialData={initialData} />
         </div>
+        <SearchPage initialData={initialData} />
       </div>
     </Suspense>
   );

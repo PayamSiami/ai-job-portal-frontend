@@ -125,9 +125,12 @@
   }
   body {
     @apply bg-background text-foreground font-vazirmatn antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   html {
     @apply font-vazirmatn;
+    scroll-behavior: smooth;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   /* RTL Support */
   html[dir="rtl"] {

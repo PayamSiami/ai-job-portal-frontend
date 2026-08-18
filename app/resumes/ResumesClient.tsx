@@ -292,11 +292,11 @@ export default function ResumesClient() {
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <FileText className="w-8 h-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <FileText className="w-8 h-8 text-blue-600 dark:text-blue-400" />
             رزومه‌های من
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             با استفاده از قالب‌های داخلی، چندین نسخه رزومه ایجاد و مدیریت کنید
           </p>
         </div>
@@ -315,7 +315,7 @@ export default function ResumesClient() {
       </div>
 
       {/* Default Resume Notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div className="bg-blue-100 border border-blue-200 rounded-lg p-4 mb-6">
         <div className="flex items-center gap-2 text-sm text-blue-800">
           <Star className="w-4 h-4 fill-current" />
           <span className="font-medium">رزومه پیش‌فرض:</span>

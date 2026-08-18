@@ -98,7 +98,7 @@ export const LoginForm = () => {
           <div className="space-y-2">
             <label className="text-sm font-medium">ایمیل</label>
             <div className="relative">
-              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="email"
                 placeholder="you@example.com"

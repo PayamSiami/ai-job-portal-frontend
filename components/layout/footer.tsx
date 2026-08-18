@@ -5,7 +5,7 @@ import { FaGithub, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
 export const Footer = () => {
 
   return (
-    <footer className="border-t bg-white" >
+    <footer className="border-t bg-background" >
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -14,35 +14,35 @@ export const Footer = () => {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
                 <Sparkles className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">جاب مچ</span>
+              <span className="text-xl font-bold text-foreground">جاب مچ</span>
             </Link>
-            <p className="text-sm text-gray-600 max-w-sm">
+            <p className="text-sm text-muted-foreground max-w-sm">
               شغل رویایی خود را با جستجوی مبتنی بر هوش مصنوعی پیدا کنید. به شرکت‌های برتر متصل شوید و حرفه خود را به سطح بعدی ببرید.
             </p>
             <div className="flex items-center gap-4 mt-4">
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaGithub className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaTwitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaLinkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaYoutube className="w-5 h-5" />
               </a>
             </div>
             {/* Contact Info */}
-            <div className="mt-4 text-sm text-gray-600">
-              <p>تلفن تماس: <span className="font-medium text-gray-800">۰۹۲۱۸۰۸۷۱۹۵</span></p>
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p>تلفن تماس: <span className="font-medium text-foreground">۰۹۲۱۸۰۸۷۱۹۵</span></p>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">برای جویندگان کار</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-semibold text-foreground mb-4">برای جویندگان کار</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link href="/jobs" className="hover:text-blue-600 transition-colors">
                   مشاهده مشاغل
@@ -68,8 +68,8 @@ export const Footer = () => {
 
           {/* For Employers */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">برای کارفرمایان</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-semibold text-foreground mb-4">برای کارفرمایان</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <a
                   href="https://panel.jobmatch.ir"
@@ -114,7 +114,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
+        <div className="border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <p>© ۲۰۲۶ جاب مچ. تمام حقوق محفوظ است.</p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-blue-600 transition-colors">
