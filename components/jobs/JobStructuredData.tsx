@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useMemo } from 'react';
 import { config } from '@/lib/config';
 import { Job } from '@/lib/types/job.types';

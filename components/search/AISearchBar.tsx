@@ -123,7 +123,7 @@ export function AISearchBar({ onSearch, initialQuery = '', isLoading = false }: 
       <p className="text-white/80 text-xs mt-3 flex items-center gap-2 flex-wrap justify-end">
         <span className="bg-white/10 px-2 py-1 rounded">"توسعه‌دهنده ارشد React با حقوق بالای ۱۲۰ میلیون"</span>
         <span className="bg-white/10 px-2 py-1 rounded">"تحلیل‌گر داده تازه‌کار در تهران"</span>
-        <span>مثال:</span>
+        <span>:مثال</span>
       </p>
     </div>
   );

@@ -1,8 +1,10 @@
-"use client";
-
 import { config } from '@/lib/config';
 import React from 'react';
 
+/**
+ * Organization and WebSite structured data for the home page.
+ * Server-rendered so Googlebot sees JSON-LD in the initial HTML response.
+ */
 export const HomeStructuredData: React.FC = () => {
   const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
@@ -14,7 +16,8 @@ export const HomeStructuredData: React.FC = () => {
         '@id': `${baseUrl}/#website`,
         url: baseUrl,
         name: 'جاب مچ',
-        description: 'پلتفرم استخدام با هوش مصنوعی - شغل رویایی خود را با جستجو و تطابق مبتنی بر هوش مصنوعی پیدا کنید',
+        description:
+          'پلتفرم استخدام با هوش مصنوعی - شغل رویایی خود را با جستجو و تطابق مبتنی بر هوش مصنوعی پیدا کنید',
         inLanguage: 'fa-IR',
         publisher: {
           '@id': `${baseUrl}/#organization`,
@@ -32,17 +35,18 @@ export const HomeStructuredData: React.FC = () => {
         '@type': 'Organization',
         '@id': `${baseUrl}/#organization`,
         name: 'جاب مچ',
-        alternateName: 'JobAI',
+        alternateName: 'JobMatch',
         url: baseUrl,
         logo: {
           '@type': 'ImageObject',
-          url: `${baseUrl}/logo.png`,
+          url: `${baseUrl}/logo.svg`,
         },
-        description: 'پلتفرم استخدام با هوش مصنوعی برای پیدا کردن شغل رویایی شما',
+        description:
+          'پلتفرم استخدام با هوش مصنوعی برای پیدا کردن شغل رویایی شما',
         sameAs: [
-          'https://linkedin.com/company/jobai',
-          'https://twitter.com/jobai_ir',
-          'https://instagram.com/jobai.ir',
+          'https://linkedin.com/company/jobmatch-ir',
+          'https://twitter.com/jobmatch_ir',
+          'https://instagram.com/jobmatch.ir',
         ],
         contactPoint: {
           '@type': 'ContactPoint',

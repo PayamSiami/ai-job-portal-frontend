@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { JobStatsResponse } from '@/lib/types/job.types';
 import SearchPage from '@/components/jobs/SearchPage';
 import { getInitialJobs } from './jobs/page';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 const JobStatsSkeleton = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -99,6 +100,9 @@ export default async function HomePage() {
             <SearchPage initialData={initialData} />
           </div>
         </Suspense>
+
+        {/* FAQ Section with structured data */}
+        <FAQSection />
       </div>
 
     </>

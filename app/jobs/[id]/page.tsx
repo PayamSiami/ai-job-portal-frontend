@@ -11,6 +11,21 @@ import { Job } from '@/lib/types/job.types';
 const REVALIDATE_TIME = 600; // 10 minutes
 const REQUEST_TIMEOUT = 10000; // 10 seconds
 
+/**
+ * Resolve the best available image URL for a job's OG preview.
+ * Uses company logo if available, falls back to site logo.
+ */
+function getJobImageUrl(job: Job): string {
+  const baseUrl = config.NEXT_PUBLIC_APP_URL;
+  const company = job.company;
+
+  if (company && typeof company === 'object' && company.logo) {
+    return company.logo.startsWith('http') ? company.logo : `${baseUrl}${company.logo}`;
+  }
+
+  return `${baseUrl}/logo.svg`;
+}
+
 // Types
 interface JobDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -94,6 +109,7 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
   const keywords = [job.title, job.company, job.location, ...(job.skills || [])]
     .filter(Boolean)
     .join(', ');
+  const imageUrl = getJobImageUrl(job);
 
   return {
     title: `${job.title} در ${job.company} | جاب مچ`,
@@ -113,11 +129,20 @@ export async function generateMetadata({ params }: JobDetailsPageProps): Promise
       url: jobUrl,
       siteName: 'جاب مچ',
       locale: 'fa_IR',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `لوگوی ${job.company} — فرصت شغلی ${job.title} در جاب مچ`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${job.title} در ${job.company}`,
       description,
+      images: [imageUrl],
     },
     alternates: {
       canonical: jobUrl,

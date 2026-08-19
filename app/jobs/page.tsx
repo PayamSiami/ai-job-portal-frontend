@@ -4,21 +4,44 @@ import SearchPage from "@/components/jobs/SearchPage";
 import { Suspense } from "react";
 import { jobService } from '@/lib/services/job.service';
 import { JobFilters, JobSearchResponse } from '@/lib/types/job.types';
+import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
+import { FAQSection } from '@/components/seo/FAQSection';
 
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
-  title: 'جستجوی شغل | جاب مچ',
-  description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
-  keywords: 'جستجوی شغل, کاریابی, استخدام, شغل‌های باز, فرصت‌های شغلی',
+  title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
+  description:
+    'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته، جستجوی هوش مصنوعی با AI، شغل‌های دورکاری، حضوری و ترکیبی از شرکت‌های برتر ایران.',
+  keywords:
+    'جستجوی شغل, استخدام, کاریابی, شغل‌های باز, فرصت‌های شغلی, شغل دورکاری, شغل حضوری, شغل ترکیبی, استخدام آنلاین, فرصت شغلی ایران, جاب مچ',
   openGraph: {
-    title: 'جستجوی شغل | جاب مچ',
-    description: 'هزاران شغل در حوزه‌های مختلف را جستجو کنید. فیلترهای پیشرفته، جستجوی هوشمند با AI و جزئیات کامل شغل.',
+    title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
+    description:
+      'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته، جستجوی هوش مصنوعی با AI، شغل‌های دورکاری، حضوری و ترکیبی از شرکت‌های برتر ایران.',
     type: 'website',
     url: `${baseUrl}/jobs`,
+    siteName: 'جاب مچ | JobMatch',
+    locale: 'fa_IR',
+    images: [`${baseUrl}/logo.svg`],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
+    description:
+      'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته و جستجوی هوش مصنوعی با AI.',
+    images: [`${baseUrl}/logo.svg`],
   },
   alternates: {
     canonical: `${baseUrl}/jobs`,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    'max-snippet': 160,
+    'max-image-preview': 'large',
+    'max-video-preview': -1,
   },
 };
 
@@ -80,7 +103,8 @@ export default async function SearchPageWrapper() {
   const initialData = await getInitialJobs();
 
   return (
-    <Suspense fallback={<JobsLoadingFallback />}>
+    <>
+      <BreadcrumbStructuredData items={generateBreadcrumbs.jobs(baseUrl)} />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -88,10 +112,17 @@ export default async function SearchPageWrapper() {
             <h1 className="text-4xl font-bold text-gray-900 mb-2 dark:text-gray-100">
               شغل رویایی خود را پیدا کنید
             </h1>
+            <p className="text-gray-600 mt-2 dark:text-gray-300">
+              هزاران فرصت شغلی از شرکت‌های برتر — با فیلترهای پیشرفته و جستجوی هوش مصنوعی
+            </p>
           </div>
         </div>
-        <SearchPage initialData={initialData} />
+        <Suspense fallback={<JobsLoadingFallback />}>
+          <SearchPage initialData={initialData} />
+        </Suspense>
+        {/* FAQ Section with structured data */}
+        <FAQSection />
       </div>
-    </Suspense>
+    </>
   );
 }

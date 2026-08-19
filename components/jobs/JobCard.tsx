@@ -79,12 +79,26 @@ export function JobCard({ job, featured }: JobCardProps) {
     }
   };
 
+  const siteUrl = process.env['NEXT_PUBLIC_APP_URL'] || '';
+  const jobUrl = `${siteUrl}/jobs/${job._id}`;
+
   return (
-    <Card className={`hover:shadow-lg transition-shadow ${featured ? 'border-blue-200 border-2 bg-blue-50/30' : ''}`}>
+    <Card
+      className={`hover:shadow-lg transition-shadow ${featured ? 'border-blue-200 border-2 bg-blue-50/30' : ''}`}
+      itemScope
+      itemType="https://schema.org/JobPosting"
+    >
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <Avatar className="h-12 w-12 rounded-lg">
-            {companyLogo && <AvatarImage src={companyLogo} />}
+            {companyLogo && (
+              <AvatarImage
+                src={companyLogo}
+                alt={`لوگوی ${companyName || 'شرکت'}`}
+                itemProp="logo"
+                loading="lazy"
+              />
+            )}
             <AvatarFallback className="bg-blue-100 text-blue-600 text-lg rounded-lg">
               {companyName?.charAt(0) || 'C'}
             </AvatarFallback>
@@ -92,8 +106,11 @@ export function JobCard({ job, featured }: JobCardProps) {
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
-              <Link href={`/jobs/${job._id}`} className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors flex items-center gap-2">
+              <Link href={jobUrl} className="flex-1">
+                <h3
+                  className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors flex items-center gap-2"
+                  itemProp="title"
+                >
                   {job.title}
                 </h3>
               </Link>
@@ -101,6 +118,7 @@ export function JobCard({ job, featured }: JobCardProps) {
                 <Badge
                   variant="outline"
                   className="flex items-center gap-1 text-xs"
+                  itemProp="employmentType"
                 >
                   {getWorkModeIcon(job.workMode)}
                   {getWorkModeLabel(job.workMode)}
@@ -109,17 +127,22 @@ export function JobCard({ job, featured }: JobCardProps) {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1" itemProp="hiringOrganization" itemScope itemType="https://schema.org/Organization">
+                <meta itemProp="name" content={companyName || ''} />
                 <Building className="w-4 h-4" />
-                {companyName}
+                <span itemProp="name">{companyName}</span>
               </span>
               <span className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
-                {job.location}
+                <span itemProp="jobLocation" itemScope itemType="https://schema.org/Place">
+                  <meta itemProp="address" content={job.location} />
+                  {job.location}
+                </span>
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 Posted {formatDistanceToNow(new Date(job.createdAt))}
+                <meta itemProp="datePosted" content={job.createdAt} />
               </span>
             </div>
 
@@ -131,19 +154,23 @@ export function JobCard({ job, featured }: JobCardProps) {
               {job.minSalary && job.maxSalary && (
                 <Badge variant="secondary">
                   <DollarSign className="w-3 h-3 mr-1" />
-                  {formatSalary(job.minSalary, job.maxSalary)}
+                  <span itemProp="baseSalary" itemScope itemType="https://schema.org/MonetaryAmount">
+                    <meta itemProp="currency" content="IRR" />
+                    <meta itemProp="value" content={`${job.minSalary}-${job.maxSalary}`} />
+                    {formatSalary(job.minSalary, job.maxSalary)}
+                  </span>
                 </Badge>
               )}
             </div>
 
-            <p className="mt-3 text-sm text-gray-600 line-clamp-2">
+            <p className="mt-3 text-sm text-gray-600 line-clamp-2" itemProp="description">
               {job.description}
             </p>
 
             {job.skills && job.skills.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-3">
                 {job.skills.slice(0, 5).map((skill: string) => (
-                  <Badge key={skill} variant="secondary" className="text-xs">
+                  <Badge key={skill} variant="secondary" className="text-xs" itemProp="skills">
                     {skill}
                   </Badge>
                 ))}
@@ -164,7 +191,7 @@ export function JobCard({ job, featured }: JobCardProps) {
                 )}
               </div>
 
-              <Link href={`/jobs/${job._id}`}>
+              <Link href={jobUrl}>
                 <Button variant="outline" size="sm" className="hover:bg-blue-50">
                   نمایش جزییات
                 </Button>
@@ -172,6 +199,7 @@ export function JobCard({ job, featured }: JobCardProps) {
             </div>
           </div>
         </div>
+        <link rel="canonical" href={jobUrl} />
       </CardContent>
     </Card>
   );

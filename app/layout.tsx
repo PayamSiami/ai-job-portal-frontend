@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
+import { config } from '@/lib/config';
 
 // Local Persian & English font
 const vazirmatn = localFont({
@@ -11,16 +12,99 @@ const vazirmatn = localFont({
   display: 'swap',
 });
 
+const baseUrl = config.NEXT_PUBLIC_APP_URL;
+
 export const metadata: Metadata = {
-  title: 'جاب مچ - پلتفرم استخدام با هوش مصنوعی',
-  description: 'شغل رویایی خود را با جستجو و تطابق مبتنی بر هوش مصنوعی پیدا کنید',
-  keywords: 'شغل, کاریابی, هوش مصنوعی, استخدام, کار',
-  authors: [{ name: 'تیم جاب مچ' }],
+  title: {
+    default: 'جاب مچ - پلتفرم استخدام با هوش مصنوعی',
+    template: `%s | جاب مچ`,
+  },
+  description:
+    'جاب مچ (JobMatch) — پلتفرم هوشمند استخدام در ایران و دورکاری. هزاران شغل فیل‌موو، تمام‌وقت، پاره‌وقت، کارآموزی و قراردادی از شرکت‌های برتر با جستجوی هوش مصنوعی AI.',
+  keywords:
+    'شغل, استخدام, کاریابی, هوش مصنوعی, AI, فرصت شغلی, استخدام آنلاین, شغل دورکاری, شغل حضوری, شغل ترکیبی, فرصت‌های شغلی ایران, کاریابی آنلاین, پلتفرم استخدام',
+  authors: [{ name: 'تیم جاب مچ', url: baseUrl }],
+  publisher: 'جاب مچ',
+  creator: 'جاب مچ',
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
   openGraph: {
     title: 'جاب مچ - پلتفرم استخدام با هوش مصنوعی',
-    description: 'شغل رویایی خود را با جستجو و تطابق مبتنی بر هوش مصنوعی پیدا کنید',
+    description:
+      'جاب مچ (JobMatch) — پلتفرم هوشمند استخدام در ایران و دورکاری. هزاران شغل فیل‌موو، تمام‌وقت، پاره‌وقت، کارآموزی و قراردادی از شرکت‌های برتر با جستجوی هوش مصنوعی AI.',
     type: 'website',
+    url: baseUrl,
+    siteName: 'جاب مچ | JobMatch',
+    locale: 'fa_IR',
+    alternateLocale: ['en_US'],
+    images: [
+      {
+        url: `${baseUrl}/logo.svg`,
+        width: 512,
+        height: 512,
+        alt: 'جاب مچ - لوگو پلتفرم استخدام با هوش مصنوعی',
+      },
+    ],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'جاب مچ - پلتفرم استخدام با هوش مصنوعی',
+    description:
+      'جاب مچ (JobMatch) — پلتفرم هوشمند استخدام در ایران و دورکاری با جستجوی هوش مصنوعی AI.',
+    images: [`${baseUrl}/logo.svg`],
+  },
+  alternates: {
+    canonical: baseUrl,
+    languages: {
+      'fa-IR': `${baseUrl}/fa`,
+      'en-US': `${baseUrl}/en`,
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': 160,
+    },
+  },
+  verification: {
+    google: process.env['NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION'] || undefined,
+  },
+  icons: {
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo.svg', type: 'image/svg+xml' },
+      { url: '/logo-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/logo-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
+    ],
+    shortcut: '/favicon-32.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  category: 'business',
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  minimumScale: 1,
+  userScalable: true,
+  viewportFit: 'cover',
+  colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#111827' },
+  ],
 };
 
 export default function RootLayout({
@@ -35,6 +119,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={vazirmatn.variable}
     >
+      <head>
+        <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" />
+      </head>
       <body className="font-vazirmatn antialiased">
         <Providers>
           <MainLayout>
