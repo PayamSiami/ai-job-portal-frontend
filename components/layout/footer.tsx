@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
 import { FaGithub, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import Image from 'next/image';
 
 export const Footer = () => {
 
@@ -11,8 +11,8 @@ export const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-                <Sparkles className="h-5 w-5 text-white" />
+              <div className="flex h-8 w-8 items-center justify-center">
+                <Image src="/logo.svg" alt="JobMatch Logo" className="h-10 w-10" width={20} height={20} />
               </div>
               <span className="text-xl font-bold text-foreground">جاب مچ</span>
             </Link>

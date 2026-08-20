@@ -33,6 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Image from "next/image";
 
 const baseNavItems = [
   { href: "/", label: "خانه", icon: Home },
@@ -93,12 +94,11 @@ export const Navbar = () => {
           className="flex items-center gap-2.5 group transition-transform active:scale-95"
           onClick={handleLinkClick}
         >
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-transform group-hover:scale-105">
-            <Sparkles className="h-5 w-5 text-white animate-pulse" />
-            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 opacity-0 blur transition-opacity group-hover:opacity-40" />
+          <div className="relative flex h-10 w-10 items-center justify-center">
+            {/* <Image src="/logo.svg" alt="JobMatch Logo" className="h-10 w-10" width={20} height={20} /> */}
           </div>
           <div className="flex flex-col items-start">
-            <span className="text-xl font-black tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="text-xl font-black tracking-tight bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               جاب مچ
             </span>
             <span className="text-[10px] font-medium text-muted-foreground leading-none hidden sm:block">
