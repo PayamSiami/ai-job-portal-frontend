@@ -12,7 +12,7 @@ export const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="flex h-8 w-8 items-center justify-center">
-                <Image src="/logo.svg" alt="لوگوی جاب مچ" className="h-10 w-10" width={40} height={40} />
+                <Image src="/logo.svg" alt="لوگوی جاب مچ" className="h-auto w-auto" width={40} height={40} />
               </div>
               <span className="text-xl font-bold text-foreground">جاب مچ</span>
             </Link>

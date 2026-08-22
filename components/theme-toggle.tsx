@@ -1,6 +1,7 @@
 "use client";
 
 import { Moon, Sun, Monitor } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from "@/lib/hooks/use-theme";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils/cn";
 
 const themeOptions = [
@@ -24,16 +25,25 @@ export function ThemeToggle({
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null;
   size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg" | null;
 }) {
-  const { theme, resolvedTheme, setTheme } = useTheme();
+  // Use lazy initialization to check if we're on the client
+  const [mounted] = useState(() => typeof window !== "undefined");
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
-  const currentIcon =
-    theme === "system" ? (
-      <Monitor className="h-4 w-4" />
-    ) : theme === "dark" ? (
-      <Moon className="h-4 w-4" />
-    ) : (
-      <Sun className="h-4 w-4" />
-    );
+  // Determine which icon to show based on theme
+  const getIcon = () => {
+    if (!mounted) {
+      // Return a consistent default during SSR
+      return <Sun className="h-4 w-4" />;
+    }
+    
+    if (theme === "system") {
+      return <Monitor className="h-4 w-4" />;
+    }
+    if (theme === "dark") {
+      return <Moon className="h-4 w-4" />;
+    }
+    return <Sun className="h-4 w-4" />;
+  };
 
   return (
     <DropdownMenu>
@@ -48,10 +58,11 @@ export function ThemeToggle({
               : "bg-gray-100 hover:bg-gray-200 text-gray-700"
           )}
         >
-          {currentIcon}
-          {theme === "system" && (
+          {getIcon()}
+          {mounted && theme === "system" && (
             <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-blue-500 ring-2 ring-background" />
           )}
+          <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
