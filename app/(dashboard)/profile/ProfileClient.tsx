@@ -266,7 +266,12 @@ export default function ProfileClient() {
             <CardContent className="p-6 text-center">
               <div className="relative inline-block">
                 <Avatar className="w-24 h-24 mx-auto border-4 border-blue-100">
-                  <AvatarImage src={displayProfile.profile.profileImage} />
+                  <AvatarImage
+                    src={displayProfile.profile.profileImage}
+                    alt={displayProfile?.profile?.fullName || 'پروفایل کاربری'}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <AvatarFallback className="text-2xl bg-blue-100 text-blue-600">
                     {getInitials(displayProfile?.profile?.fullName)}
                   </AvatarFallback>

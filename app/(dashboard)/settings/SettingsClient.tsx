@@ -374,7 +374,12 @@ export default function SettingsClient() {
                             <div className="flex flex-col items-center text-center">
                                 <div className="relative">
                                     <Avatar className="w-24 h-24 border-4 border-blue-100">
-                                        <AvatarImage src={avatarPreview || user?.avatar} />
+                                        <AvatarImage
+                                          src={avatarPreview || user?.avatar}
+                                          alt={user?.fullName || 'تصویر پروفایل'}
+                                          loading="lazy"
+                                          decoding="async"
+                                        />
                                         <AvatarFallback className="text-2xl bg-blue-100 text-blue-600">
                                             {getInitials(user?.fullName || 'User')}
                                         </AvatarFallback>

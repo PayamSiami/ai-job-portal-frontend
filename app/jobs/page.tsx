@@ -7,43 +7,79 @@ import { JobFilters, JobSearchResponse } from '@/lib/types/job.types';
 import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
 import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 import { FAQSection } from '@/components/seo/FAQSection';
+import { ItemListStructuredData } from '@/components/seo/ItemListStructuredData';
 
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
-export const metadata: Metadata = {
-  title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
-  description:
-    'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته، جستجوی هوش مصنوعی با AI، شغل‌های دورکاری، حضوری و ترکیبی از شرکت‌های برتر ایران.',
-  keywords:
-    'جستجوی شغل, استخدام, کاریابی, شغل‌های باز, فرصت‌های شغلی, شغل دورکاری, شغل حضوری, شغل ترکیبی, استخدام آنلاین, فرصت شغلی ایران, جاب مچ',
-  openGraph: {
+/**
+ * Check if search params indicate a filtered view (not the canonical /jobs page).
+ * Filtered views get noindex to prevent duplicate content.
+ */
+function hasActiveFilters(searchParams: Record<string, string | string[] | undefined>): boolean {
+  const keys = Object.keys(searchParams || {});
+  if (keys.length === 0) return false;
+  // 'page' alone is allowed to be indexed (pagination)
+  return keys.some((key) => key !== 'page' && searchParams[key] !== '');
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const hasFilters = hasActiveFilters(params);
+
+  const commonMetadata: Metadata = {
     title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
     description:
       'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته، جستجوی هوش مصنوعی با AI، شغل‌های دورکاری، حضوری و ترکیبی از شرکت‌های برتر ایران.',
-    type: 'website',
-    url: `${baseUrl}/jobs`,
-    siteName: 'جاب مچ | JobMatch',
-    locale: 'fa_IR',
-    images: [`${baseUrl}/logo.svg`],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
-    description:
-      'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته و جستجوی هوش مصنوعی با AI.',
-    images: [`${baseUrl}/logo.svg`],
-  },
-  alternates: {
-    canonical: `${baseUrl}/jobs`,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    'max-snippet': 160,
-    'max-image-preview': 'large',
-    'max-video-preview': -1,
-  },
-};
+    keywords:
+      'جستجوی شغل, استخدام, کاریابی, شغل‌های باز, فرصت‌های شغلی, شغل دورکاری, شغل حضوری, شغل ترکیبی, استخدام آنلاین, فرصت شغلی ایران, جاب مچ',
+    openGraph: {
+      title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
+      description:
+        'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته، جستجوی هوش مصنوعی با AI، شغل‌های دورکاری، حضوری و ترکیبی از شرکت‌های برتر ایران.',
+      type: 'website',
+      url: `${baseUrl}/jobs`,
+      siteName: 'جاب مچ | JobMatch',
+      locale: 'fa_IR',
+      images: [`${baseUrl}/logo.svg`],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'جستجوی شغل | جاب مچ — فرصت‌های شغلی در ایران',
+      description:
+        'هزاران شغل در حوزه‌های مختلف را در جاب مچ جستجو کنید. فیلترهای پیشرفته و جستجوی هوش مصنوعی با AI.',
+      images: [`${baseUrl}/logo.svg`],
+    },
+    alternates: {
+      canonical: `${baseUrl}/jobs`,
+    },
+  };
+
+  // noindex filtered results to prevent duplicate content from search params
+  if (hasFilters) {
+    return {
+      ...commonMetadata,
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
+  return {
+    ...commonMetadata,
+    robots: {
+      index: true,
+      follow: true,
+      'max-snippet': 160,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  };
+}
 
 // Enable ISR with revalidation
 export const revalidate = 3600; // Revalidate every hour
@@ -99,12 +135,40 @@ function JobsLoadingFallback() {
   );
 }
 
-export default async function SearchPageWrapper() {
+export default async function SearchPageWrapper({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const initialData = await getInitialJobs();
+
+  // Resolve search params for pagination rel="next"/"prev"
+  const params = searchParams ? await searchParams : {};
+  const currentPage = Number(params['page']) || 1;
+  const totalPages = initialData?.pagination?.totalPages || 1;
+  const hasFilters = hasActiveFilters(params);
+
+  // Build base URL for pagination links (strip query params for canonical)
+  const jobsUrl = `${baseUrl}/jobs`;
 
   return (
     <>
       <BreadcrumbStructuredData items={generateBreadcrumbs.jobs(baseUrl)} />
+      {/* Pagination rel="next"/"prev" for SEO — only on canonical jobs page (no filters) */}
+      {!hasFilters && totalPages > 1 && currentPage < totalPages && (
+        <link rel="next" href={`${jobsUrl}?page=${currentPage + 1}`} />
+      )}
+      {!hasFilters && currentPage > 1 && (
+        <link rel="prev" href={`${jobsUrl}?page=${currentPage - 1}`} />
+      )}
+      {/* ItemList structured data for job cards — helps Google index job listings */}
+      {initialData && initialData.jobs?.length > 0 && (
+        <ItemListStructuredData
+          jobs={initialData.jobs}
+          currentPage={initialData.pagination?.page || 1}
+          totalPages={initialData.pagination?.totalPages || 1}
+        />
+      )}
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

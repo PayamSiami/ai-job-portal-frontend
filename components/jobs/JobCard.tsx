@@ -97,6 +97,7 @@ export function JobCard({ job, featured }: JobCardProps) {
                 alt={`لوگوی ${companyName || 'شرکت'}`}
                 itemProp="logo"
                 loading="lazy"
+                decoding="async"
               />
             )}
             <AvatarFallback className="bg-blue-100 text-blue-600 text-lg rounded-lg">

@@ -207,7 +207,7 @@ export const Navbar = () => {
                     className="relative h-10 w-10 rounded-full p-0 focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
                     <Avatar className="h-10 w-10 border-2 border-border/60 hover:border-blue-500 transition-colors">
-                      <AvatarImage src="/avatars/default.png" alt={user.fullName || "User"} />
+                      <AvatarImage src="/avatars/default.png" alt={user.fullName || "User"} loading="lazy" decoding="async" />
                       <AvatarFallback className="bg-linear-to-br from-blue-500 to-indigo-500 text-white font-semibold">
                         {user.fullName?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
@@ -218,8 +218,8 @@ export const Navbar = () => {
                   <DropdownMenuLabel className="font-normal p-3 rounded-xl bg-muted/30 mb-1">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src="/avatars/default.png" alt={user.fullName || "User"} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white font-semibold">
+                        <AvatarImage src="/avatars/default.png" alt={user.fullName || "User"} loading="lazy" decoding="async" />
+                        <AvatarFallback className="bg-linear-to-br from-blue-500 to-indigo-500 text-white font-semibold">
                           {user.fullName?.charAt(0).toUpperCase() || "U"}
                         </AvatarFallback>
                       </Avatar>
@@ -345,7 +345,7 @@ export const Navbar = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-muted/40">
                       <Avatar className="h-10 w-10 border">
-                        <AvatarImage src="/avatars/default.png" alt={user.fullName || "User"} />
+                        <AvatarImage src="/avatars/default.png" alt={user.fullName || "User"} loading="lazy" decoding="async" />
                         <AvatarFallback className="bg-linear-to-br from-blue-500 to-indigo-500 text-white font-semibold">
                           {user.fullName?.charAt(0).toUpperCase() || "U"}
                         </AvatarFallback>

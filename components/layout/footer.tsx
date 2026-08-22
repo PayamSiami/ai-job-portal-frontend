@@ -12,7 +12,7 @@ export const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="flex h-8 w-8 items-center justify-center">
-                <Image src="/logo.svg" alt="JobMatch Logo" className="h-10 w-10" width={20} height={20} />
+                <Image src="/logo.svg" alt="لوگوی جاب مچ" className="h-10 w-10" width={40} height={40} />
               </div>
               <span className="text-xl font-bold text-foreground">جاب مچ</span>
             </Link>
@@ -20,16 +20,16 @@ export const Footer = () => {
               شغل رویایی خود را با جستجوی مبتنی بر هوش مصنوعی پیدا کنید. به شرکت‌های برتر متصل شوید و حرفه خود را به سطح بعدی ببرید.
             </p>
             <div className="flex items-center gap-4 mt-4">
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://github.com/jobmatch-ir" target="_blank" rel="noopener noreferrer nofollow" aria-label="GitHub جاب مچ" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaGithub className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://twitter.com/jobmatch_ir" target="_blank" rel="noopener noreferrer nofollow" aria-label="توییتر جاب مچ" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaTwitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://linkedin.com/company/jobmatch-ir" target="_blank" rel="noopener noreferrer nofollow" aria-label="لینکدین جاب مچ" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaLinkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://youtube.com/@jobmatch" target="_blank" rel="noopener noreferrer nofollow" aria-label="یوتیوب جاب مچ" className="text-muted-foreground hover:text-foreground transition-colors">
                 <FaYoutube className="w-5 h-5" />
               </a>
             </div>
@@ -63,6 +63,11 @@ export const Footer = () => {
                   مشاغل ذخیره شده
                 </Link>
               </li>
+              <li>
+                <Link href="/blog" className="hover:text-blue-600 transition-colors">
+                  بلاگ و مقالات
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -74,7 +79,7 @@ export const Footer = () => {
                 <a
                   href="https://panel.jobmatch.ir"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="hover:text-blue-600 transition-colors"
                 >
                   داشبورد
@@ -84,7 +89,7 @@ export const Footer = () => {
                 <a
                   href="https://panel.jobmatch.ir"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="hover:text-blue-600 transition-colors"
                 >
                   ثبت آگهی شغلی
@@ -94,7 +99,7 @@ export const Footer = () => {
                 <a
                   href="https://panel.jobmatch.ir"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="hover:text-blue-600 transition-colors"
                 >
                   بررسی درخواست‌ها
@@ -104,7 +109,7 @@ export const Footer = () => {
                 <a
                   href="https://panel.jobmatch.ir"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="hover:text-blue-600 transition-colors"
                 >
                   پروفایل شرکت

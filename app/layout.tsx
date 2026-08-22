@@ -120,7 +120,17 @@ export default function RootLayout({
       className={vazirmatn.variable}
     >
       <head>
-        <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" />
+        <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" fetchPriority="high" />
+        {/* Preconnect to API gateway for faster company logo image loading */}
+        <link
+          rel="preconnect"
+          href={config.NEXT_PUBLIC_API_GATEWAY_URL || ''}
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="dns-prefetch"
+          href={config.NEXT_PUBLIC_API_GATEWAY_URL || ''}
+        />
       </head>
       <body className="font-vazirmatn antialiased">
         <Providers>

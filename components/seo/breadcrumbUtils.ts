@@ -109,4 +109,30 @@ export const generateBreadcrumbs = {
     { name: 'خانه', url: baseUrl },
     { name: pageName, url: `${baseUrl}/auth/${pageName.toLowerCase()}` },
   ],
+
+  /**
+   * Blog index breadcrumb
+   */
+  blog: (baseUrl: string): BreadcrumbItem[] => [
+    { name: 'خانه', url: baseUrl },
+    { name: 'بلاگ', url: `${baseUrl}/blog` },
+  ],
+
+  /**
+   * Blog post detail breadcrumb
+   */
+  blogPost: (baseUrl: string, postTitle: string, slug: string): BreadcrumbItem[] => [
+    { name: 'خانه', url: baseUrl },
+    { name: 'بلاگ', url: `${baseUrl}/blog` },
+    { name: postTitle, url: `${baseUrl}/blog/${slug}` },
+  ],
+
+  /**
+   * Blog category listing breadcrumb
+   */
+  blogCategory: (baseUrl: string, categoryName: string, categorySlug: string): BreadcrumbItem[] => [
+    { name: 'خانه', url: baseUrl },
+    { name: 'بلاگ', url: `${baseUrl}/blog` },
+    { name: categoryName, url: `${baseUrl}/blog/category/${categorySlug}` },
+  ],
 };
