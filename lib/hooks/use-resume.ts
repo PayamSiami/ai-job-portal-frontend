@@ -88,7 +88,7 @@ export const useResume = () => {
   // Delete resume mutation
   const deleteResume = useMutation({
     mutationFn: (id: string) => resumeService.deleteResume(id),
-    onSuccess: (_, id) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resumes"] });
       toast.success("Resume deleted successfully!");
     },
@@ -101,9 +101,8 @@ export const useResume = () => {
   const generateCoverLetter = useMutation({
     mutationFn: ({ resumeId, jobId }: { resumeId: string; jobId: string }) =>
       resumeService.generateCoverLetter(resumeId, jobId),
-    onSuccess: (data: { coverLetter: string }) => {
+    onSuccess: () => {
       toast.success("Cover letter generated successfully!");
-      return data;
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to generate cover letter");
@@ -113,9 +112,8 @@ export const useResume = () => {
   // Generate AI summary mutation
   const generateAISummary = useMutation({
     mutationFn: (resumeId: string) => resumeService.generateAISummary(resumeId),
-    onSuccess: (data: { summary: string }) => {
+    onSuccess: () => {
       toast.success("AI summary generated successfully!");
-      return data;
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to generate summary");

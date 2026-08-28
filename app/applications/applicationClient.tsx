@@ -121,7 +121,7 @@ export default function ApplicationClient() {
     }
 
     // Sort
-    filtered = [...filtered].sort((a: any, b: any) => {
+    filtered = [...filtered].sort((a: Application, b: Application) => {
       switch (sortBy) {
         case "newest":
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -148,7 +148,7 @@ export default function ApplicationClient() {
   // Calculate status counts for badges
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    applicationsData.forEach((app: any) => {
+    applicationsData.forEach((app: Application) => {
       const status = app.status?.toLowerCase() || "pending";
       counts[status] = (counts[status] || 0) + 1;
     });
@@ -327,13 +327,13 @@ export default function ApplicationClient() {
 
               {/* List Items */}
               <div className="divide-y divide-gray-100">
-                {paginatedApplications.map((app: any, index: number) => {
+                {paginatedApplications.map((app: Application, index: number) => {
                   const isWithdrawn = app?.status?.toLowerCase() === "withdrawn";
                   const canWithdrawApp = canWithdraw(app?.status);
 
                   return (
                     <div
-                      key={app?._id || app?.id || index}
+                      key={app?._id || index}
                       className={cn(
                         "grid grid-cols-1 md:grid-cols-12 gap-4 p-4 hover:bg-gray-50/50 transition-colors items-start md:items-center",
                         isWithdrawn && "opacity-60"

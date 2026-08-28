@@ -10,18 +10,24 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         disallow: [
+          // Next.js internal API rewrites to the backend
           "/api/",
-          "/dashboard/",
-          "/employer/",
-          "/applications/",
-          "/resumes/create",
-          "/resumes/*/edit",
+          // Authenticated / private user areas (jobseeker)
+          "/dashboard",
+          "/profile",
           "/settings",
-          "/profile/",
-          "/saved-jobs/",
+          "/applications",
+          "/resumes",
+          "/saved-jobs",
+          // Authenticated / private employer area
+          "/employer",
         ],
       },
     ],
-    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/jobs/sitemap.xml`, `${baseUrl}/blog/sitemap.xml`],
+    sitemap: [
+      `${baseUrl}/sitemap.xml`,
+      `${baseUrl}/jobs/sitemap.xml`,
+      `${baseUrl}/blog/sitemap.xml`,
+    ],
   };
 }

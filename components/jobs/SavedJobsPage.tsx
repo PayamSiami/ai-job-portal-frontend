@@ -45,8 +45,11 @@ interface SavedJob extends Job {
     employmentType: string;
 }
 
-// Mock data for demonstration
-const MOCK_SAVED_JOBS: any[] = [
+type SortOption = 'recent' | 'oldest' | 'company' | 'title';
+
+// Mock data for demonstration (kept separate from the real Job shape; the
+// demo records are intentionally partial, so the array is cast explicitly)
+const MOCK_SAVED_JOBS = [
     {
         _id: '1',
         title: 'توسعه‌دهنده ارشد React',
@@ -94,7 +97,7 @@ const MOCK_SAVED_JOBS: any[] = [
         isActive: true,
         isFeatured: false,
     },
-];
+] as unknown as SavedJob[];
 
 export function SavedJobsPage({
     savedJobs: propSavedJobs,
@@ -103,10 +106,14 @@ export function SavedJobsPage({
     isLoading = false,
 }: SavedJobsPageProps) {
     const router = useRouter();
-    const [savedJobs, setSavedJobs] = useState<SavedJob[]>(propSavedJobs || MOCK_SAVED_JOBS);
+    // Real saved jobs come as Job[]; the mock provides the SavedJob extras,
+    // so the prop is narrowed to SavedJob[] for the shared state type.
+    const [savedJobs, setSavedJobs] = useState<SavedJob[]>(
+        propSavedJobs ? (propSavedJobs as SavedJob[]) : MOCK_SAVED_JOBS
+    );
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState<'all' | 'full-time' | 'part-time' | 'contract' | 'internship'>('all');
-    const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'company' | 'title'>('recent');
+    const [sortBy, setSortBy] = useState<SortOption>('recent');
     const [selectedJob, setSelectedJob] = useState<SavedJob | null>(null);
     const [showFilters, setShowFilters] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -279,7 +286,7 @@ export function SavedJobsPage({
                         </Button>
                         <select
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as any)}
+                            onChange={(e) => setSortBy(e.target.value as SortOption)}
                             className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="recent">جدیدترین</option>

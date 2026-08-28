@@ -7,7 +7,6 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Plus, X, Loader2 } from "lucide-react";
 import { useResume } from "@/lib/hooks/use-resume";
 import toast from "react-hot-toast";
@@ -61,7 +60,7 @@ export const SkillsForm: React.FC<SkillsFormProps> = ({ resumeId }) => {
     name: "skills",
   });
 
-  const onSubmit = async (data: SkillsFormData) => {
+  const onSubmit = async () => {
     if (!resumeId && !currentResume) {
       toast.error("Please create a resume first");
       return;
@@ -71,7 +70,7 @@ export const SkillsForm: React.FC<SkillsFormProps> = ({ resumeId }) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Skills updated successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update skills");
     } finally {
       setIsSubmitting(false);

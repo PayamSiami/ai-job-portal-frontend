@@ -58,10 +58,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: baseUrl,
-    languages: {
-      'fa-IR': `${baseUrl}/fa`,
-      'en-US': `${baseUrl}/en`,
-    },
   },
   robots: {
     index: true,

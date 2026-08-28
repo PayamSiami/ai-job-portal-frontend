@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useMemo } from 'react';
 import { useProfile } from '@/lib/hooks/use-profile';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -127,7 +126,7 @@ export default function ProfileClient() {
       await updateProfile.mutateAsync(updateData);
       setIsEditing(false);
       setEditableProfile(null);
-    } catch (error) {
+    } catch {
       // Error is handled in the mutation
     } finally {
       setIsSaving(false);
@@ -141,7 +140,7 @@ export default function ProfileClient() {
         await uploadProfileImage.mutateAsync(file);
         // Refetch profile to get updated image
         await refetch();
-      } catch (error) {
+      } catch {
         // Error is handled in the mutation
       }
     }
@@ -179,7 +178,7 @@ export default function ProfileClient() {
       try {
         await updateSkills.mutateAsync(editableProfile.profile.skills);
         toast.success('مهارت‌ها با موفقیت بروزرسانی شدند!');
-      } catch (error) {
+      } catch {
         // Error is handled in the mutation
       }
     }

@@ -56,8 +56,11 @@ export const ItemListStructuredData: React.FC<ItemListStructuredDataProps> = ({
   };
 
   // Add pagination info if available
+  // NOTE: `itemListOrder` must be one of schema.org's enum values
+  // (Ascending | Descending | Unordered), not a URL — using a URL here
+  // produced invalid JSON-LD that search engines could reject.
   if (totalPages && totalPages > 1) {
-    structuredData['itemListOrder'] = `${baseUrl}/jobs?page=${currentPage}`;
+    structuredData['itemListOrder'] = 'Ascending';
     structuredData['numberOfItems'] = jobs.length;
   }
 

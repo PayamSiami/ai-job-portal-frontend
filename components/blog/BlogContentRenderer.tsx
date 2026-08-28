@@ -5,14 +5,13 @@ import { Quote } from 'lucide-react';
 
 interface BlogContentRendererProps {
   content: BlogPostContent[];
-  baseUrl?: string;
 }
 
 /**
  * Renders the parsed blog post content array into semantic HTML.
  * Used by the server-rendered blog post page so content is in the SSR HTML.
  */
-export function BlogContentRenderer({ content, baseUrl }: BlogContentRendererProps) {
+export function BlogContentRenderer({ content }: BlogContentRendererProps) {
   if (!content || !Array.isArray(content)) return null;
 
   return (

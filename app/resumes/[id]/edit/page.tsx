@@ -254,7 +254,7 @@ export default function EditResumePage() {
         setAiDialogOpen(false);
         setAiPrompt('');
       }
-    } catch (error) {
+    } catch {
       toast.error('تولید محتوا با شکست مواجه شد');
     } finally {
       setIsGenerating(false);

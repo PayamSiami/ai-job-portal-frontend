@@ -22,9 +22,11 @@ export const useJobs = () => {
     });
   };
 
+  // Get job by AI search — NOTE: uses a distinct key ("job-ai") so it can
+  // never collide with useGetJobById's ["job", id] query cache entry.
   const useGetJobByAI = (query: string) => {
     return useQuery({
-      queryKey: ["job", query],
+      queryKey: ["job-ai", query],
       queryFn: () => jobService.aiSearch(query),
     });
   };

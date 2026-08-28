@@ -11,7 +11,6 @@ import {
   User,
   Menu,
   X,
-  Sparkles,
   Bell,
   Settings,
   LogOut,

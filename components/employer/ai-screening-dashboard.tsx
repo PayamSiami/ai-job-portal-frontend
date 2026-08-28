@@ -8,13 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Sparkles, 
   CheckCircle, 
-  XCircle, 
   AlertCircle, 
   Users, 
   Clock,
   FileText,
-  TrendingUp,
-  BarChart3,
   Filter,
   Search,
   Download,
@@ -26,9 +23,7 @@ import {
   Phone,
   MapPin,
   Briefcase,
-  Star,
   Award,
-  Zap,
   Brain,
   Target,
   Loader2
@@ -49,10 +44,8 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'react-hot-toast';
 
@@ -362,12 +355,12 @@ export const AIScreeningDashboard = () => {
 
   // Update Status Mutation
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ applicationId, status }: { applicationId: string; status: string }) => {
+    mutationFn: async ({ applicationId: _applicationId, status: _status }: { applicationId: string; status: string }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
       return { success: true };
     },
-    onSuccess: (_, { applicationId, status }) => {
+    onSuccess: (_, { status }) => {
       toast.success(`Application status updated to ${status}`);
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       setIsDetailsOpen(false);

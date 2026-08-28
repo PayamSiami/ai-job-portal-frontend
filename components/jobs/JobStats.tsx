@@ -15,9 +15,7 @@ import {
   BarChart3,
   UserX,
   LucideIcon,
-  RefreshCw,
   Layers,
-  Sparkles,
 } from 'lucide-react';
 
 interface StatItem {

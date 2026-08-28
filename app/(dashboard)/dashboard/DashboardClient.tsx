@@ -109,9 +109,6 @@ export default function DashboardClient() {
     const accepted = applicationsData.filter(
       (app: Application) => app.status?.toLowerCase() === "accepted"
     ).length;
-    const rejected = applicationsData.filter(
-      (app: Application) => app.status?.toLowerCase() === "rejected"
-    ).length;
 
     return [
       {

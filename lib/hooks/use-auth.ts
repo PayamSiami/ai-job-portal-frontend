@@ -39,11 +39,17 @@ export const useAuth = () => {
       localStorage.setItem("accessToken", token);
       localStorage.setItem("user", JSON.stringify(user));
     } else if (!user) {
+      // Remove tokens AND cached user on logout — leaving a stale
+      // refreshToken behind could confuse the axios refresh interceptor.
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
     }
     queryClient.setQueryData(authKeys.user, user);
   };
+
+  // Safe display name (User exposes both fullName and username)
+  const displayName = (user: User) => user.fullName || user.username || "there";
 
   // Login Mutation
   const loginMutation = useMutation({
@@ -51,7 +57,7 @@ export const useAuth = () => {
       authService.login({ email, password }),
     onSuccess: (data) => {
       setAuthData(data.user, data.token);
-      toast.success(`Welcome back, ${data.user.fullName}!`);
+      toast.success(`Welcome back, ${displayName(data.user)}!`);
     },
     onError: (error: Error) => {
       toast.error(error.message || "Login failed");
@@ -67,7 +73,7 @@ export const useAuth = () => {
       if (!token || !user) return;
 
       setAuthData(user, token);
-      toast.success(`Welcome back, ${user.username}!`);
+      toast.success(`Welcome back, ${displayName(user)}!`);
     },
     onError: (error: Error) => {
       toast.error(error.message || "Google login failed");
@@ -79,7 +85,7 @@ export const useAuth = () => {
     mutationFn: (data: RegisterRequest) => authService.register(data),
     onSuccess: (data) => {
       setAuthData(data.user, data.token);
-      toast.success(`Welcome, ${data.user.fullName}!`);
+      toast.success(`Welcome, ${displayName(data.user)}!`);
     },
     onError: (error: Error) => {
       toast.error(error.message || "Registration failed");

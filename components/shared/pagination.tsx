@@ -19,10 +19,9 @@ export const Pagination: React.FC<PaginationProps> = ({
   className,
 }) => {
   const getPageNumbers = () => {
-    const pages = [];
     const delta = 2;
-    const range = [];
-    const rangeWithDots = [];
+    const range: number[] = [];
+    const rangeWithDots: Array<number | string> = [];
 
     for (let i = 1; i <= totalPages; i++) {
       if (
@@ -34,7 +33,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       }
     }
 
-    let lastNumber;
+    let lastNumber: number | undefined;
     for (const number of range) {
       if (lastNumber) {
         if (number - lastNumber === 2) {
@@ -65,7 +64,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
       {getPageNumbers().map((page, index) => (
         <Button
-          key={index}
+          key={`${page}-${index}`}
           variant={page === currentPage ? "default" : "outline"}
           size="sm"
           onClick={() => typeof page === "number" && onPageChange(page)}
