@@ -23,6 +23,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { resumeService, Resume } from "@/lib/services/resume.service";
 import { Badge } from "@/components/ui/badge";
 import { applicationService } from "@/lib/services/application.service";
+import { useResume } from "@/lib/hooks/use-resume";
 
 const applicationSchema = z.object({
   resumeId: z.string().min(1, "لطفاً یک رزومه انتخاب کنید"),
@@ -47,6 +48,7 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
 }) => {
   const [isGeneratingCoverLetter, setIsGeneratingCoverLetter] = useState(false);
   const queryClient = useQueryClient();
+  const { generateCoverLetter } = useResume();
 
   // Fetch resumes
   const { data: resumes, isLoading, error } = useQuery({
@@ -114,41 +116,33 @@ export const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     },
   });
 
-  const handleGenerateCoverLetter = async () => {
+  const handleGenerateCover = useMutation({
+    mutationFn: (resumeData: { resumeId: string, jobId: string }) => {
+      return generateCoverLetter.mutateAsync(resumeData)
+    },
+    onSuccess: (data: any) => {
+      toast.success('درخواست با موفقیت ارسال شد!');
+      console.log(data)
+      if (data?.content)
+        setValue("coverLetter", data?.content)
+      setIsGeneratingCoverLetter(false);
+    },
+    onError: (error: any) => {
+      setIsGeneratingCoverLetter(false);
+      toast.error(error?.response?.data?.error || error?.message || 'ارسال درخواست با شکست مواجه شد');
+    },
+  });
+
+  const handleGenerateCoverLetter = () => {
+    setIsGeneratingCoverLetter(true);
     if (!selectedResume) {
       toast.error("لطفاً ابتدا یک رزومه انتخاب کنید");
       return;
     }
-
-    setIsGeneratingCoverLetter(true);
-    try {
-      const response = await fetch(`/api/resumes/${selectedResumeId}/generate-cover-letter`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({
-          jobId: jobId,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData?.error || 'تولید نامه پوششی با شکست مواجه شد');
-      }
-
-      const result = await response.json();
-      const generated = result.data?.coverLetter;
-
-      setValue("coverLetter", generated);
-      toast.success("نامه پوششی با موفقیت تولید شد!");
-    } catch (error) {
-      toast.error("تولید نامه پوششی با شکست مواجه شد");
-      console.error('Cover letter generation error:', error);
-    } finally {
-      setIsGeneratingCoverLetter(false);
-    }
+    handleGenerateCover.mutate({
+      resumeId: selectedResumeId,
+      jobId: jobId,
+    })
   };
 
   const onSubmit = (data: ApplicationFormData) => {
