@@ -116,6 +116,18 @@ export default function RootLayout({
       className={vazirmatn.variable}
     >
       <head>
+        {/*
+          Inline theme-detection script.
+          Runs synchronously in <head> — BEFORE the stylesheet renders — so the
+          first paint already reflects the user's saved theme (or OS preference)
+          instead of flashing the light-defaults and flipping on hydration.
+          This eliminates FOUC and reduces the render-blocking/LCP impact.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var e=localStorage.getItem("theme");var t=e==="dark"||(e==="system"||!e)&&window.matchMedia("(prefers-color-scheme: dark)").matches;var r=document.documentElement;r.classList.toggle("dark",t);r.style.colorScheme=t?"dark":"light"}catch(e){}})();`,
+          }}
+        />
         <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" fetchPriority="high" />
         {/* Preconnect to API gateway for faster company logo image loading */}
         <link
@@ -129,6 +141,11 @@ export default function RootLayout({
         />
       </head>
       <body className="font-vazirmatn antialiased">
+        {/*
+          The body/html transitions below can cause an unwanted background-color
+          fade during the (now fast) theme switch. Removed to avoid extra paint
+          composits and a potential flash on first load.
+        */}
         <Providers>
           <MainLayout>
             {children}

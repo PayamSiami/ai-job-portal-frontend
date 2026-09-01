@@ -312,7 +312,7 @@ export const BLOG_POSTS: BlogPost[] = [
     categorySlug: 'jobsearch',
     tags: ['حقوق', 'مذاکره', 'شرایط شغلی', 'negotiation'],
     readingTime: 10,
-    image: `${BASE_URL}/blog/negotiate-salary.jpg`,
+    image: `${BASE_URL}/blog/negotiate-salary.webp`,
     featured: false,
     content: [
       {
@@ -410,7 +410,7 @@ export const BLOG_POSTS: BlogPost[] = [
     categorySlug: 'interview',
     tags: ['مصاحبه', 'هوش مصنوعی', 'ai interview', 'job interview'],
     readingTime: 9,
-    image: `${BASE_URL}/blog/ai-interview.jpg`,
+    image: `${BASE_URL}/blog/ai-interview.webp`,
     featured: false,
     content: [
       {
@@ -589,7 +589,7 @@ export const BLOG_POSTS: BlogPost[] = [
     categorySlug: 'resume',
     tags: ['پرتفولیو', 'portfolio', 'نمونه کار', 'طراحی'],
     readingTime: 7,
-    image: `${BASE_URL}/blog/portfolio.jpg`,
+    image: `${BASE_URL}/blog/portfolio.webp`,
     featured: false,
     content: [
       {
@@ -678,7 +678,7 @@ export const BLOG_POSTS: BlogPost[] = [
     categorySlug: 'career',
     tags: ['تغییر حرفه', 'برنامه‌نویسی', 'کارآفرینی', 'career change'],
     readingTime: 15,
-    image: `${BASE_URL}/blog/career-change-tech.jpg`,
+    image: `${BASE_URL}/blog/career-change-tech.webp`,
     featured: true,
     content: [
       {

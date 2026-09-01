@@ -69,11 +69,10 @@ export const FAQSection = () => {
                   id={`faq-answer-${item.id}`}
                   role="region"
                   aria-labelledby={`faq-question-${item.id}`}
-                  className={`px-6 text-right text-gray-600 dark:text-gray-300 overflow-hidden transition-all duration-300 ease-in-out ${
-                    isOpen ? 'pb-4 max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  <p className="leading-relaxed pr-9 pt-2">{item.answer}</p>
+                  className={`px-6 pb-4 pt-2 text-right text-gray-600 dark:text-gray-300 overflow-hidden transition-all duration-300 ease-in-out ${
+                    isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+                  }`}>
+                  <p className="leading-relaxed pr-9">{item.answer}</p>
                 </div>
               </div>
             );
