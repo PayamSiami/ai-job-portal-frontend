@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
+import { AuthRouteGate } from '@/components/auth/AuthRouteGate';
 import { config } from '@/lib/config';
 
 // Local Persian & English font
@@ -15,6 +16,7 @@ const vazirmatn = localFont({
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
+  metadataBase: baseUrl ? new URL(baseUrl) : undefined,
   title: {
     default: 'جاب مچ - پلتفرم استخدام با هوش مصنوعی',
     template: `%s | جاب مچ`,
@@ -39,7 +41,6 @@ export const metadata: Metadata = {
     url: baseUrl,
     siteName: 'جاب مچ | JobMatch',
     locale: 'fa_IR',
-    alternateLocale: ['en_US'],
     images: [
       {
         url: `${baseUrl}/logo.svg`,
@@ -147,9 +148,11 @@ export default function RootLayout({
           composits and a potential flash on first load.
         */}
         <Providers>
-          <MainLayout>
-            {children}
-          </MainLayout>
+          <AuthRouteGate>
+            <MainLayout>
+              {children}
+            </MainLayout>
+          </AuthRouteGate>
         </Providers>
       </body>
     </html>

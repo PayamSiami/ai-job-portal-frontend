@@ -34,9 +34,18 @@ export const useAuth = () => {
   });
 
   // Helper to sync query cache + localStorage
-  const setAuthData = (user: User | null, token?: string) => {
+  const setAuthData = (
+    user: User | null,
+    token?: string,
+    refreshToken?: string,
+  ) => {
     if (user && token) {
       localStorage.setItem("accessToken", token);
+      // Persist the refresh token when the backend issues one — the axios
+      // 401 interceptor depends on it to renew expired sessions.
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
       localStorage.setItem("user", JSON.stringify(user));
     } else if (!user) {
       // Remove tokens AND cached user on logout — leaving a stale
@@ -56,7 +65,7 @@ export const useAuth = () => {
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.login({ email, password }),
     onSuccess: (data) => {
-      setAuthData(data.user, data.token);
+      setAuthData(data.user, data.token, data.refreshToken);
       toast.success(`Welcome back, ${displayName(data.user)}!`);
     },
     onError: (error: Error) => {
@@ -67,13 +76,13 @@ export const useAuth = () => {
   // Google OAuth Mutation
   const googleLoginMutation = useMutation({
     mutationFn: (idToken: string) => authService.loginWithGoogle(idToken),
-    onSuccess: (response: { token: string; user: User }) => {
-      const token = response?.token;
-      const user = response?.user;
-      if (!token || !user) return;
-
-      setAuthData(user, token);
-      toast.success(`Welcome back, ${displayName(user)}!`);
+    onSuccess: (data) => {
+      if (!data?.token || !data?.user) {
+        toast.error("پاسخ نامعتبر از سرور هنگام ورود با گوگل");
+        return;
+      }
+      setAuthData(data.user, data.token, data.refreshToken);
+      toast.success(`Welcome back, ${displayName(data.user)}!`);
     },
     onError: (error: Error) => {
       toast.error(error.message || "Google login failed");
@@ -84,7 +93,7 @@ export const useAuth = () => {
   const registerMutation = useMutation({
     mutationFn: (data: RegisterRequest) => authService.register(data),
     onSuccess: (data) => {
-      setAuthData(data.user, data.token);
+      setAuthData(data.user, data.token, data.refreshToken);
       toast.success(`Welcome, ${displayName(data.user)}!`);
     },
     onError: (error: Error) => {

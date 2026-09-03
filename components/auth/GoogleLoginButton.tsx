@@ -39,13 +39,19 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   oneTapAutoPrompt = false,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoaded, setIsGoogleLoaded] = useState<boolean>(() => {
-    return typeof window !== "undefined" && Boolean(window.google);
-  });
+  // Tracks whether the GIS script is ready to use. A lazy initializer covers
+  // the cached-script case (window.google already present from a previous
+  // page visit), so the load effect below only needs to handle fresh loads.
+  const [isGoogleReady, setIsGoogleReady] = useState(
+    () => typeof window !== "undefined" && Boolean(window.google),
+  );
   const [isInitialized, setIsInitialized] = useState(false);
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
-  const initializationAttempted = useRef(false);
+  // Guards against double-rendering the GIS button into the same container —
+  // each renderButton call injects a NEW iframe, so this must run at most once
+  // per mount (and the container must be cleared if it ever re-runs).
+  const hasRenderedButton = useRef(false);
   const isMounted = useRef(true);
 
   // Safely parse JWT token containing potential UTF-8 strings
@@ -114,7 +120,6 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   const initializeGoogleSignIn = useCallback(() => {
     if (
       !isMounted.current ||
-      initializationAttempted.current ||
       !window.google ||
       !buttonContainerRef.current
     ) {
@@ -136,20 +141,28 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
         cancel_on_tap_outside: true,
         context: "signin",
         itp_support: true,
+        // Required by newer Chrome builds (FedCM) so the One-Tap prompt works.
+        use_fedcm_for_prompt: true,
       });
 
-      window.google.accounts.id.renderButton(buttonContainerRef.current, {
-        theme: "outline",
-        size: "large",
-        type: "standard",
-        text: "continue_with",
-        shape: "rectangular",
-        logo_alignment: "left",
-        width: "100%",
-        locale: "fa",
-      });
+      // Render the real GIS button exactly once per mount.
+      if (!hasRenderedButton.current && buttonContainerRef.current) {
+        buttonContainerRef.current.innerHTML = "";
+        // GIS width is numeric px; measure the container so the button fits.
+        const containerWidth = buttonContainerRef.current.offsetWidth || 326;
+        window.google.accounts.id.renderButton(buttonContainerRef.current, {
+          theme: "outline",
+          size: "large",
+          type: "standard",
+          text: "continue_with",
+          shape: "rectangular",
+          logo_alignment: "left",
+          width: containerWidth,
+          locale: "fa",
+        });
+        hasRenderedButton.current = true;
+      }
 
-      initializationAttempted.current = true;
       setIsInitialized(true);
 
       if (showOneTap && oneTapAutoPrompt) {
@@ -166,11 +179,12 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
     }
   }, [handleCredentialResponse, onError, showOneTap, oneTapAutoPrompt, promptOneTap]);
 
-  // Load Google GIS Script dynamically with deduplication
+  // Load the Google GIS script dynamically with deduplication.
+  // NOTE: the cached-script case (window.google already exists) is handled by
+  // the isGoogleReady lazy initializer — this effect only manages fresh loads.
   useEffect(() => {
     isMounted.current = true;
 
-    // If already loaded via state initializer or prior run, skip effect
     if (typeof window === "undefined" || window.google) {
       return;
     }
@@ -187,97 +201,92 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
     }
 
     const handleLoad = () => {
-      if (isMounted.current) setIsGoogleLoaded(true);
+      if (isMounted.current) setIsGoogleReady(true);
     };
 
     const handleError = () => {
       if (isMounted.current) onError?.("Failed to load Google authentication service");
     };
 
-    // If script tag exists and is already loaded (e.g. cached or loaded by another component)
+    // If the script tag exists and already finished loading (e.g. mounted by
+    // another component instance), treat it as ready right away.
     if (script.getAttribute("data-loaded") === "true") {
-      handleLoad();
-    } else {
-      script.addEventListener("load", handleLoad);
-      script.addEventListener("error", handleError);
+      // Async microtask keeps this out of the sync-setState-in-effect path.
+      const raf = requestAnimationFrame(handleLoad);
+      return () => {
+        isMounted.current = false;
+        cancelAnimationFrame(raf);
+      };
     }
+
+    script.addEventListener("load", handleLoad);
+    script.addEventListener("error", handleError);
 
     return () => {
       isMounted.current = false;
       script?.removeEventListener("load", handleLoad);
       script?.removeEventListener("error", handleError);
     };
-  }, [onError, setIsGoogleLoaded]);
-
+  }, [onError]);
 
   // Trigger setup once GIS script is ready
   useEffect(() => {
-    if (!isGoogleLoaded || initializationAttempted.current) return;
+    if (!isGoogleReady) return;
 
     const timer = setTimeout(() => {
-      if (isMounted.current && isGoogleLoaded && !initializationAttempted.current) {
+      if (isMounted.current && window.google) {
         initializeGoogleSignIn();
       }
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [isGoogleLoaded, initializeGoogleSignIn]);
+  }, [isGoogleReady, initializeGoogleSignIn]);
 
-  // Fallback trigger handler
+  // Fallback trigger handler — used only when the real GIS button has not
+  // mounted yet. Once it mounts, the container becomes visible and takes over.
   const handleManualSignIn = useCallback(async () => {
-    if (!window.google || !isInitialized) {
-      try {
-        initializeGoogleSignIn();
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        if (!isInitialized) throw new Error("Google Sign-In not initialized");
-      } catch {
-        onError?.("Failed to initialize Google Sign-In");
-        return;
-      }
+    if (!window.google) {
+      onError?.("Google authentication service is not available");
+      return;
+    }
+
+    if (!isInitialized) {
+      initializeGoogleSignIn();
+      // Give GIS a moment to mount its iframe before showing the container.
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+
+    if (isInitialized || hasRenderedButton.current) {
+      // The real button has replaced the fallback.
+      return;
     }
 
     if (showOneTap) {
       promptOneTap();
-    } else if (buttonContainerRef.current && window.google) {
-      setIsLoading(true);
-      try {
-        window.google.accounts.id.renderButton(buttonContainerRef.current, {
-          theme: "outline",
-          size: "large",
-          type: "standard",
-          text: "continue_with",
-          shape: "rectangular",
-          logo_alignment: "left",
-          width: "100%",
-          locale: "fa",
-        });
-      } catch (error) {
-        console.error("Failed to render Google button:", error);
-        onError?.("Failed to render Google Sign-In button");
-      } finally {
-        setIsLoading(false);
-      }
     }
   }, [isInitialized, initializeGoogleSignIn, promptOneTap, showOneTap, onError]);
 
   return (
     <div className="relative w-full">
-      {/* Target element where GIS mounts iframe */}
+      {/* Target element where GIS mounts its button — must stay in layout
+          (never display:none) so the iframe measures a real size. */}
       <div
         ref={buttonContainerRef}
-        className={`w-full min-h-[44px] ${!isInitialized ? "hidden" : ""} ${className}`}
+        className={`w-full min-h-[44px] ${className}`}
       />
 
-      {/* Fallback button when GIS is not yet ready or explicitly disabled */}
+      {/* Fallback overlay while GIS is not ready, or while disabled —
+          covers the GIS button instead of stacking below it. */}
       {(!isInitialized || disabled) && (
-        <Button
-          type="button"
-          variant={buttonVariant}
-          size={size}
-          className={`w-full ${className}`}
-          onClick={handleManualSignIn}
-          disabled={disabled || isLoading}
-        >
+        <div className="absolute inset-0">
+          <Button
+            type="button"
+            variant={buttonVariant}
+            size={size}
+            className="h-full w-full"
+            onClick={handleManualSignIn}
+            disabled={disabled || isLoading}
+          >
           {isLoading ? (
             <>
               <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -311,7 +320,8 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
               {buttonText}
             </>
           )}
-        </Button>
+          </Button>
+        </div>
       )}
     </div>
   );
@@ -330,6 +340,8 @@ declare global {
             cancel_on_tap_outside?: boolean;
             context?: string;
             itp_support?: boolean;
+            /** Required by newer Chrome builds (FedCM) for the One-Tap prompt. */
+            use_fedcm_for_prompt?: boolean;
           }) => void;
           renderButton: (
             element: HTMLElement,

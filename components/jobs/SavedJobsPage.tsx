@@ -251,7 +251,7 @@ export function SavedJobsPage({
                     <div className="flex items-center gap-3">
                         <Button
                             variant="outline"
-                            onClick={() => router.push('/search')}
+                            onClick={() => router.push('/jobs')}
                             className="flex items-center gap-2"
                         >
                             <ArrowRight className="w-4 h-4" />
@@ -370,7 +370,7 @@ export function SavedJobsPage({
                         asChild
                         className="bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                     >
-                        <Link href="/search">
+                        <Link href="/jobs">
                             <Search className="w-4 h-4 ml-2" />
                             شروع جستجو
                         </Link>

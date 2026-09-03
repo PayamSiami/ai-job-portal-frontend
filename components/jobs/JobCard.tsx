@@ -200,8 +200,7 @@ export function JobCard({ job, featured }: JobCardProps) {
             </div>
           </div>
         </div>
-        <link rel="canonical" href={jobUrl} />
-      </CardContent>
-    </Card>
-  );
+    </CardContent>
+  </Card>
+);
 }

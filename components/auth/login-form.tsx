@@ -36,6 +36,21 @@ export const LoginForm = () => {
   const router = useRouter();
   const { login, loginWithGoogle } = useAuth();
 
+  // After a successful login, send the user back to a protected page they were
+  // redirected from (via ?from=), validating it's same-origin/safe to avoid an
+  // open-redirect. Defaults to the dashboard.
+  const getRedirectTarget = (): string => {
+    try {
+      const from = new URLSearchParams(window.location.search).get("from");
+      if (from && from.startsWith("/") && !from.startsWith("//") && !from.startsWith("/\\")) {
+        return from;
+      }
+    } catch {
+      /* fall through to default */
+    }
+    return "/dashboard";
+  };
+
   const {
     register,
     handleSubmit,
@@ -49,7 +64,7 @@ export const LoginForm = () => {
     try {
       await login({ email: data.email, password: data.password });
       toast.success("خوش آمدید!");
-      router.push("/dashboard");
+      router.push(getRedirectTarget());
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "ورود با شکست مواجه شد");
     } finally {
@@ -61,7 +76,7 @@ export const LoginForm = () => {
     setGoogleLoading(true);
     try {
       await loginWithGoogle(credential);
-      router.push("/dashboard");
+      router.push(getRedirectTarget());
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "ورود با گوگل ناموفق بود");
     } finally {

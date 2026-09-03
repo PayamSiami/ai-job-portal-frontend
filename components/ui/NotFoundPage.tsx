@@ -145,7 +145,7 @@ export function NotFoundPage({
                                 variant="outline"
                                 className="flex items-center gap-2 px-6 border-blue-200 hover:bg-blue-50"
                             >
-                                <Link href="/search">
+                                <Link href="/jobs">
                                     <Search className="w-4 h-4" />
                                     جستجوی مشاغل
                                 </Link>

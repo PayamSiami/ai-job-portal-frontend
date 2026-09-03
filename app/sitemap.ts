@@ -30,18 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [`${baseUrl}/logo.svg`],
     },
     {
-      url: `${baseUrl}/login`,
-      lastModified: currentDate,
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/register`,
-      lastModified: currentDate,
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
-    },
-    {
       url: `${baseUrl}/privacy`,
       lastModified: currentDate,
       changeFrequency: "monthly" as const,
@@ -59,6 +47,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.4,
     },
+    // NOTE: job detail URLs live in /jobs/sitemap.xml (generated at ISR),
+    // and blog post URLs live in /blog/sitemap.xml — see app/robots.ts.
   ];
 
   // Blog post routes — each with its own lastModified from the post data

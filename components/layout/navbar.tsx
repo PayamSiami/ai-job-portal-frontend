@@ -138,11 +138,14 @@ export const Navbar = () => {
 
         {/* User Actions */}
         <div className="flex items-center gap-2">
-          {/* Search Button (Mobile) */}
-          <Link href="/search" className="lg:hidden" onClick={handleLinkClick}>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
-              <Search className="h-4 w-4" />
-            </Button>
+          {/* Search Button (Mobile) — icon-only link to the search page */}
+          <Link
+            href="/jobs"
+            className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            aria-label="جستجوی مشاغل"
+            onClick={handleLinkClick}
+          >
+            <Search className="h-4 w-4" aria-hidden="true" />
           </Link>
 
           {/* Theme Toggle */}
@@ -159,8 +162,10 @@ export const Navbar = () => {
                     variant="ghost"
                     size="icon"
                     className="relative h-9 w-9 rounded-full hover:bg-muted"
+                    aria-label="اعلان‌ها"
                   >
                     <Bell className="h-4 w-4" />
+                    <span className="sr-only">اعلان‌ها</span>
                     <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-background" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -282,9 +287,13 @@ export const Navbar = () => {
             variant="ghost"
             size="icon"
             className="lg:hidden h-10 w-10 rounded-full"
+            aria-label={isMenuOpen ? "بستن منو" : "بازکردن منو"}
+            aria-controls="mobile-menu-drawer"
+            aria-expanded={isMenuOpen}
             onClick={handleMenuToggle}
           >
             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <span className="sr-only">{isMenuOpen ? "بستن منو" : "بازکردن منو"}</span>
           </Button>
         </div>
       </div>
@@ -293,6 +302,9 @@ export const Navbar = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            id="mobile-menu-drawer"
+            role="region"
+            aria-label="منوی ناوبری"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -302,7 +314,7 @@ export const Navbar = () => {
             <div className="container mx-auto px-4 py-5 space-y-4">
               {/* Mobile Search Bar */}
               <div className="sm:hidden">
-                <Link href="/search" onClick={handleLinkClick}>
+                <Link href="/jobs" onClick={handleLinkClick}>
                   <Button variant="outline" className="w-full justify-start gap-3 h-11 rounded-xl bg-muted/40 border-border/60 text-muted-foreground">
                     <Search className="h-4 w-4" />
                     <span>جستجوی مشاغل...</span>
