@@ -1,0 +1,55 @@
+# Content-Signal directives (Cloudflare managed):
+#   search=yes   - building a search index and providing search results
+#   ai-train=no  - do not use content to train/fine-tune AI models
+#   use=reference - AI may consume content in reference/grounding contexts only
+# https://developers.cloudflare.com/ai-bots/robots-txt
+
+# BEGIN Cloudflare Managed content
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+Allow: /
+Disallow: /api/
+# Authenticated / private jobseeker areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /settings
+Disallow: /applications
+Disallow: /resumes
+Disallow: /saved-jobs
+# Authenticated / private employer area
+Disallow: /employer
+
+# AI crawlers blocked per Content-Signal (ai-train=no)
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CloudflareBrowserRenderingCrawler
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+# END Cloudflare Managed Content
+
+# Sitemaps — job URLs live in /jobs/sitemap.xml, blog URLs in /blog/sitemap.xml
+Sitemap: https://jobmatch.ir/sitemap.xml
+Sitemap: https://jobmatch.ir/jobs/sitemap.xml
+Sitemap: https://jobmatch.ir/blog/sitemap.xml
