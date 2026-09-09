@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
 import { AuthRouteGate } from '@/components/auth/AuthRouteGate';
 import { config } from '@/lib/config';
-import Script from 'next/script';
 
 // Local Persian & English font
 const vazirmatn = localFont({
@@ -110,6 +110,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gaMeasurementId = 'G-40GXYYT6YY';
+
   return (
     <html
       lang="fa"
@@ -118,19 +120,26 @@ export default function RootLayout({
       className={vazirmatn.variable}
     >
       <head>
-        {/*
-          Inline theme-detection script.
-          Runs synchronously in <head> — BEFORE the stylesheet renders — so the
-          first paint already reflects the user's saved theme (or OS preference)
-          instead of flashing the light-defaults and flipping on hydration.
-          This eliminates FOUC and reduces the render-blocking/LCP impact.
-        */}
+        {/* Inline theme-detection script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var e=localStorage.getItem("theme");var t=e==="dark"||(e==="system"||!e)&&window.matchMedia("(prefers-color-scheme: dark)").matches;var r=document.documentElement;r.classList.toggle("dark",t);r.style.colorScheme=t?"dark":"light"}catch(e){}})();`,
           }}
         />
+
+        {/* Microsoft Clarity */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "yfninswh9i");`,
+          }}
+        />
+
         <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" fetchPriority="high" />
+
         {/* Preconnect to API gateway for faster company logo image loading */}
         <link
           rel="preconnect"
@@ -143,11 +152,6 @@ export default function RootLayout({
         />
       </head>
       <body className="font-vazirmatn antialiased">
-        {/*
-          The body/html transitions below can cause an unwanted background-color
-          fade during the (now fast) theme switch. Removed to avoid extra paint
-          composits and a potential flash on first load.
-        */}
         <Providers>
           <AuthRouteGate>
             <MainLayout>
@@ -155,18 +159,22 @@ export default function RootLayout({
             </MainLayout>
           </AuthRouteGate>
         </Providers>
-        {/* Microsoft Clarity - loads after page content */}
+
+        {/* Google Analytics 4 - Using Next.js Script component for optimization */}
         <Script
-          id="clarity-script"
+          src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
           strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "yfninswh9i");`,
-          }}
         />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gaMeasurementId}', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
