@@ -127,17 +127,6 @@ export default function RootLayout({
           }}
         />
 
-        {/* Microsoft Clarity */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "yfninswh9i");`,
-          }}
-        />
-
         <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" fetchPriority="high" />
 
         {/* Preconnect to API gateway for faster company logo image loading */}
@@ -159,6 +148,17 @@ export default function RootLayout({
             </MainLayout>
           </AuthRouteGate>
         </Providers>
+
+        {/* Use Next.js Script component and place it correctly */}
+        <Script strategy="afterInteractive" id="ms-clarity">
+          {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "yfninswh9i");
+          `}
+        </Script>
 
         {/* Google Analytics 4 - Using Next.js Script component for optimization */}
         <Script
