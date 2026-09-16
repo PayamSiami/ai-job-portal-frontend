@@ -6,6 +6,7 @@ import { config } from '@/lib/config';
 import { BLOG_POSTS, getBlogPost, getRelatedPosts, BlogPost } from '@/lib/data/blogPosts';
 import { ArticleStructuredData } from '@/components/seo/ArticleStructuredData';
 import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
+import { FAQSection } from '@/components/seo/FAQSection';
 import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 import { BlogContentRenderer } from '@/components/blog/BlogContentRenderer';
 import { TableOfContents } from '@/components/blog/TableOfContents';
@@ -315,6 +316,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </section>
         )}
       </article>
+
+      {/* FAQ — visible accordion + FAQPage JSON-LD for rich results.
+          Reuses the shared FAQSection (which renders its own <h2 id="faq-heading">
+          and matching FAQPage JSON-LD) so Google sees user-facing FAQ content. */}
+      <div className="mt-12 md:mt-16 max-w-4xl mx-auto px-4">
+        <FAQSection />
+      </div>
     </>
   );
 }

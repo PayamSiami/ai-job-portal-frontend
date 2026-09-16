@@ -29,7 +29,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
     <article
       className={cn(
         'group transition-all duration-300',
-        featured ? 'md:grid md:grid-cols-2 gap-6' : ''
+        featured ? 'md:grid md:grid-cols-1 gap-6' : ''
       )}
     >
       <Card

@@ -92,7 +92,7 @@ export default function BlogPage() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
               مقالات ویژه
             </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {featuredPosts.map((post: BlogPost) => (
                 <BlogCard key={post.slug} post={post} featured />
               ))}
