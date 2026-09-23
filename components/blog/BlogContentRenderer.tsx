@@ -1,11 +1,76 @@
 import { slugify } from '@/lib/utils/slugify';
 import type { BlogPostContent } from '@/lib/data/blogPosts';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Fragment, type ReactNode } from 'react';
 import { Quote } from 'lucide-react';
 
 interface BlogContentRendererProps {
   content: BlogPostContent[];
 }
+
+/**
+ * Renders a paragraph that may contain inline links, returning React nodes.
+ * Links are injected as <Link> elements so they participate in the Next.js
+ * router and pass anchor-text PageRank from high-traffic blog content to
+ * /jobs (the money page) and /register.
+ */
+function LinkedParagraph({
+  item,
+}: {
+  item: BlogPostContent;
+}) {
+  const links = item.links;
+  if (!links || links.length === 0) {
+    return <p className="mb-4 leading-relaxed">{item.text}</p>;
+  }
+
+  const parts: ReactNode[] = [];
+  let remaining = item.text || '';
+  let keySuffix = 0;
+
+  while (remaining.length > 0) {
+    // Find the earliest link whose search_text occurs in the remaining string.
+    let earliest = -1;
+    let earliestLink: (typeof links)[number] | null = null;
+    for (const l of links) {
+      const idx = remaining.indexOf(l.search_text);
+      if (idx !== -1 && (earliest === -1 || idx < earliest)) {
+        earliest = idx;
+        earliestLink = l;
+      }
+    }
+
+    if (earliest === -1 || !earliestLink) {
+      // No more links — push the rest as plain text.
+      if (remaining) {
+        parts.push(<Fragment key={`t${keySuffix++}`}>{remaining}</Fragment>);
+      }
+      break;
+    }
+
+    // Push text before the link.
+    if (earliest > 0) {
+      parts.push(<Fragment key={`t${keySuffix++}`}>{remaining.slice(0, earliest)}</Fragment>);
+    }
+
+    const after = remaining.slice(earliest + earliestLink.search_text.length);
+    parts.push(
+      <Link
+        key={`l${keySuffix++}`}
+        href={earliestLink.href}
+        className="text-blue-600 dark:text-blue-400 underline decoration-blue-300 hover:text-blue-800 dark:hover:text-blue-300"
+      >
+        {earliestLink.label || earliestLink.search_text}
+      </Link>,
+    );
+
+    remaining = after;
+  }
+
+  return <p className="mb-4 leading-relaxed">{parts}</p>;
+}
+
 
 /**
  * Renders the parsed blog post content array into semantic HTML.
@@ -35,11 +100,7 @@ export function BlogContentRenderer({ content }: BlogContentRendererProps) {
           }
 
           case 'paragraph':
-            return (
-              <p key={key} className="mb-4 leading-relaxed">
-                {item.text}
-              </p>
-            );
+            return <LinkedParagraph key={key} item={item} />;
 
           case 'list':
             return (

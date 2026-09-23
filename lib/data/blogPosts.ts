@@ -25,6 +25,9 @@ export interface BlogPostContent {
   type: "heading" | "paragraph" | "list" | "quote" | "image";
   // heading / paragraph / quote
   text?: string;
+  // paragraph only — inline links for PageRank flow (e.g. blog → /jobs).
+  // { search_text } is replaced in-place with an <a> to href.
+  links?: Array<{ search_text: string; href: string; label?: string }>;
   // heading
   level?: 2 | 3 | 4;
   // list
@@ -855,6 +858,9 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "paragraph",
         text: "جستجوی شغل هوشمند فقط دردسترسی به هزاران آگهی نیست، بلکه تبدیل به یک شریک جستجو است که می‌فهمد دقیقاً چه می‌خواهید بسازید. با وارد کردن واقعیت‌های‌تان، استفاده از فیلترهای حالت کاری و حقوق، و ذخیره نتایج، شانس پیدا کردن شغلی که واقعاً مناسب‌تان است را چند برابر می‌کنید.",
+        links: [
+          { search_text: "جستجوی شغل هوشمند", href: "/jobs", label: "جستجوی شغل هوشمند" },
+        ],
       },
     ],
   },
@@ -945,6 +951,9 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "paragraph",
         text: "دورکاری آزادی می‌دهد، حضوری یاد می‌دهد و ترکیبی می‌خواهد هر دو را بدانید. با فیلتر کردن دقیق در جاب مچ و پرسیدن این سه سؤال کلیدی، می‌توانید شغلی انتخاب کنید که نه تنها مهارت، بلکه سبک زندگی‌تان را هم می‌پذیرد.",
+        links: [
+          { search_text: "جاب مچ", href: "/jobs", label: "جاب مچ" },
+        ],
       },
     ],
   },
@@ -1129,6 +1138,9 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "paragraph",
         text: "اولین شغل یعنی اولین فرصت برای ثابت کردن این‌که می‌توانید سریع یاد بگیرید. جاب مچ با فیلترهای هوشمند، شرکت‌هایی را پیدا می‌کند که به جای «تجربهٔ ۳ سال» به «استعداد و رشد» اولویت می‌دهند. کلید این است که خودتان را مثل یک محقق معرفی کنید — نه یک متقاضی.",
+        links: [
+          { search_text: "جاب مچ با فیلترهای هوشمند", href: "/register", label: "در جاب مچ ثبت‌نام کنید" },
+        ],
       },
     ],
   },
