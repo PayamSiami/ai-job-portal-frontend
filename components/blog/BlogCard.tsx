@@ -4,7 +4,7 @@ import { Calendar, Clock, Tag } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils/cn';
-import { BlogPost } from '@/lib/data/blogPosts';
+import { BlogPost } from '@/lib/blog';
 
 interface BlogCardProps {
   post: BlogPost;
