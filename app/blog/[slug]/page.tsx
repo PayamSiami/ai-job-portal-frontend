@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { config } from '@/lib/config';
-import { BLOG_POSTS, getBlogPost, getRelatedPosts, BlogPost } from '@/lib/data/blogPosts';
 import { ArticleStructuredData } from '@/components/seo/ArticleStructuredData';
 import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
 import { FAQSection } from '@/components/seo/FAQSection';
@@ -15,6 +14,8 @@ import { BlogCard } from '@/components/blog/BlogCard';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, Tag, ArrowLeft } from 'lucide-react';
 import { extractHeadings } from '@/lib/utils/slugify';
+import { BLOG_POSTS } from '@/lib/blog/post';
+import { BlogPost, getBlogPost, getRelatedPosts } from '@/lib/blog';
 
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 

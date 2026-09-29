@@ -1,6 +1,6 @@
+import { BLOG_POSTS } from "@/lib/blog/post";
 import { config } from "@/lib/config";
 import type { MetadataRoute } from "next";
-import { BLOG_POSTS } from "@/lib/data/blogPosts";
 
 // Provide a fallback URL
 const baseUrl = config.NEXT_PUBLIC_APP_URL;

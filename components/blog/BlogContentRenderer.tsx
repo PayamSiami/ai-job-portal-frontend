@@ -1,9 +1,9 @@
 import { slugify } from '@/lib/utils/slugify';
-import type { BlogPostContent } from '@/lib/data/blogPosts';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, type ReactNode } from 'react';
 import { Quote } from 'lucide-react';
+import { BlogPostContent } from '@/lib/blog';
 
 interface BlogContentRendererProps {
   content: BlogPostContent[];

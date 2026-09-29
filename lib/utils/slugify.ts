@@ -1,3 +1,5 @@
+import { BlogPostContent } from "../blog";
+
 /**
  * Generate a URL-friendly slug from a Persian/English heading string.
  * Handles Persian characters by transliterating to a simple ASCII slug.
@@ -56,7 +58,6 @@ export function slugify(text: string): string {
  * Extract heading text from a content array to build a table of contents.
  * Returns array of { id, text, level } for each heading.
  */
-import type { BlogPostContent } from '@/lib/data/blogPosts';
 
 export function extractHeadings(
   content: BlogPostContent[]

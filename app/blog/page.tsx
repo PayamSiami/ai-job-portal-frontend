@@ -5,8 +5,8 @@ import { BlogCard } from '@/components/blog/BlogCard';
 import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
 import { BlogListStructuredData } from '@/components/seo/BlogListStructuredData';
 import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
-import { BLOG_POSTS, getFeaturedPosts, getRecentPosts, BLOG_CATEGORIES } from '@/lib/data/blogPosts';
-import { BlogPost } from '@/lib/data/blogPosts';
+import { BLOG_CATEGORIES, BlogPost, getFeaturedPosts, getRecentPosts } from '@/lib/blog';
+import { BLOG_POSTS } from '@/lib/blog/post';
 
 const baseUrl = config.NEXT_PUBLIC_APP_URL;
 
