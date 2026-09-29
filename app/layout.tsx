@@ -117,6 +117,7 @@ export default function RootLayout({
       lang="fa"
       dir="rtl"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={vazirmatn.variable}
     >
       <head>

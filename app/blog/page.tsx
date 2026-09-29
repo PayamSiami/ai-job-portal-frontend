@@ -128,18 +128,20 @@ export default function BlogPage() {
                 دسته‌بندی‌ها
               </h3>
               <div className="space-y-2">
-                {Object.entries(BLOG_CATEGORIES).map(([slug, name]) => (
-                  <a
-                    key={slug}
-                    href={`/blog/category/${slug}`}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-muted/50 hover:text-blue-600 transition-colors"
-                  >
-                    <span>{name}</span>
-                    <span className="bg-muted/30 text-xs px-2 py-0.5 rounded-full">
-                      {categoryCounts[slug] || 0}
-                    </span>
-                  </a>
-                ))}
+                {Object.entries(BLOG_CATEGORIES)
+                  .filter(([slug]) => (categoryCounts[slug] || 0) > 0)
+                  .map(([slug, name]) => (
+                    <a
+                      key={slug}
+                      href={`/blog/category/${slug}`}
+                      className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-muted/50 hover:text-blue-600 transition-colors"
+                    >
+                      <span>{name.name}</span>
+                      <span className="bg-muted/30 text-xs px-2 py-0.5 rounded-full">
+                        {categoryCounts[slug] || 0}
+                      </span>
+                    </a>
+                  ))}
               </div>
             </div>
 
@@ -164,7 +166,7 @@ export default function BlogPage() {
                             width={64}
                             height={64}
                             className="w-full h-full object-cover"
-                            loading="lazy"
+                            loading="eager"
                             decoding="async"
                           />
                         )}
