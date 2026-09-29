@@ -1,6 +1,6 @@
 import React from 'react';
 import { config } from '@/lib/config';
-import { BlogPost } from '@/lib/data/blogPosts';
+import { BlogPost } from '@/lib/blog';
 
 /**
  * CollectionPage structured data for the blog listing page.

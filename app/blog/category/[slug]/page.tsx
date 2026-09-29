@@ -6,7 +6,6 @@ import { config } from '@/lib/config';
 import { BlogCard } from '@/components/blog/BlogCard';
 import { BreadcrumbStructuredData } from '@/components/seo/BreadcrumbStructuredData';
 import { BlogListStructuredData } from '@/components/seo/BlogListStructuredData';
-import { generateBreadcrumbs } from '@/components/seo/breadcrumbUtils';
 import {
     BLOG_CATEGORIES,
     BLOG_POSTS,
