@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import './globals.css';
 import { Providers } from './providers';
 import MainLayout from './(main)/layout';
 import { AuthRouteGate } from '@/components/auth/AuthRouteGate';
 import { config } from '@/lib/config';
 
-// Local Persian & English font
 const vazirmatn = localFont({
   src: './fonts/Vazirmatn-VariableFont_wght.ttf',
   variable: '--font-vazirmatn',
@@ -29,11 +29,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'تیم جاب مچ', url: baseUrl }],
   publisher: 'جاب مچ',
   creator: 'جاب مچ',
-  formatDetection: {
-    telephone: true,
-    email: true,
-    address: true,
-  },
+  formatDetection: { telephone: true, email: true, address: true },
   openGraph: {
     title: 'جاب مچ - پلتفرم استخدام با هوش مصنوعی',
     description:
@@ -58,9 +54,7 @@ export const metadata: Metadata = {
       'جاب مچ (JobMatch) — پلتفرم هوشمند استخدام در ایران و دورکاری با جستجوی هوش مصنوعی AI.',
     images: [`${baseUrl}/logo.svg`],
   },
-  alternates: {
-    canonical: baseUrl,
-  },
+  alternates: { canonical: baseUrl },
   robots: {
     index: true,
     follow: true,
@@ -84,9 +78,7 @@ export const metadata: Metadata = {
       { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
     ],
     shortcut: '/favicon-32.png',
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   category: 'business',
 };
@@ -105,11 +97,12 @@ export const viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
   const gaMeasurementId = 'G-40GXYYT6YY';
 
   return (
@@ -123,6 +116,7 @@ export default function RootLayout({
       <head>
         {/* Inline theme-detection script */}
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var e=localStorage.getItem("theme");var t=e==="dark"||(e==="system"||!e)&&window.matchMedia("(prefers-color-scheme: dark)").matches;var r=document.documentElement;r.classList.toggle("dark",t);r.style.colorScheme=t?"dark":"light"}catch(e){}})();`,
           }}
@@ -130,28 +124,22 @@ export default function RootLayout({
 
         <link rel="preload" as="image" href="/logo.svg" type="image/svg+xml" fetchPriority="high" />
 
-        {/* Preconnect to API gateway for faster company logo image loading */}
         <link
           rel="preconnect"
           href={config.NEXT_PUBLIC_API_GATEWAY_URL || ''}
           crossOrigin="anonymous"
         />
-        <link
-          rel="dns-prefetch"
-          href={config.NEXT_PUBLIC_API_GATEWAY_URL || ''}
-        />
+        <link rel="dns-prefetch" href={config.NEXT_PUBLIC_API_GATEWAY_URL || ''} />
       </head>
       <body className="font-vazirmatn antialiased">
         <Providers>
           <AuthRouteGate>
-            <MainLayout>
-              {children}
-            </MainLayout>
+            <MainLayout>{children}</MainLayout>
           </AuthRouteGate>
         </Providers>
 
-        {/* Use Next.js Script component and place it correctly */}
-        <Script strategy="afterInteractive" id="ms-clarity">
+        {/* Microsoft Clarity */}
+        <Script strategy="afterInteractive" id="ms-clarity" nonce={nonce}>
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -161,12 +149,13 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Google Analytics 4 - Using Next.js Script component for optimization */}
+        {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
           strategy="afterInteractive"
+          nonce={nonce}
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
