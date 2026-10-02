@@ -4,13 +4,13 @@ export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
 
   const apiGatewayUrl =
-    process.env["NEXT_PUBLIC_API_GATEWAY_URL"] || "";
+    process.env["NEXT_PUBLIC_API_GATEWAY_URL"] || "https://api.jobmatch.ir";
 
   let apiOrigin = "";
   try {
     apiOrigin = new URL(apiGatewayUrl).origin;
   } catch {
-    apiOrigin = "";
+    apiOrigin = "https://api.jobmatch.ir";
   }
 
   const cspHeader = `
